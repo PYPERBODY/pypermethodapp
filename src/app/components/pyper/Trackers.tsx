@@ -43,9 +43,9 @@ export function Trackers() {
   return (
     <>
       <PageHeader
-        eyebrow="Trackers"
+        eyebrow="Track"
         title="Repeatable, reviewable, exportable."
-        subtitle="Every tracker supports duplicate-entry, routine templates, and a clinician-ready export. Demo data shown — secure storage attaches when authentication is connected."
+        subtitle="Guide-related trackers support duplicate entries, routine templates, and exportable review. Demo data shown — secure storage attaches only to support guide use when authentication is connected."
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-6">
@@ -85,7 +85,7 @@ export function Trackers() {
               </div>
               <h3 className="mb-3">Tracker scaffold ready</h3>
               <p className="text-sm max-w-md mx-auto">
-                Fields, duplicate-entry, routine templates, and check-in export follow the same
+                Fields, duplicate-entry, routine templates, and guide export follow the same
                 pattern as the Tolerance Tracker. Open Tolerance to see the working pattern.
               </p>
             </Surface>
@@ -191,7 +191,7 @@ function ToleranceTracker() {
             />
           </div>
         </Field>
-        <Field label="Notes for provider" className="md:col-span-2">
+        <Field label="Notes for guide review" className="md:col-span-2">
           <textarea
             rows={3}
             value={draft.notes}
@@ -212,7 +212,7 @@ function ToleranceTracker() {
             <p className="text-xs mt-1">
               Severe abdominal pain, repeated vomiting, or inability to hydrate may need urgent
               care. Contact your clinician or seek urgent/emergency care. Do not rely on this
-              portal for urgent medical decisions.
+              guide for urgent medical decisions.
             </p>
           </div>
         </div>

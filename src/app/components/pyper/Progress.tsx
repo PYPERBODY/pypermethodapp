@@ -72,7 +72,7 @@ export function Progress({ onGoExport }: { onGoExport: () => void }) {
             <Signal label="Sleep" status="steady" />
             <Signal label="Side effects" status="steady" />
             <Signal label="Body-care barrier" status="attention" />
-            <Signal label="Provider questions" status="provider" />
+            <Signal label="Guide questions" status="provider" />
           </ul>
         </Surface>
       </div>
@@ -87,7 +87,7 @@ export function Progress({ onGoExport }: { onGoExport: () => void }) {
             onClick={onGoExport}
             className="text-sm border border-[var(--graphite)] px-4 py-2 rounded-md hover:bg-[var(--graphite)] hover:text-[var(--porcelain)]"
           >
-            Export check-in summary
+            Export guide summary
           </button>
         </div>
         <div className="h-64">
@@ -136,7 +136,7 @@ function Signal({
   const map = {
     steady: { dot: "#6F8491", text: "Steady" },
     attention: { dot: "#C9A86A", text: "Needs attention" },
-    provider: { dot: "#7C8991", text: "Bring to provider" },
+    provider: { dot: "#7C8991", text: "Discuss if needed" },
   };
   const m = map[status];
   return (

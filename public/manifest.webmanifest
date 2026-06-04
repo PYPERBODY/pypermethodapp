@@ -1,0 +1,36 @@
+{
+  "name": "The PYPER Method Interactive Guide",
+  "short_name": "PYPER Method",
+  "description": "Installable responsive guide for learning, tracking, reviewing, and maintaining The PYPER Method.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F7F6F2",
+  "theme_color": "#171717",
+  "categories": [
+    "health",
+    "lifestyle",
+    "education"
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

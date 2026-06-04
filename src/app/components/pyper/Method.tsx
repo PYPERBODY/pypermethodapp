@@ -14,8 +14,25 @@ export function Method() {
       <PageHeader
         eyebrow="The PYPER Method"
         title="Foundation, framework, refinement."
-        subtitle="Education designed for the medication window. Read at your pace — save sections, mark chapters complete, and add questions for your clinician."
+        subtitle="The primary installable PWA and responsive digital replacement for the static PYPER Method GLP-1 guide. Read at your pace — save sections, mark chapters complete, and keep the Guide at the center."
       />
+
+      <Surface className="p-5 mb-8 grid gap-4 md:grid-cols-[1.2fr_1fr] md:items-center">
+        <div>
+          <div className="mono-label mb-2">Approved delivery system</div>
+          <h3 className="mb-2">Interactive Guide + installable PWA</h3>
+          <p className="text-sm text-[var(--soft-text)]">
+            The Guide is the primary responsive experience for web, mobile phones, tablets,
+            and desktop. Companion Goodnotes and Printable PDF editions should be generated
+            from the same approved PYPER Method content source.
+          </p>
+        </div>
+        <div className="grid gap-2 text-sm">
+          <div className="border border-[var(--border)] rounded-md p-3">Primary: The PYPER Method Interactive Guide + PWA</div>
+          <div className="border border-[var(--border)] rounded-md p-3">Companion: The PYPER Method Goodnotes Edition</div>
+          <div className="border border-[var(--border)] rounded-md p-3">Companion: The PYPER Method Printable PDF Edition</div>
+        </div>
+      </Surface>
 
       {/* Featured chapter: Seven Pillars */}
       <Surface className="p-6 lg:p-8 mb-10">

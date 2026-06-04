@@ -9,8 +9,8 @@ import { Edit } from "./components/pyper/Edit";
 import { Safety } from "./components/pyper/Safety";
 import { Support } from "./components/pyper/Support";
 
-// NOTE: Frontend prototype. Health data lives in component state for demo only.
-// Production: connect Supabase Auth + RLS-protected tables for every health log.
+// NOTE: Frontend prototype for the interactive guide. Guide tracker data lives in component state for demo only.
+// Production: connect Supabase Auth + RLS-protected tables only for guide-related tracker data.
 export default function App() {
   const [tab, setTab] = useState<TabKey>("today");
 

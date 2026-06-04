@@ -1,4 +1,4 @@
-# PYPER Member Portal Master Prompt for Claude Code / Cursor
+# The PYPER Method Interactive Guide Master Prompt for Claude Code / Cursor
 
 Paste this into `CLAUDE.md` at the root of your project folder, or save it as `docs/pyper-member-portal-spec.md`.
 
@@ -6,14 +6,26 @@ Paste this into `CLAUDE.md` at the root of your project folder, or save it as `d
 
 You are an advanced product designer, brand systems designer, healthcare UX strategist, and senior full-stack developer.
 
-We are building the PYPER Member Portal.
+We are building The PYPER Method Interactive Guide.
 
-PYPER is a premium body-focused dermatology, GLP-1, metabolic transformation, and lifestyle-support brand. The portal should feel like Equinox discipline, luxury dermatology precision, and calm clinical support. It should not feel like a diet app, a cheap tracker, a PDF flipbook, a generic patient portal, or a wellness template.
+Approved delivery system:
+- Primary product: The PYPER Method Interactive Guide + installable PWA
+- Companion format: The PYPER Method Goodnotes Edition
+- Companion format: The PYPER Method Printable PDF Edition
+- Companion formats must be generated from the same approved content source. Do not create separate, inconsistent guide versions.
+
+This project is not the main PYPER member portal or patient portal for pyperbody.com. The Guide remains the heart of the product.
+
+Product rhythm:
+Learn → Track → Review → Maintain
+
+
+PYPER is a premium body-focused dermatology, GLP-1, metabolic transformation, and lifestyle-support brand. The portal should feel like Equinox discipline, luxury dermatology precision, and calm clinical support. It should not feel like a diet app, a cheap tracker, a PDF flipbook, a generic interactive clinical-lifestyle guide, or a wellness template.
 
 Use the attached `preview.html` as the core content and visual direction source. Preserve the PYPER Method content, structure, tone, safety language, guide chapters, pillars, tables, check-in concepts, and member tools from `preview.html`, but do not keep it as a fixed PDF-style layout.
 
 Important:
-The existing guide is built like a print/PDF document with fixed Letter pages, page breaks, headers, footers, and static sections. Convert this into a responsive, interactive, mobile-first logged-in member portal for phones, tablets, and desktop.
+The existing guide is built like a print/PDF document with fixed Letter pages, page breaks, headers, footers, and static sections. Convert this into a responsive, interactive, mobile-first logged-in interactive guide for phones, tablets, and desktop.
 
 Do not build a flipbook.
 Do not keep fixed 8.5in x 11in pages.
@@ -23,10 +35,10 @@ Do not create diagnosis logic.
 Do not recommend dose changes.
 Do not give medical advice.
 Do not connect health logs to unsecured forms, email, Google Sheets, Airtable, Notion, Typeform, Webflow forms, or Netlify Forms.
-Do not add advertising pixels, retargeting scripts, behavioral tracking, or session replay inside the logged-in member portal.
+Do not add advertising pixels, retargeting scripts, behavioral tracking, or session replay inside the logged-in interactive guide.
 Do not pass member health data into affiliate links, partner links, analytics, or third-party tools.
 
-Build this as a responsive private member portal with:
+Build this as a responsive private interactive guide and installable PWA with:
 - Method guide chapters
 - interactive trackers
 - repeatable entries
@@ -49,33 +61,33 @@ Recommended build:
 - LocalStorage can be used only for prototype/demo UI state until secure auth/database is connected
 
 Primary product name:
-PYPER Member Portal
+The PYPER Method Interactive Guide
 
-Main member experience:
-Today in PYPER
+Main guide experience:
+Today in The Guide
 
 Core navigation:
 1. Today
 2. Method
-3. Trackers
+3. Track
 4. Reminders
 5. Progress
 6. The PYPER Edit
 7. Safety
-8. Support
+
 
 Mobile bottom navigation:
 - Today
 - Method
 - Track
 - Safety
-- Support
 
-The experience should open to the Today dashboard, not the guide.
+
+The experience should open to Today, with the Guide section remaining the heart of the product. The app should also be installable as a PWA.
 
 TODAY DASHBOARD REQUIREMENTS
 
-Create a premium dashboard called “Today in PYPER.”
+Create a premium dashboard called “Today in The Guide.”
 
 Include:
 - Today’s date
@@ -175,7 +187,7 @@ Typography:
 
 TRACKERS / LOGS REQUIREMENTS
 
-Rename “logs” to “Trackers” in the UI where possible.
+Use “Track” in primary navigation and “guide-related trackers” when describing supporting tracking tools.
 
 Build the following core trackers:
 
@@ -247,7 +259,7 @@ Fields:
 
 Add red-flag logic:
 If member selects severe abdominal pain, repeated vomiting, inability to hydrate, fainting, chest pain, allergic reaction, suicidal thoughts, or severe mental health concern, show a clear urgent warning:
-“This may require urgent medical attention. Contact your clinician or seek urgent/emergency care. Do not rely on this portal for urgent medical decisions.”
+“This may require urgent medical attention. Contact your clinician or seek urgent/emergency care. Do not rely on this guide for urgent medical decisions.”
 
 5. Emotional Check-In
 Mental Health + Emotional Adjustment Log.
@@ -554,21 +566,21 @@ Create a portal-only section called “The PYPER Edit.”
 
 The PYPER Edit includes:
 1. Affiliate product links
-2. Portal-only Member Partner Offers
+2. Guide-only Member Partner Offers
 3. Curated products, services, and partner perks that support the PYPER Method
 
 Important:
-Member Partner Offers are only available inside the private PYPER Member Portal.
+Member Partner Offers are only available inside The PYPER Method Interactive Guide.
 Do not create a public deals page.
 Do not show partner offer codes, QR codes, redemption links, private terms, or claim buttons publicly.
 
 Public website may only say:
-“PYPER members receive access to curated partner offers inside the PYPER Member Portal.”
+“PYPER members receive access to curated partner offers inside The PYPER Method Interactive Guide.”
 
 Offer labels:
 - Affiliate Link
 - Member Partner Offer
-- Portal Exclusive
+- Guide Exclusive
 
 Categories:
 - Protein
@@ -602,7 +614,7 @@ Product/offer cards should include:
 - mark as used button
 
 Required disclosure near top:
-“PYPER may earn commission, referral fees, sponsorship fees, or other compensation from some products and partner offers featured inside The PYPER Edit. Member Partner Offers are available exclusively to PYPER members inside the private PYPER Member Portal. These recommendations do not replace medical advice, diagnosis, treatment, or clinician guidance.”
+“PYPER may earn commission, referral fees, sponsorship fees, or other compensation from some products and partner offers featured inside The PYPER Edit. Member Partner Offers are available exclusively to PYPER members inside The PYPER Method Interactive Guide. These recommendations do not replace medical advice, diagnosis, treatment, or clinician guidance.”
 
 On affiliate cards:
 “Affiliate link. PYPER may earn commission.”
@@ -664,7 +676,7 @@ Safety tab should be calm, clear, and serious.
 
 SUPPORT TAB REQUIREMENTS
 
-Create Support section.
+Create guide support content for exports, community boundaries, FAQs, and contact placeholders without adding a primary Support nav item.
 
 Include:
 - provider questions queue
@@ -862,8 +874,8 @@ Prepare for user-specific data access:
 
 PRIVACY + COMPLIANCE UX COPY
 
-Add this privacy notice in the portal:
-“Your health logs may include sensitive health information. PYPER should only store this information in a secure member system with appropriate privacy, security, and vendor protections. Do not use this portal for emergencies.”
+Add this privacy notice in the guide:
+“Your health logs may include sensitive health information. PYPER should only store this information in a secure member system with appropriate privacy, security, and vendor protections. Do not use this guide for emergencies.”
 
 Add this reminder privacy notice:
 “Reminder notifications are intentionally brief for privacy. Detailed medication, dose, symptom, weight, or mental health information is only visible after login.”
@@ -925,11 +937,11 @@ FINAL RESULT
 
 The final result should feel like:
 
-PYPER Member Portal
+The PYPER Method Interactive Guide
 A private GLP-1, body composition, skin, lifestyle, and maintenance support system with education, trackers, reminders, partner offers, safety guidance, and clinician check-in preparation.
 
 The product rhythm should be:
-Today → Track → Review → Adjust → Maintain
+Learn → Track → Review → Maintain
 
 Do not deliver another static PDF.
 Do not deliver a flipbook.

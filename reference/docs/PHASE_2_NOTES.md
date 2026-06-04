@@ -1,4 +1,4 @@
-# PYPER Member Portal — Phase 2 Notes
+# The PYPER Method Interactive Guide — Phase 2 Notes
 
 ## Scope completed
 
@@ -46,3 +46,8 @@ The source changes were prepared in an environment without package-registry acce
 - Node version: `22`
 
 Netlify should build the updated source using the existing `netlify.toml` configuration after the files are uploaded to GitHub.
+
+
+## Delivery System Scope
+
+Primary product: The PYPER Method Interactive Guide + installable PWA. Companion formats: The PYPER Method Goodnotes Edition and The PYPER Method Printable PDF Edition, generated from the same approved content source.
