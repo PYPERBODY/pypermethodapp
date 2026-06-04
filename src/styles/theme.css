@@ -1,0 +1,112 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+
+  /* PYPER palette */
+  --porcelain: #F7F6F2;
+  --ivory: #ECEAE4;
+  --bone: #E3E1DA;
+  --steel: #7C8991;
+  --med-blue: #6F8491;
+  --graphite: #171717;
+  --soft-text: #4A4A4A;
+
+  --background: var(--porcelain);
+  --foreground: var(--graphite);
+  --card: #FFFFFF;
+  --card-foreground: var(--graphite);
+  --popover: #FFFFFF;
+  --popover-foreground: var(--graphite);
+  --primary: var(--graphite);
+  --primary-foreground: var(--porcelain);
+  --secondary: var(--ivory);
+  --secondary-foreground: var(--graphite);
+  --muted: var(--ivory);
+  --muted-foreground: var(--soft-text);
+  --accent: var(--bone);
+  --accent-foreground: var(--graphite);
+  --destructive: #8a2a2a;
+  --destructive-foreground: #ffffff;
+  --border: rgba(23, 23, 23, 0.08);
+  --input: transparent;
+  --input-background: #FFFFFF;
+  --switch-background: #C8CDD0;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: var(--med-blue);
+  --chart-1: #6F8491;
+  --chart-2: #7C8991;
+  --chart-3: #4A4A4A;
+  --chart-4: #B8BFC2;
+  --chart-5: #171717;
+  --radius: 0.5rem;
+  --sidebar: var(--ivory);
+  --sidebar-foreground: var(--graphite);
+  --sidebar-primary: var(--graphite);
+  --sidebar-primary-foreground: var(--porcelain);
+  --sidebar-accent: var(--bone);
+  --sidebar-accent-foreground: var(--graphite);
+  --sidebar-border: rgba(23, 23, 23, 0.08);
+  --sidebar-ring: var(--med-blue);
+
+  --font-serif: "Fraunces", ui-serif, Georgia, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+.dark {
+  --background: #0e0e0e;
+  --foreground: var(--porcelain);
+  --card: #161616;
+  --card-foreground: var(--porcelain);
+  --popover: #161616;
+  --popover-foreground: var(--porcelain);
+  --primary: var(--porcelain);
+  --primary-foreground: var(--graphite);
+  --secondary: #1d1d1d;
+  --secondary-foreground: var(--porcelain);
+  --muted: #1d1d1d;
+  --muted-foreground: #9a9a9a;
+  --accent: #232323;
+  --accent-foreground: var(--porcelain);
+  --border: rgba(255, 255, 255, 0.08);
+  --sidebar: #111;
+  --sidebar-foreground: var(--porcelain);
+}
+
+@layer base {
+  html, body {
+    font-family: var(--font-sans);
+    color: var(--foreground);
+    background: var(--background);
+    font-feature-settings: "ss01", "cv11";
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--graphite);
+  }
+  h1 { font-size: 2.25rem; line-height: 1.05; }
+  h2 { font-size: 1.625rem; line-height: 1.1; }
+  h3 { font-size: 1.125rem; line-height: 1.2; }
+  h4 { font-size: 1rem; line-height: 1.25; }
+
+  p { line-height: 1.55; color: var(--soft-text); }
+
+  .mono-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--steel);
+  }
+
+  .rule {
+    height: 1px;
+    background: var(--border);
+    width: 100%;
+  }
+}
