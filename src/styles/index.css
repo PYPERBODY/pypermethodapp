@@ -18,3 +18,20 @@
   outline: 2px solid var(--steel);
   outline-offset: 2px;
 }
+
+
+.form-input {
+  width: 100%;
+  min-height: 2.75rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--border);
+  background: var(--porcelain);
+  padding: 0.625rem 0.75rem;
+  font-size: 0.95rem;
+  color: var(--graphite);
+}
+
+.form-input:focus {
+  outline: 2px solid var(--steel);
+  outline-offset: 2px;
+}
