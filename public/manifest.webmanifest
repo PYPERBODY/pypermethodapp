@@ -32,5 +32,29 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "Today",
+      "short_name": "Today",
+      "url": "/?section=today",
+      "description": "Open today's guide rhythm"
+    },
+    {
+      "name": "Track",
+      "short_name": "Track",
+      "url": "/?section=track",
+      "description": "Open guide trackers"
+    },
+    {
+      "name": "Reminders",
+      "short_name": "Reminders",
+      "url": "/?section=reminders",
+      "description": "Open guide reminders"
+    }
+  ],
+  "display_override": [
+    "standalone",
+    "minimal-ui"
   ]
 }
