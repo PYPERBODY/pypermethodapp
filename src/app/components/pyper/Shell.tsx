@@ -33,6 +33,9 @@ const MOBILE_NAV: { key: TabKey; label: string; icon: any }[] = [
   { key: "today", label: "Today", icon: Home },
   { key: "method", label: "Guide", icon: BookOpen },
   { key: "trackers", label: "Track", icon: Activity },
+  { key: "reminders", label: "Reminders", icon: Bell },
+  { key: "progress", label: "Progress", icon: TrendingUp },
+  { key: "edit", label: "The PYPER Edit", icon: Sparkles },
   { key: "safety", label: "Safety", icon: ShieldAlert },
   { key: "progress", label: "Progress", icon: TrendingUp },
 ];
@@ -103,7 +106,7 @@ export function Shell({
 
       {/* Mobile bottom nav */}
       <nav className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-[var(--ivory)] border-t border-[var(--border)]">
-        <div className="grid grid-cols-5">
+        <div className="flex overflow-x-auto px-2">
           {MOBILE_NAV.map((n) => {
             const Icon = n.icon;
             const isActive = active === n.key;
@@ -111,7 +114,7 @@ export function Shell({
               <button
                 key={n.key}
                 onClick={() => onChange(n.key)}
-                className={`flex flex-col items-center gap-1 py-3 ${
+                className={`flex w-24 shrink-0 flex-col items-center gap-1 py-3 ${
                   isActive ? "text-[var(--graphite)]" : "text-[var(--steel)]"
                 }`}
               >
