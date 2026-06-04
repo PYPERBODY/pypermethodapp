@@ -31,3 +31,9 @@
   - `VITE_SUPABASE_ANON_KEY`
 
   Copy `.env.example` to `.env.local` for local development. Do not commit real keys or service-role keys. If the variables are missing, the app shows a protected access setup state instead of crashing.
+
+
+  The app also supports Supabase/Next-style public variables for compatibility with setup snippets:
+
+  - `NEXT_PUBLIC_SUPABASE_URL`
+  - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
