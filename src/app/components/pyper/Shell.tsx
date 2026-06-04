@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { SignOutButton } from "../auth/AuthGate";
 import {
   Home,
   BookOpen,
@@ -33,9 +34,6 @@ const MOBILE_NAV: { key: TabKey; label: string; icon: any }[] = [
   { key: "today", label: "Today", icon: Home },
   { key: "method", label: "Guide", icon: BookOpen },
   { key: "trackers", label: "Track", icon: Activity },
-  { key: "reminders", label: "Reminders", icon: Bell },
-  { key: "progress", label: "Progress", icon: TrendingUp },
-  { key: "edit", label: "The PYPER Edit", icon: Sparkles },
   { key: "safety", label: "Safety", icon: ShieldAlert },
   { key: "progress", label: "Progress", icon: TrendingUp },
 ];
@@ -44,10 +42,14 @@ export function Shell({
   active,
   onChange,
   children,
+  userEmail,
+  onSignOut,
 }: {
   active: TabKey;
   onChange: (k: TabKey) => void;
   children: ReactNode;
+  userEmail?: string;
+  onSignOut?: () => void;
 }) {
   return (
     <div className="min-h-screen w-full bg-[var(--porcelain)] text-[var(--graphite)] flex">
@@ -81,6 +83,10 @@ export function Shell({
         </nav>
         <div className="mt-auto pt-8">
           <div className="rule mb-4" />
+          <div className="mono-label mb-1">Signed in</div>
+          <div className="mb-3 truncate text-sm">{userEmail || "Guide account"}</div>
+          {onSignOut && <SignOutButton onSignOut={onSignOut} />}
+          <div className="rule my-4" />
           <div className="mono-label mb-1">Guide rhythm</div>
           <div className="text-sm">Learn → Track → Review → Maintain</div>
         </div>
@@ -96,7 +102,10 @@ export function Shell({
               The PYPER Method
             </div>
           </div>
-          <div className="mono-label">Learn → Maintain</div>
+          <div className="flex items-center gap-2">
+            <div className="hidden max-w-[140px] truncate text-xs sm:block">{userEmail}</div>
+            {onSignOut && <SignOutButton onSignOut={onSignOut} />}
+          </div>
         </header>
 
         <div className="px-5 sm:px-8 lg:px-12 py-6 lg:py-10 max-w-6xl mx-auto">
@@ -106,7 +115,7 @@ export function Shell({
 
       {/* Mobile bottom nav */}
       <nav className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-[var(--ivory)] border-t border-[var(--border)]">
-        <div className="flex overflow-x-auto px-2">
+        <div className="grid grid-cols-5">
           {MOBILE_NAV.map((n) => {
             const Icon = n.icon;
             const isActive = active === n.key;
@@ -114,7 +123,7 @@ export function Shell({
               <button
                 key={n.key}
                 onClick={() => onChange(n.key)}
-                className={`flex w-24 shrink-0 flex-col items-center gap-1 py-3 ${
+                className={`flex flex-col items-center gap-1 py-3 ${
                   isActive ? "text-[var(--graphite)]" : "text-[var(--steel)]"
                 }`}
               >

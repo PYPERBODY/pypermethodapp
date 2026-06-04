@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Shell, TabKey } from "./components/pyper/Shell";
+import { ProtectedGuide, useGuideAuth } from "./components/auth/AuthGate";
+import { Shell, Surface, TabKey } from "./components/pyper/Shell";
 import { Today } from "./components/pyper/Today";
 import { Method } from "./components/pyper/Method";
 import { Trackers } from "./components/pyper/Trackers";
@@ -9,13 +10,22 @@ import { Edit } from "./components/pyper/Edit";
 import { Safety } from "./components/pyper/Safety";
 import { Support } from "./components/pyper/Support";
 
-// NOTE: Frontend prototype for the interactive guide. Guide tracker data lives in component state for demo only.
-// Production: connect Supabase Auth + RLS-protected tables only for guide-related tracker data.
+// Phase 5 foundation only: Supabase Auth protects the guide shell. Tracker forms remain demo state until Phase 6.
 export default function App() {
+  return (
+    <ProtectedGuide>
+      <AuthenticatedGuide />
+    </ProtectedGuide>
+  );
+}
+
+function AuthenticatedGuide() {
   const [tab, setTab] = useState<TabKey>("today");
+  const { user, signOut } = useGuideAuth();
 
   return (
-    <Shell active={tab} onChange={setTab}>
+    <Shell active={tab} onChange={setTab} userEmail={user?.email} onSignOut={signOut}>
+      <GuidePrivacyNotices />
       {tab === "today" && <Today onGoExport={() => setTab("support")} />}
       {tab === "method" && <Method />}
       {tab === "trackers" && <Trackers />}
@@ -25,5 +35,18 @@ export default function App() {
       {tab === "safety" && <Safety />}
       {tab === "support" && <Support />}
     </Shell>
+  );
+}
+
+function GuidePrivacyNotices() {
+  return (
+    <Surface className="mb-8 grid gap-3 p-4 text-sm lg:grid-cols-2">
+      <p>
+        <strong>Privacy notice:</strong> Your guide progress and trackers may include sensitive health information. PYPER should only store this information in a secure system with appropriate privacy, security, and vendor protections. Do not use this guide for emergencies.
+      </p>
+      <p>
+        <strong>Future reminder privacy:</strong> Reminder notifications should remain brief for privacy. Detailed medication, dose, symptom, weight, prescription body-care, or mental health information should only be visible after sign-in.
+      </p>
+    </Surface>
   );
 }

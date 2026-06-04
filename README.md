@@ -21,3 +21,13 @@
   Run `pnpm run dev` to start the development server.
 
   Run `pnpm run build` to create the production build in `dist/`.
+
+
+  ## Phase 5 auth environment
+
+  Supabase Auth is configured with public Vite variables only:
+
+  - `VITE_SUPABASE_URL`
+  - `VITE_SUPABASE_ANON_KEY`
+
+  Copy `.env.example` to `.env.local` for local development. Do not commit real keys or service-role keys. If the variables are missing, the app shows a protected access setup state instead of crashing.
