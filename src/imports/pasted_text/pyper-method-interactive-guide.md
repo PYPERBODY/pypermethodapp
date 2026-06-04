@@ -334,7 +334,7 @@ Use sliders for appetite, fullness, cravings, food noise, and meal tolerance.
 * notes
 * reviewed for check-in
 
-8. Body-Care Routine
+8. PYPER Body-Care Plan
    Fields:
 
 * AM routine completed yes/no
@@ -400,8 +400,8 @@ Add routine templates for:
 
 * daily supplement routine
 * weekly dose routine
-* AM body-care routine
-* PM body-care routine
+* PYPER Body-Care Plan AM
+* PYPER Body-Care Plan PM
 * strength training routine
 * Pilates routine
 * hydration goal
@@ -467,8 +467,8 @@ Reminder types:
 * supplement reminders
 * GLP-1 dose reminders
 * protein check reminders
-* AM body-care routine reminders
-* PM body-care routine reminders
+* PYPER Body-Care Plan AM reminders
+* PYPER Body-Care Plan PM reminders
 * weight/body metrics reminders
 * mental health check-in reminders
 * weekly progress check-in reminders
@@ -553,7 +553,7 @@ Include:
 * symptoms/tolerance
 * mental health/emotional check-in
 * training rhythm
-* skin/body-care routine
+* PYPER Body-Care Plan
 * provider questions
 * next week focus
 

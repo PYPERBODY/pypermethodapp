@@ -12,11 +12,11 @@ type R = {
 };
 
 const SEED: R[] = [
-  { id: "r1", title: "AM body-care routine", type: "Body-care", time: "07:30", frequency: "Daily", active: true },
+  { id: "r1", title: "PYPER Body-Care Plan AM", type: "Body-care", time: "07:30", frequency: "Daily", active: true },
   { id: "r2", title: "GLP-1 dose reminder", type: "Medication", time: "08:00", frequency: "Weekly · Sun", active: true },
   { id: "r3", title: "Hydration check", type: "Hydration", time: "Every 2h", frequency: "Daily", active: true },
   { id: "r4", title: "Protein check", type: "Protein", time: "12:30", frequency: "Daily", active: true },
-  { id: "r5", title: "PM body-care routine", type: "Body-care", time: "20:00", frequency: "Daily", active: true },
+  { id: "r5", title: "PYPER Body-Care Plan PM", type: "Body-care", time: "20:00", frequency: "Daily", active: true },
   { id: "r6", title: "Weekly check-in prep", type: "Provider", time: "Sun 18:00", frequency: "Weekly", active: false },
 ];
 

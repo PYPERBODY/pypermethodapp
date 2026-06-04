@@ -24,11 +24,11 @@ export function Today({ onGoExport }: { onGoExport: () => void }) {
         <div>
           <div className="mono-label mb-2">Next best action</div>
           <div style={{ fontFamily: "var(--font-serif)" }} className="text-xl leading-snug max-w-md">
-            Log your tolerance check before lunch — keep the medication window calm.
+            Review today's PYPER Body-Care Plan — PM Texture Rx and Recover are pending.
           </div>
         </div>
         <button className="self-start md:self-auto inline-flex items-center gap-2 bg-[var(--graphite)] text-[var(--porcelain)] px-5 py-3 rounded-md text-sm hover:bg-black transition-colors">
-          Open Tolerance Tracker
+          Open PYPER Body-Care Plan
           <ArrowUpRight size={16} />
         </button>
       </Surface>

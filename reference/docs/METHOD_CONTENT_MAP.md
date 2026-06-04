@@ -14,7 +14,7 @@ Phase 2 converts the complete patient-facing content from `previewv2.html` into 
 | Metabolic Nutrition | The PYPER Nutrition Standard; Meal Structure & Decision Flow; Start Early, Not After Symptoms; Sample Weekly Meal Plan |
 | Dining, Travel & Social Protocols | Eating Out; Travel Protocols; Events, Holidays & Family Meals |
 | Supplements, Strength & Movement | Supplement Framework; The Body-Composition Backbone; Pilates + Low-Impact Cardio |
-| Skin & Body Refinement | Skin + Body Changes During Weight Loss; The PYPER Body-Care Routine; PYPER Body-Care Pathways; Aesthetic Treatment Timing |
+| Skin & Body Refinement | Skin + Body Changes During Weight Loss; The PYPER Body-Care Plan; PYPER Body-Care Pathways; Aesthetic Treatment Timing |
 | Recovery, Mindset & Maintenance | Sleep, Stress & Cortisol; Nausea, Constipation & Hair Shedding; Mental Health + Body Image |
 | Tracking, Safety & Red Flags | The Progress Dashboard; Red Flags |
 | Beyond GLP-1 | Maintaining Beyond GLP-1; Member Journey Map; PYPER Check-In Dashboard; Member Support, Discord & Partner Perks |

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { PageHeader, Surface } from "./Shell";
 import { TRACKERS } from "./data";
+import { BodyCarePlan } from "./BodyCarePlan";
 import { Slider } from "../ui/slider";
 import { Copy, Plus, Save, Trash2, AlertTriangle } from "lucide-react";
 
@@ -39,7 +40,7 @@ const initial: Entry[] = [
 ];
 
 export function Trackers() {
-  const [selected, setSelected] = useState("tolerance");
+  const [selected, setSelected] = useState("skin");
   return (
     <>
       <PageHeader
@@ -76,7 +77,9 @@ export function Trackers() {
         </Surface>
 
         <div>
-          {selected === "tolerance" ? (
+          {selected === "skin" ? (
+            <BodyCarePlan />
+          ) : selected === "tolerance" ? (
             <ToleranceTracker />
           ) : (
             <Surface className="p-8 text-center">
