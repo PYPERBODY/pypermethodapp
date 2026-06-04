@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"/><title>PYPER Method GLP-1 Guide Redesign</title><style>
+@font-face { font-family: Inter; src: url('file:///usr/share/fonts/opentype/inter/Inter-Regular.otf'); font-weight:400; }
+@font-face { font-family: Inter; src: url('file:///usr/share/fonts/opentype/inter/Inter-SemiBold.otf'); font-weight:600; }
+@font-face { font-family: InterDisplay; src: url('file:///usr/share/fonts/opentype/inter/InterDisplay-Bold.otf'); font-weight:800; }
+@font-face { font-family: NotoMono; src: url('file:///usr/share/fonts/truetype/noto/NotoSansMono-Regular.ttf'); }
+@page { size: Letter; margin:0; }
+* { box-sizing:border-box; }
+html,body { margin:0; padding:0; font-family:Inter, Arial, sans-serif; color:#111111; background:#F7F6F2; }
+.page { width:8.5in; height:11in; page-break-after:always; padding:0.58in 0.62in; position:relative; overflow:hidden; background:#F7F6F2; }
+.page.light { background:#F7F6F2; }
+.page.dark { background:#171717; color:#FAFAF7; }
+.page.section { padding:0.7in; }
+main { position:relative; z-index:2; }
+.page.section main { position:static; }
+.hdr { position:absolute; top:0.34in; left:0.62in; right:0.62in; display:flex; justify-content:space-between; font-size:8.6pt; letter-spacing:.05em; color:#6A6A6A; border-bottom:1px solid rgba(17,17,17,.14); padding-bottom:0.12in; }
+.dark .hdr { color:#C9C9C2; border-bottom-color:rgba(250,250,247,.16); }
+.ftr { position:absolute; bottom:0.32in; left:0.62in; right:0.62in; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; font-size:8pt; color:#6A6A6A; border-top:1px solid rgba(17,17,17,.14); padding-top:0.1in; }
+.ftr span:last-child { text-align:right; letter-spacing:.08em; }
+.dark .ftr { color:#C9C9C2; border-top-color:rgba(250,250,247,.16); }
+h1 { font-family:InterDisplay, Inter, Arial, sans-serif; font-size:35pt; line-height:.95; margin:0 0 .18in; letter-spacing:-.045em; font-weight:800; }
+h2 { font-family:InterDisplay, Inter, Arial, sans-serif; font-size:22pt; line-height:1; letter-spacing:-.035em; margin:.14in 0 .11in; font-weight:800; }
+h3 { font-size:11pt; line-height:1.08; margin:0 0 .075in; font-weight:700; }
+p { font-size:10.4pt; line-height:1.46; color:#4A4A4A; margin:0 0 .12in; }
+.dark p, .dark li { color:#D6D6D0; }
+.kicker { font-family:NotoMono, monospace; font-size:7.5pt; letter-spacing:.18em; text-transform:uppercase; color:#6F8491; margin:0 0 .18in; }
+.kicker.ondark,.ondark { color:#A9B4BA; }
+.dek { font-size:13.2pt; line-height:1.38; max-width:6.6in; color:#4A4A4A; margin:.05in 0 .25in; }
+.dark .dek { color:#D6D6D0; }
+.lead { font-size:11.5pt; line-height:1.48; color:#4A4A4A; margin-bottom:.18in; }
+.subhead { font-size:16pt; color:#D6D6D0; margin-bottom:.20in; }
+ul { margin:.03in 0 .05in .18in; padding:0; }
+li { font-size:9.8pt; line-height:1.38; color:#4A4A4A; margin:.035in 0; }
+.grid { display:grid; gap:.15in; }
+.grid.two { grid-template-columns:1fr 1fr; }
+.grid.three { grid-template-columns:1fr 1fr 1fr; }
+.mt { margin-top:.22in; }
+.card { border:1px solid rgba(17,17,17,.12); background:rgba(236,234,228,.58); padding:.18in; min-height:1.25in; }
+.card p { font-size:9.4pt; line-height:1.38; margin:0; }
+.card ul { margin-left:.12in; }
+.card li { font-size:8.9pt; line-height:1.26; }
+.tag { font-family:NotoMono, monospace; font-size:6.8pt; text-transform:uppercase; letter-spacing:.16em; color:#6F8491; margin-bottom:.08in; }
+.notice { border-left:4px solid #7C8991; padding:.16in .18in; background:#ECEAE4; color:#4A4A4A; font-size:10pt; line-height:1.44; }
+.notice b { color:#111111; }
+.standard { border:1px solid rgba(124,137,145,.38); background:#EEF2F2; padding:.18in; }
+.standard b { font-family:NotoMono, monospace; font-size:7.8pt; letter-spacing:.14em; text-transform:uppercase; color:#6F8491; }
+.standard p { margin:.08in 0 0; font-size:9.6pt; }
+.quote { font-family:InterDisplay, Inter, Arial, sans-serif; font-size:23pt; line-height:1.05; letter-spacing:-.035em; color:#111111; border-top:1px solid rgba(17,17,17,.18); border-bottom:1px solid rgba(17,17,17,.18); padding:.22in 0; margin:.28in 0 .1in; }
+.smallq { font-size:17pt; }
+.statement { font-family:InterDisplay, Inter, Arial, sans-serif; font-size:26pt; line-height:1.02; letter-spacing:-.04em; color:#111111; padding:.24in; background:#ECEAE4; border:1px solid rgba(17,17,17,.12); }
+table { width:100%; border-collapse:collapse; margin:.14in 0 .06in; font-size:8.8pt; line-height:1.25; }
+th { text-align:left; font-family:NotoMono, monospace; font-size:7pt; letter-spacing:.12em; text-transform:uppercase; font-weight:400; background:#171717; color:#FAFAF7; padding:.075in; border:1px solid #171717; }
+td { vertical-align:top; padding:.085in; border:1px solid rgba(17,17,17,.15); color:#4A4A4A; }
+tr:nth-child(even) td { background:rgba(236,234,228,.52); }
+.compact td { font-size:8.1pt; padding:.06in; }
+.tiny td { font-size:7.2pt; line-height:1.18; padding:.052in; }
+.tracker td { height:.34in; font-size:7.7pt; }
+.cover { padding:.58in; }
+.cover::before { content:""; position:absolute; inset:.36in; border:1px solid rgba(250,250,247,.18); }
+.covermark { position:absolute; top:.42in; left:.58in; font-family:NotoMono, monospace; font-size:8pt; letter-spacing:.22em; color:#A9B4BA; }
+.covergrid { display:grid; grid-template-columns:1.05fr .75fr; gap:.35in; min-height:8.6in; align-items:center; }
+.covercopy h1 { font-size:54pt; color:#FAFAF7; max-width:4.75in; }
+.covercopy .dek { color:#D6D6D0; font-size:14pt; max-width:4.7in; }
+.coverpills { display:flex; flex-wrap:wrap; gap:.08in; margin-top:.25in; }
+.pill { display:inline-block; font-family:NotoMono, monospace; font-size:7pt; letter-spacing:.08em; text-transform:uppercase; border:1px solid rgba(250,250,247,.18); color:#D6D6D0; padding:.06in .09in; border-radius:99px; margin-right:.06in; }
+.light .pill { border-color:rgba(17,17,17,.14); color:#4A4A4A; }
+.covervisual { height:5.6in; border:1px solid rgba(250,250,247,.16); background:linear-gradient(140deg, #222626 0%, #171717 45%, #6F8491 100%); position:relative; padding:.25in; overflow:hidden; }
+.covervisual::after { content:""; position:absolute; width:5.2in; height:5.2in; border-radius:50%; border:1px solid rgba(250,250,247,.20); right:-2.2in; bottom:-1.8in; }
+.covervisual::before { content:""; position:absolute; width:2.7in; height:7in; background:rgba(250,250,247,.05); transform:rotate(16deg); right:.2in; top:-.5in; }
+.visual-title { font-family:NotoMono, monospace; font-size:7pt; color:#D6D6D0; letter-spacing:.16em; text-transform:uppercase; position:absolute; bottom:.75in; left:.25in; }
+.visual-line { position:absolute; left:.25in; right:.25in; bottom:.58in; height:1px; background:rgba(250,250,247,.22); }
+.visual-note { position:absolute; left:.25in; right:.25in; bottom:.25in; color:#D6D6D0; font-size:9pt; line-height:1.35; }
+.coverbottom { position:absolute; bottom:.55in; left:.58in; right:.58in; display:flex; justify-content:space-between; font-family:NotoMono, monospace; color:#A9B4BA; letter-spacing:.18em; text-transform:uppercase; font-size:7.2pt; }
+.swatches { display:grid; grid-template-columns:repeat(6,1fr); gap:.09in; margin:.28in 0 .08in; }
+.swatches div { border:1px solid rgba(17,17,17,.12); background:#ECEAE4; padding:.09in; }
+.swatches span { display:block; height:.7in; border:1px solid rgba(17,17,17,.08); margin:.06in 0; }
+.swatches b { font-size:8pt; display:block; }
+.swatches em { font-family:NotoMono, monospace; font-size:6.5pt; font-style:normal; color:#6A6A6A; }
+.tocgrid { display:grid; grid-template-columns:1fr 1fr; gap:.09in .18in; margin-top:.28in; }
+.tocgrid div { display:grid; grid-template-columns:.35in 1fr; align-items:start; gap:.10in; padding:.13in 0; border-top:1px solid rgba(17,17,17,.14); }
+.tocgrid span { font-family:NotoMono, monospace; font-size:8pt; color:#7C8991; }
+.tocgrid b { font-size:12pt; line-height:1.15; }
+.pillars { display:grid; grid-template-columns:1fr 1fr; gap:.12in; margin-top:.2in; }
+.pillar { min-height:1.07in; border:1px solid rgba(17,17,17,.13); padding:.14in; background:#ECEAE4; }
+.pillar span { font-family:InterDisplay; font-size:20pt; color:#7C8991; display:block; margin-bottom:.06in; }
+.pillar b { font-size:10pt; display:block; margin-bottom:.06in; }
+.pillar p { font-size:8.5pt; line-height:1.28; margin:0; }
+.section-art { position:absolute; inset:0; opacity:1; z-index:1; }
+.section-art .ring { position:absolute; right:-1.5in; top:1.0in; width:5.8in; height:5.8in; border-radius:50%; border:1px solid rgba(250,250,247,.18); }
+.section-art .panel { position:absolute; right:.72in; bottom:.78in; width:2.9in; height:6.3in; background:linear-gradient(160deg,rgba(124,137,145,.55),rgba(23,23,23,0)); border:1px solid rgba(250,250,247,.12); }
+.divider-copy { position:absolute; left:.72in; bottom:1.05in; width:5.2in; z-index:4; }
+.divider-copy h1 { color:#FAFAF7; font-size:48pt; max-width:5.7in; }
+.divider-copy .dek { color:#D6D6D0; font-size:14pt; max-width:4.8in; }
+.phonecard { background:#171717; color:#FAFAF7; padding:.22in; margin:.16in 0; }
+.phonecard p { color:#D6D6D0; font-size:10pt; }
+.measuregrid { display:grid; grid-template-columns:repeat(4,1fr); gap:.08in; }
+.measuregrid div { border:1px solid rgba(17,17,17,.15); background:#ECEAE4; padding:.08in; height:.62in; }
+.measuregrid b { display:block; font-size:7.5pt; text-transform:uppercase; letter-spacing:.09em; color:#6A6A6A; }
+.closing { margin-top:.34in; padding:.28in; background:#171717; color:#FAFAF7; }
+.closing h2 { color:#FAFAF7; margin-top:.05in; }
+.closing p { color:#D6D6D0; max-width:5.4in; }
+@media print { .page:last-child { page-break-after:auto; } }
+
+
+/* ---- V5 patient-facing correction pass ---- */
+.page.light main { padding-top: .18in; }
+.hdr { top:.30in; padding-bottom:.09in; }
+.kicker { font-size:8.2pt; margin:0 0 .15in; }
+h1 { font-size:37pt; line-height:.96; margin:0 0 .16in; }
+h2 { font-size:23pt; margin:.18in 0 .11in; }
+h3 { font-size:11.7pt; line-height:1.1; }
+p { font-size:11pt; line-height:1.50; }
+.dek { font-size:14.3pt; line-height:1.37; margin:.05in 0 .24in; max-width:6.85in; }
+.lead { font-size:12pt; }
+li { font-size:10.2pt; line-height:1.38; margin:.035in 0; }
+.card { padding:.17in; min-height:1.05in; }
+.card p { font-size:10.15pt; line-height:1.40; }
+.card li { font-size:9.55pt; line-height:1.28; }
+.notice { font-size:10.8pt; line-height:1.45; }
+.standard p { font-size:10.4pt; line-height:1.42; }
+.standard b { font-size:8.2pt; }
+table { font-size:9.2pt; line-height:1.28; }
+.compact td { font-size:8.55pt; line-height:1.23; padding:.062in; }
+.tiny td { font-size:7.9pt; line-height:1.18; padding:.052in; }
+.tracker td { height:.31in; font-size:7.8pt; }
+.fillband { margin-top:.20in; padding:.17in; background:#171717; color:#FAFAF7; }
+.fillband h3 { color:#FAFAF7; margin-bottom:.07in; }
+.fillband p, .fillband li { color:#D6D6D0; }
+.fillgrid { display:grid; grid-template-columns:repeat(4,1fr); gap:.08in; margin-top:.12in; }
+.fillgrid div { border:1px solid rgba(250,250,247,.18); padding:.10in; min-height:.72in; }
+.fillgrid b { display:block; font-family:NotoMono, monospace; font-size:7pt; letter-spacing:.12em; color:#A9B4BA; text-transform:uppercase; margin-bottom:.04in; }
+.fillgrid span { font-size:8.7pt; line-height:1.25; color:#D6D6D0; }
+.phonecard { margin:.14in 0; }
+.covercopy h1 { font-size:56pt; }
+</style></head><body><section class="page cover dark"><main>
+<div class="covermark">PYPER</div>
+<div class="covergrid">
+<div class="covercopy">
+<div class="kicker ondark">PYPER MEMBERS</div>
+<h1>The PYPER Method</h1>
+<p class="subhead">The Body, Skin &amp; Metabolic Transformation Guide</p>
+<p class="dek">A clinical-lifestyle blueprint for GLP-1 support, body composition, skin quality, and long-term maintenance.</p>
+<div class="coverpills"><span class="pill">GLP-1 support</span><span class="pill">body composition</span><span class="pill">skin quality</span><span class="pill">maintenance</span></div>
+</div>
+<div class="covervisual">
+<div class="visual-title">ELEVATED DISCIPLINE</div>
+<div class="visual-line"></div>
+<div class="visual-note">Luxury dermatology precision. Honest support for the entire transformation.</div>
+</div>
+</div>
+<div class="coverbottom"><span>Member Guide</span><span>PYPER BODY</span></div>
+</main></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Before you begin</div><h1>Medical &amp; Member Safety</h1><p class="dek">This guide supports the work around medication. It does not replace licensed medical care.</p>
+<div class="notice"><b>Educational support only.</b> GLP-1 medications should only be used under the supervision of a licensed clinician. Always follow your prescribed dosing instructions and contact your clinician before changing medication, adding supplements, starting a new exercise plan, treating side effects, or using prescription skin actives.</div>
+<div class="grid two mt">
+<div class="card"><h3>What the guide does</h3><p>Helps members build structure around nourishment, strength, skin care, recovery, emotional steadiness, and long-term maintenance.</p></div>
+<div class="card"><h3>What the medication may do</h3><p>Quiet appetite and create a window where habits are easier to practice. The window is valuable, but it is not the entire transformation.</p></div>
+</div>
+<h2>The PYPER tone</h2>
+<p>Elevated discipline is not punishment. It is calm, precise consistency. We are not chasing rapid loss at any cost. We are protecting muscle, supporting skin, reducing inflammation triggers, improving daily habits, and building a body you can maintain.</p>
+<div class="quote">Your medication may start the process. Your habits protect the result.</div>
+</main><div class="ftr"><span></span><span>1</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Contents</div><h1>The Member System</h1><p class="dek">A clinical-lifestyle guide organized by pillars, then converted into member tools.</p>
+<div class="tocgrid">
+<div><span>01</span><b>Welcome to The PYPER Method</b></div>
+<div><span>02</span><b>The Seven PYPER Pillars</b></div>
+<div><span>03</span><b>The Medication Window</b></div>
+<div><span>04</span><b>Body Composition</b></div>
+<div><span>05</span><b>Metabolic Nutrition</b></div>
+<div><span>06</span><b>Dining, Travel &amp; Social Protocols</b></div>
+<div><span>07</span><b>Supplements, Strength &amp; Movement</b></div>
+<div><span>08</span><b>Skin &amp; Body Refinement</b></div>
+<div><span>09</span><b>Recovery, Mindset &amp; Maintenance</b></div>
+<div><span>10</span><b>Tracking, Safety &amp; Red Flags</b></div>
+<div><span>11</span><b>Beyond GLP-1</b></div>
+<div><span>12</span><b>Appendices &amp; Member Tools</b></div>
+</div>
+<div class="notice mt"><b>How to use this guide:</b> Read the first two chapters before your first or next clinician check-in. Use the trackers weekly. Revisit nutrition, training, skin, and recovery sections each month as your body changes.</div>
+</main><div class="ftr"><span></span><span>2</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Welcome</div><h1>A body-first transformation system</h1><p class="dek">PYPER exists for the parts of transformation that ordinary weight-loss content ignores: muscle, skin, habits, confidence, maintenance, and the emotional reality of change.</p>
+<div class="grid two">
+<div class="card"><h3>Not a crash diet</h3><p>This is a clinical-lifestyle framework for becoming stronger, leaner, more supported, and more in control of your body.</p></div>
+<div class="card"><h3>Not just appetite suppression</h3><p>The goal is not simply to eat less. The goal is to protect the outcome: muscle, skin quality, energy, digestion, mood, and maintenance capacity.</p></div>
+</div>
+<div class="statement mt">PYPER is direct, but never careless. Beautiful, but never superficial. Clinical, but never cold.</div>
+<h2>The promise</h2>
+<p>Inside, you will find guidance on nutrition, strength training, hydration, digestion, skin changes, supplements, recovery, mindset, travel, eating out, check-ins, and maintenance beyond the medication window.</p>
+</main><div class="ftr"><span></span><span>3</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Operating system</div><h1>The Seven PYPER Pillars</h1><p class="dek">Each pillar protects a different part of the transformation.</p>
+<div class="pillars"><div class="pillar"><span>01</span><b>The Medication Window</b><p>Understand what GLP-1s can do, what they cannot do, and how to use this window with intention.</p></div><div class="pillar"><span>02</span><b>Body Composition</b><p>Preserve muscle, protect metabolism, reduce the risk of rapid-loss changes, and build shape.</p></div><div class="pillar"><span>03</span><b>Metabolic Nutrition</b><p>Prioritize protein, hydration, digestion, and food choices that support steadiness and satiety.</p></div><div class="pillar"><span>04</span><b>Dining &amp; Life Protocols</b><p>Navigate restaurants, travel, events, holidays, and family meals without losing the thread.</p></div><div class="pillar"><span>05</span><b>Skin &amp; Body Refinement</b><p>Support texture, pigmentation, body acne, stretch marks, barrier repair, and skin quality.</p></div><div class="pillar"><span>06</span><b>Recovery &amp; Mindset</b><p>Manage sleep, stress, mood, comparison, identity, and the emotional side of change.</p></div><div class="pillar"><span>07</span><b>Maintenance</b><p>Transition from active loss to a lifestyle that stays with you after the medication window.</p></div></div>
+<div class="notice mt"><b>Operating principle:</b> Do not measure transformation by appetite suppression alone. Measure it by preserved strength, improved skin texture, better daily structure, fewer symptoms, steadier energy, and the ability to maintain your habits when hunger returns.</div>
+</main><div class="ftr"><span></span><span>4</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Program rhythm</div><h1>Three-Phase Standard</h1><p class="dek">The guide is structured around active transformation, lifestyle transition, and clinician-guided exceptions.</p>
+<table class=""><thead><tr><th>Phase</th><th>Purpose</th><th>What changes</th></tr></thead><tbody><tr><td>Active Transformation</td><td>Structured weight-loss and body-composition phase.</td><td>More precision: protein targets, strength training, hydration, symptom tracking, skin support, and fewer trigger foods.</td></tr><tr><td>Lifestyle Phase</td><td>Transition into a sustainable, repeatable rhythm.</td><td>Less intensity, more stability: flexible social choices, maintenance calories, continued training, and proactive relapse prevention.</td></tr><tr><td>Clinician-Guided Exceptions</td><td>Personalization for medical needs, history, side effects, culture, schedule, or contraindications.</td><td>Your clinician guidance comes first. Any exception should be intentional, documented, and supportive of your health.</td></tr></tbody></table>
+<div class="grid three mt">
+<div class="card"><h3>Assess</h3><p>Intake, goals, contraindications, lifestyle context, body-skin concerns, and baseline metrics.</p></div>
+<div class="card"><h3>Treat</h3><p>Medication when clinically appropriate, nutrition structure, strength plan, skin pathway, symptom support.</p></div>
+<div class="card"><h3>Maintain</h3><p>Stable routines, reduced dependency on appetite suppression, maintenance calories, relapse prevention, skin support.</p></div>
+</div>
+</main><div class="ftr"><span></span><span>5</span><span>PYPER BODY</span></div></section><section class="page dark section"><main>
+<div class="section-art"><div class="ring"></div><div class="panel"></div></div>
+<div class="divider-copy">
+<div class="kicker ondark">PILLAR 01</div>
+<h1>The Medication Window</h1>
+<p class="dek">Use the quiet appetite phase to build the structure that keeps working later.</p>
+</div>
+</main></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Pillar 01</div><h1>What GLP-1s Do</h1><p class="dek">In everyday language, they may help reduce appetite, slow digestion, improve fullness, and make food noise feel quieter.</p>
+<div class="grid two">
+<div class="card"><h3>What they can support</h3><p><ul><li>Feeling satisfied sooner and for longer after meals.</li><li>Reduced hunger signals and less mental chatter around food.</li><li>Improved consistency with protein, hydration, and meal structure.</li><li>A window to rebuild habits while appetite is less dominant.</li></ul></p></div>
+<div class="card"><h3>What they do not do alone</h3><p><ul><li>They do not build muscle - resistance training and adequate protein do that.</li><li>They do not guarantee skin tightening.</li><li>They do not create long-term habits automatically.</li><li>They do not replace clinical supervision.</li></ul></p></div>
+</div>
+<div class="standard mt"><b>PYPER Standard</b><p>Treat the medication as a window, not the whole transformation. The habits built during appetite suppression are the habits that protect maintenance later.</p></div>
+</main><div class="ftr"><span></span><span>7</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Medication guardrails</div><h1>Dose Rhythm, Tolerance &amp; Questions</h1><p class="dek">Your provider determines medication, dose, pace, contraindications, and changes.</p>
+<div class="grid two">
+<div class="card"><h3>Medication reminders</h3><p>Follow your prescription exactly. Do not double dose, accelerate dose changes, or restart after a gap without clinician guidance.</p></div>
+<div class="card"><h3>Bring to check-in</h3><p>Dose day, missed doses, appetite level, side effects, hydration, constipation, reflux, mood, training, and body-skin changes.</p></div>
+</div>
+<h2>Side-effect tracking language</h2>
+<p>Members should track symptoms plainly and early. Nausea, constipation, reflux, abdominal pain, dehydration, dizziness, mood changes, and medication uncertainty belong in the clinician conversation. Do not wait for a scheduled check-in if symptoms feel serious.</p>
+<div class="quote smallq">Quiet appetite is useful. Silent symptoms are not. Track early, ask early, adjust safely.</div>
+</main><div class="ftr"><span></span><span>8</span><span>PYPER BODY</span></div></section><section class="page dark section"><main>
+<div class="section-art"><div class="ring"></div><div class="panel"></div></div>
+<div class="divider-copy">
+<div class="kicker ondark">PILLAR 02</div>
+<h1>Body Composition</h1>
+<p class="dek">Slower loss. Stronger tissue. Better shape. More sustainable results.</p>
+</div>
+</main></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Pillar 02</div><h1>The Speed Problem</h1><p class="dek">Faster is not always better. Rapid weight loss can increase the risk of muscle loss, facial volume changes, fatigue, hair shedding, loose-skin appearance, and poor recovery. PYPER prioritizes steady body-composition change over dramatic scale drops.</p>
+<div class="notice"><b>Target pace:</b> A commonly used target during active transformation is a steady, sustainable rate of loss, often around 1-2 lb per week for many people. Your clinician may adjust this based on your starting point, medical history, side effects, and goals.</div>
+<div class="grid two mt">
+<div class="card"><h3>Why muscle matters</h3><ul><li>Supports resting metabolic rate and functional strength.</li><li>Gives the body shape as fat decreases.</li><li>Supports posture, stability, and long-term independence.</li><li>Can make maintenance easier after appetite returns.</li></ul></div>
+<div class="card"><h3>Body-composition rules</h3><ul><li>Protein first at every meal.</li><li>Strength training is scheduled, not optional, unless your clinician advises otherwise.</li><li>Do not undereat just because appetite is low.</li><li>Hydration, electrolytes, fiber, and sleep are part of the plan, not extras.</li><li>Use measurements, photos, clothing fit, energy, and strength - not scale weight alone.</li></ul></div>
+</div>
+<div class="standard mt"><b>Protein framework</b><p>A practical target many members discuss with their clinician is approximately 0.8-1.0 gram of protein per pound of target body weight daily. This is a framework, not a medical prescription. Adjust based on kidney function, dietary restrictions, history, and clinician guidance.</p></div>
+<div class="fillband"><h3>Weekly body-composition check</h3><p>Do not wait for the scale to explain the full story. Review the pattern once weekly, then bring the trend to check-ins.</p><div class="fillgrid"><div><b>Strength</b><span>Are lifts, reps, or control holding?</span></div><div><b>Measurements</b><span>Waist, hip, thigh, arm, clothing fit.</span></div><div><b>Recovery</b><span>Sleep, soreness, energy, constipation.</span></div><div><b>Skin</b><span>Dryness, laxity, irritation, acne, pigment.</span></div></div></div>
+</main><div class="ftr"><span></span><span>10</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Nutrition architecture</div><h1>High-Protein Meal Framework</h1><p class="dek">Simple meals reduce decision fatigue and protect lean tissue.</p>
+<table class=""><thead><tr><th>Meal</th><th>Elevated formula</th><th>Example</th></tr></thead><tbody><tr><td>Breakfast</td><td>Protein + fiber + healthy fat</td><td>Eggs with turkey sausage and avocado, or Greek yogurt with protein powder and berries.</td></tr><tr><td>Lunch</td><td>Lean protein + large vegetable base + olive oil</td><td>Grilled chicken salad with avocado and olive oil-lemon dressing.</td></tr><tr><td>Dinner</td><td>Protein anchor + cooked vegetables + optional smart carb</td><td>Salmon with asparagus and a small sweet potato after training.</td></tr><tr><td>Snack</td><td>Only if needed to hit protein</td><td>Cottage cheese, tuna packet, protein shake, hard-boiled eggs, or jerky with clean ingredients.</td></tr></tbody></table>
+<div class="grid two mt">
+<div class="card"><h3>Easy breakfasts</h3><p><ul><li>3-4 eggs with turkey sausage and avocado.</li><li>Greek yogurt with protein powder, berries, and nuts.</li><li>Protein shake with almond milk, spinach, and almond butter.</li><li>Egg-white omelet with vegetables and cheese.</li></ul></p></div>
+<div class="card"><h3>Lunch &amp; dinner anchors</h3><p><ul><li>Chicken breast or thighs with a large salad.</li><li>Ground beef lettuce wraps with guacamole.</li><li>Salmon or white fish with vegetables.</li><li>Steak with asparagus or green beans.</li></ul></p></div>
+</div>
+<div class="notice mt"><b>If appetite is very low:</b> Eat on schedule rather than waiting for hunger. Use liquid nutrition when needed: protein shakes, Greek yogurt bowls, smoothies, or soft foods that are easier to tolerate.</div>
+</main><div class="ftr"><span></span><span>11</span><span>PYPER BODY</span></div></section><section class="page dark section"><main>
+<div class="section-art"><div class="ring"></div><div class="panel"></div></div>
+<div class="divider-copy">
+<div class="kicker ondark">PILLAR 03</div>
+<h1>Metabolic Nutrition</h1>
+<p class="dek">Precise, anti-inflammatory, protein-led eating without diet-culture chaos.</p>
+</div>
+</main></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Pillar 03</div><h1>The PYPER Nutrition Standard</h1><p class="dek">The goal is to reduce decision fatigue and protect results.</p>
+<div class="grid two">
+<div class="card"><h3>Prioritize</h3><p><ul><li>High-quality protein at every meal: eggs, poultry, fish, lean beef, Greek yogurt, cottage cheese, tofu, or clinician-approved options.</li><li>Vegetables daily, especially leafy greens, cruciferous vegetables, peppers, cucumber, zucchini, asparagus, and green beans.</li><li>Healthy fats in intentional portions: avocado, olive oil, nuts, seeds, ghee, or grass-fed butter if tolerated.</li><li>Smart carbs when useful for training, energy, or maintenance: sweet potato, quinoa, fruit, certified gluten-free oats, or approved choices.</li></ul></p></div>
+<div class="card"><h3>Reduce or avoid during active transformation</h3><p><ul><li>Sugary foods and drinks, especially liquid sugar and desserts that trigger cravings.</li><li>Fried foods and heavy meals that can worsen nausea or reflux.</li><li>Highly processed packaged foods with long ingredient lists.</li><li>Alcohol, especially during dose escalation or active fat-loss phases.</li><li>Foods that personally worsen digestion, bloating, skin, cravings, or energy.</li></ul></p></div>
+</div>
+<div class="quote smallq">This is not about moralizing food. It is about choosing foods that make the medication easier to tolerate and the transformation easier to maintain.</div>
+</main><div class="ftr"><span></span><span>13</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Food order</div><h1>Meal Structure &amp; Decision Flow</h1><p class="dek">Use a repeatable order when hunger signals are quiet or unpredictable.</p>
+<table class=""><thead><tr><th>Order</th><th>What to do</th><th>Why it helps</th></tr></thead><tbody><tr><td>1</td><td>Protein first</td><td>Protects muscle and improves satiety.</td></tr><tr><td>2</td><td>Vegetables second</td><td>Adds volume, fiber, micronutrients, and digestive support.</td></tr><tr><td>3</td><td>Healthy fats intentionally</td><td>Supports satisfaction and skin quality without accidental excess.</td></tr><tr><td>4</td><td>Smart carbs strategically</td><td>Use around training, energy needs, menstrual cycle, travel, or maintenance.</td></tr></tbody></table>
+<div class="grid three mt">
+<div class="card"><h3>Plate anchor</h3><p>Each meal begins with a protein decision before anything else.</p></div>
+<div class="card"><h3>Tolerance check</h3><p>Choose simpler preparations when nausea, reflux, or constipation appear.</p></div>
+<div class="card"><h3>Maintenance bridge</h3><p>Build meals that can survive after appetite returns.</p></div>
+</div>
+<div class="standard mt"><b>PYPER language shift</b><p>No good-food/bad-food drama. The question is: does this choice support tolerance, energy, skin, muscle, and maintenance?</p></div>
+</main><div class="ftr"><span></span><span>14</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Hydration + digestion</div><h1>Start Early, Not After Symptoms</h1><p class="dek">GLP-1s can slow gastric emptying, which may increase constipation, nausea, reflux, and early fullness.</p>
+<div class="grid two">
+<div class="card"><h3>Daily hydration rhythm</h3><p><ul><li>Start the morning with water before coffee.</li><li>Sip steadily throughout the day instead of chugging large amounts at once.</li><li>Add sugar-free electrolytes when active, sweating, traveling, or feeling depleted.</li><li>Pair fiber with sufficient water to avoid worsening constipation.</li></ul></p></div>
+<div class="card"><h3>Digestive support basics</h3><p><ul><li>Prioritize protein that is easier to tolerate.</li><li>Choose cooked vegetables when raw foods feel heavy.</li><li>Walk after meals to support digestion.</li><li>Discuss fiber, magnesium, stool softeners, or anti-nausea support with your clinician if needed.</li></ul></p></div>
+</div>
+<div class="notice mt"><b>Constipation warning:</b> Do not normalize severe constipation, inability to hydrate, significant abdominal pain, or repeated vomiting. These are clinician conversations.</div>
+</main><div class="ftr"><span></span><span>15</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Template</div><h1>Sample Weekly Meal Plan</h1><p class="dek">Use this as a flexible structure. Adjust portions, ingredients, and timing based on clinician guidance, appetite, training, and tolerance.</p>
+<table class="compact"><thead><tr><th>Day</th><th>Breakfast</th><th>Lunch</th><th>Dinner</th><th>Protein snack</th></tr></thead><tbody><tr><td>Mon</td><td>Eggs, turkey sausage, avocado</td><td>Chicken salad with EVOO</td><td>Burger bowl with broccoli</td><td>Greek yogurt</td></tr><tr><td>Tue</td><td>Protein smoothie</td><td>Turkey lettuce wraps</td><td>Salmon, asparagus, sweet potato</td><td>Cottage cheese</td></tr><tr><td>Wed</td><td>Greek yogurt bowl</td><td>Steak salad</td><td>Chicken thighs, zucchini</td><td>Protein shake</td></tr><tr><td>Thu</td><td>Egg-white omelet</td><td>Tuna cucumber bowl</td><td>Lean beef, green beans</td><td>Hard-boiled eggs</td></tr><tr><td>Fri</td><td>Eggs and avocado</td><td>Chicken soup, extra protein</td><td>Shrimp, cauliflower rice</td><td>Jerky + nuts</td></tr><tr><td>Sat</td><td>Protein coffee + eggs</td><td>Turkey burger salad</td><td>White fish, vegetables</td><td>Greek yogurt</td></tr><tr><td>Sun</td><td>Omelet + greens</td><td>Leftover protein bowl</td><td>Steak or salmon + salad</td><td>Protein shake</td></tr></tbody></table>
+<div class="notice mt"><b>Use the plan as a rhythm, not a prison.</b> Swap proteins, adjust carbs, simplify meals during side effects, and bring recurring tolerance issues to your provider.</div>
+</main><div class="ftr"><span></span><span>16</span><span>PYPER BODY</span></div></section><section class="page dark section"><main>
+<div class="section-art"><div class="ring"></div><div class="panel"></div></div>
+<div class="divider-copy">
+<div class="kicker ondark">PILLAR 04</div>
+<h1>Dining, Travel &amp; Social Protocols</h1>
+<p class="dek">Confidence without apologies. Preparation without rigidity.</p>
+</div>
+</main></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Pillar 04</div><h1>Eating Out</h1><p class="dek">Restaurants become easier when you know the order: protein, vegetables, sauce on the side, and modifications without apology. During active transformation, choose simple preparations and ask how food is cooked.</p>
+<table class="compact"><thead><tr><th>Cuisine</th><th>Order</th><th>Modify / avoid</th></tr></thead><tbody>
+<tr><td>Steakhouse</td><td>Steak, grilled fish, shrimp cocktail, vegetables, side salad.</td><td>Skip bread basket, fried sides, heavy sauces. Ask for olive oil, butter, or no oil.</td></tr>
+<tr><td>Mediterranean</td><td>Grilled chicken or fish, Greek salad, vegetables, tzatziki if tolerated.</td><td>Limit pita, rice, sweet sauces, and heavy spreads if they trigger cravings or reflux.</td></tr>
+<tr><td>Sushi / Japanese</td><td>Sashimi, edamame, miso soup, cucumber salad, grilled fish.</td><td>Avoid tempura, sugary sauces, and rice-heavy rolls during active transformation.</td></tr>
+<tr><td>Mexican</td><td>Fajita plate, carne asada salad, guacamole with vegetables.</td><td>Skip tortillas, chips, rice, beans if they trigger symptoms.</td></tr>
+<tr><td>American casual</td><td>Burger bowl, grilled chicken salad, steak and eggs, omelet.</td><td>Lettuce wrap, vegetables instead of fries, dressing on the side.</td></tr>
+<tr><td>Fast casual</td><td>Bowl with double protein, lettuce, vegetables, guacamole, salsa.</td><td>Avoid tortillas, chips, high-sugar sauces, and heavy dairy if not tolerated.</td></tr>
+</tbody></table>
+<div class="phonecard"><div class="tag ondark">Server card language</div><p>Medical dietary restrictions: please grill or bake protein simply. No breading, no flour, no sugary sauce. Dressing on the side. Olive oil, avocado oil, or butter if possible. Thank you.</p></div>
+</main><div class="ftr"><span></span><span>18</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">On the move</div><h1>Travel Protocols</h1><p class="dek">Travel should not erase the system. Make the default choices easy before hunger, delays, or social pressure take over.</p>
+<div class="grid two">
+<div class="card"><h3>Road trips</h3><p><ul><li>Pack a cooler with cooked protein, eggs, Greek yogurt, vegetables, nuts, and water.</li><li>Stop every 3-4 hours to walk and eat slowly.</li><li>Use gas stations for water, ice, and bathroom breaks - not as your meal plan.</li></ul></p></div>
+<div class="card"><h3>Flights</h3><p><ul><li>Carry protein you tolerate: jerky, protein packets, nuts, tuna packets, or a clean protein bar.</li><li>Hydrate before boarding and avoid arriving depleted.</li><li>Walk during layovers when possible.</li><li>Keep medication storage instructions and supplies organized.</li></ul></p></div>
+<div class="card"><h3>Hotels</h3><p><ul><li>Request a fridge when possible.</li><li>Find a nearby grocery store before arrival.</li><li>Keep simple proteins available for morning and late night.</li></ul></p></div>
+<div class="card"><h3>Social events</h3><p><ul><li>Eat protein before you arrive if the menu is uncertain.</li><li>Choose one intentional indulgence rather than grazing through everything.</li><li>Practice calm declines. You do not owe a medical explanation.</li></ul></p></div>
+</div>
+</main><div class="ftr"><span></span><span>19</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Social protocol</div><h1>Events, Holidays &amp; Family Meals</h1><p class="dek">Food-centered moments need a plan that is calm, not dramatic. The goal is to stay aligned without making your body, medication, or appetite the topic of the room.</p>
+<div class="grid two">
+<div class="card"><h3>Before you go</h3><ul><li>Eat a protein-forward meal before the event if the menu is uncertain.</li><li>Bring a dish you can eat without making it the center of attention.</li><li>Hydrate before alcohol, travel, or long dinners.</li><li>Decide what is worth it before you are tired, hungry, or pressured.</li></ul></div>
+<div class="card"><h3>At the event</h3><ul><li>Choose protein and vegetables first.</li><li>Use simple responses: "No thank you," "I already ate," or "That does not work for me today."</li><li>Attend for people and memories, not pressure to eat or drink.</li><li>In Lifestyle Phase, choose intentional flexibility instead of grazing.</li></ul></div>
+</div>
+<div class="standard mt"><b>Social pressure script</b><p>No thank you is a complete sentence. You do not owe a debate about your body, your medication, your appetite, or your food choices.</p></div>
+<div class="notice mt"><b>Alcohol note:</b> Alcohol can worsen nausea, reflux, dehydration, poor sleep, cravings, and medication tolerance for some members. Use clinician guidance, especially during dose escalation or active fat-loss phases.</div>
+</main><div class="ftr"><span></span><span>20</span><span>PYPER BODY</span></div></section><section class="page dark section"><main>
+<div class="section-art"><div class="ring"></div><div class="panel"></div></div>
+<div class="divider-copy">
+<div class="kicker ondark">PILLAR 05</div>
+<h1>Supplements, Strength &amp; Movement</h1>
+<p class="dek">Support the foundation: protein, hydration, training, recovery, and consistency.</p>
+</div>
+</main></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Supplements</div><h1>Supplement Framework</h1><p class="dek">Supplements can support gaps, but they should never replace food, sleep, hydration, strength training, or medical guidance.</p>
+<div class="notice"><b>Safety standard:</b> Discuss any supplement with your clinician, especially if pregnant, breastfeeding, on medication, have kidney/liver disease, or have a history of eating disorders or psychiatric symptoms.</div>
+<table><thead><tr><th>Tier</th><th>Options to discuss</th><th>Purpose</th></tr></thead><tbody>
+<tr><td>Foundational</td><td>Protein powder, multivitamin, omega-3, vitamin D3/K2, magnesium.</td><td>Protein support, micronutrient baseline, sleep and regularity support.</td></tr>
+<tr><td>Optimization</td><td>Collagen, probiotic, fiber, electrolytes.</td><td>Skin, gut, hydration, bowel regularity, and satiety support.</td></tr>
+<tr><td>Performance</td><td>Creatine, L-theanine, ashwagandha, digestive enzymes.</td><td>Strength, calm focus, stress response, and meal tolerance support for appropriate members.</td></tr>
+</tbody></table>
+<div class="standard mt"><b>Quality note</b><p>Supplement quality, dosing, and interactions matter. Use the appendix timing chart as a conversation starter with your clinician, not as a prescription.</p></div>
+</main><div class="ftr"><span></span><span>22</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Strength</div><h1>The Body-Composition Backbone</h1><p class="dek">Strength training is scheduled, not optional, unless your clinician advises otherwise.</p>
+<div class="grid two">
+<div class="card"><h3>Progressive overload</h3><p>Track your lifts. When form is strong and the same weight feels manageable for multiple sessions, gradually increase reps or weight. Small progression builds muscle over time.</p></div>
+<div class="card"><h3>If you are new</h3><p>If you have injuries, are postpartum, have medical conditions, or are significantly deconditioned, get clearance and start with a trainer or clinician-approved plan.</p></div>
+</div>
+<table class="compact"><thead><tr><th>Day</th><th>Focus</th><th>Exercises</th></tr></thead><tbody><tr><td>Day 1</td><td>Legs - quad focus</td><td>Squat or leg press, split squat, leg extension, calf raise, core.</td></tr><tr><td>Day 2</td><td>Upper push/pull</td><td>Chest press, row, shoulder press, lat pulldown, triceps, biceps.</td></tr><tr><td>Day 3</td><td>Legs - glute/hamstring</td><td>Romanian deadlift, hip thrust, hamstring curl, lunge, core.</td></tr><tr><td>Day 4</td><td>Full body</td><td>Deadlift pattern, incline press, cable row, step-up, carry.</td></tr><tr><td>Day 5</td><td>Optional conditioning</td><td>Incline walk, Zone 2 cardio, mobility, Pilates, or recovery work.</td></tr></tbody></table>
+</main><div class="ftr"><span></span><span>23</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Movement</div><h1>Pilates + Low-Impact Cardio</h1><p class="dek">Pilates complements strength training. It is not a replacement for progressive loading, but it can refine how the body moves and feels.</p>
+<div class="grid two">
+<div class="card"><h3>Reformer Pilates</h3><p><ul><li>2-3 sessions weekly if recovery allows.</li><li>Prioritize control over intensity.</li><li>Useful for posture, glutes, core, and low-impact strength.</li></ul></p></div>
+<div class="card"><h3>Mat Pilates</h3><p><ul><li>Good for travel, home consistency, and core control.</li><li>Use it as a bridge on low-energy weeks.</li><li>Do not let it crowd out strength sessions if muscle preservation is the goal.</li></ul></p></div>
+<div class="card"><h3>Walking</h3><p><ul><li>10-20 minutes after meals can support digestion and glucose steadiness.</li><li>Daily steps build consistency without overloading recovery.</li><li>Use walking as nervous-system support, not punishment.</li></ul></p></div>
+<div class="card"><h3>Recovery cardio</h3><p><ul><li>Zone 2 cardio can support health and endurance.</li><li>Avoid using intense cardio to compensate for eating.</li><li>Energy, sleep, and strength performance tell you if volume is too high.</li></ul></p></div>
+</div>
+</main><div class="ftr"><span></span><span>24</span><span>PYPER BODY</span></div></section><section class="page dark section"><main>
+<div class="section-art"><div class="ring"></div><div class="panel"></div></div>
+<div class="divider-copy">
+<div class="kicker ondark">PILLAR 06</div>
+<h1>Skin &amp; Body Refinement</h1>
+<p class="dek">A clinical body-care approach to texture, tone, laxity, pigmentation, and confidence.</p>
+</div>
+</main></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Pillar 06</div><h1>Skin + Body Changes During Weight Loss</h1><p class="dek">Your skin is an organ, not an afterthought.</p>
+<table class="compact"><thead><tr><th>Concern</th><th>What may happen</th><th>PYPER support</th></tr></thead><tbody><tr><td>Dryness</td><td>Skin may feel drier as intake and body composition shift.</td><td>Moisturize twice daily, use barrier-supportive ingredients, hydrate, and include healthy fats if appropriate.</td></tr><tr><td>Texture/KP</td><td>Rough bumps may feel more visible as skin changes.</td><td>Use gradual exfoliation, hydration, and clinician-directed texture care.</td></tr><tr><td>Pigmentation</td><td>Marks may become more noticeable during body changes or friction.</td><td>Use sunscreen on exposed areas, avoid picking, reduce friction, and follow pigment pathway instructions.</td></tr><tr><td>Body acne</td><td>Sweat, occlusion, training, and hormone shifts can trigger flares.</td><td>Shower after sweating, use breathable clothing, and follow acne pathway if prescribed.</td></tr><tr><td>Laxity</td><td>Rapid loss can make laxity more visible.</td><td>Prioritize protein, strength training, hydration, time, and professional treatment timing when appropriate.</td></tr></tbody></table>
+<div class="quote smallq">The goal is not perfect skin. The goal is supported skin while the body changes.</div>
+</main><div class="ftr"><span></span><span>26</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Routine</div><h1>The PYPER Body-Care Routine</h1><p class="dek">Clinical, below-the-neck, and concern-led. Prescription actives should be used only as directed by the prescribing clinician.</p>
+<div class="grid two">
+<div class="card"><h3>AM routine</h3><p><ul><li>Cleanse with a gentle, fragrance-free body wash.</li><li>Pat dry. Do not aggressively rub.</li><li>Apply antioxidant or brightening support where appropriate.</li><li>Use SPF 30+ on exposed skin every day.</li></ul></p></div>
+<div class="card"><h3>PM routine</h3><p><ul><li>Cleanse after sweating or training.</li><li>Apply prescribed body treatment only to directed areas.</li><li>Wait as instructed before layering moisturizer if actives irritate.</li><li>Use barrier support on dry, peeling, or sensitive areas.</li></ul></p></div>
+<div class="card"><h3>Treatment discipline</h3><p><ul><li>Do not use more product to speed results.</li><li>Do not apply strong actives to folds or sensitive areas unless directed.</li><li>Pause and contact your clinician if severe irritation, rash, swelling, burning, or signs of infection occur.</li></ul></p></div>
+<div class="card"><h3>Lifestyle support</h3><p><ul><li>Reduce friction where possible.</li><li>Change sweaty clothes quickly.</li><li>Use gentle laundry products if irritation-prone.</li><li>Protect sleep, protein, hydration, and healthy fats.</li></ul></p></div>
+</div>
+</main><div class="ftr"><span></span><span>27</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Architecture</div><h1>PYPER Body-Care Pathways</h1><p class="dek">A clear member-facing view of the product logic without turning education into a formula document.</p>
+<table class="compact tiny"><thead><tr><th>Pathway</th><th>Member-facing logic</th><th>Clinical guardrail</th></tr></thead><tbody><tr><td>Pigment</td><td>Pigment Rx may move to Pigment Rx+ only when clinician escalation is appropriate. Pigment Maintain supports non-hydroquinone maintenance after active cycles.</td><td>Hydroquinone cycles require surface-area limits, washout periods, sunscreen discipline, and no unsupervised back-to-back cycles.</td></tr><tr><td>Acne</td><td>Acne Rx supports body acne, ingrowns, and follicular bumps. Acne Rx+ is for stubborn inflammatory cases. Acne Maintain supports recurrence prevention.</td><td>Antibiotic-containing escalation requires provider evaluation and should not be treated like automatic refill.</td></tr><tr><td>Texture</td><td>Texture Rx and Rx+ address KP, strawberry skin, and rough bumps. Texture Maintain supports smoothing after improvement.</td><td>Acids and high-urea formulas can irritate sensitive or fold areas; introduction should be gradual.</td></tr><tr><td>Stretch</td><td>Stretch Rx and Rx+ support the appearance of stretch-marked skin. Stretch Maintain is the non-retinoid support route.</td><td>Retinoid formulas are not appropriate for pregnancy or breastfeeding; avoid removal or erasure claims.</td></tr><tr><td>Calm</td><td>Calm Rx treats eczema flares; Calm Rx+ is reserved for severe flares; Calm Rx-AB is antibacterial support when clinically appropriate.</td><td>Steroid potency, body-zone limits, tapering, and short-cycle discipline matter.</td></tr><tr><td>Recover</td><td>Recover and Recover Intensive support dryness, peeling, sensitivity, and compromised barrier.</td><td>Recover products are supportive and not substitutes for care when eczema, infection, allergy, or severe irritation is present.</td></tr></tbody></table>
+</main><div class="ftr"><span></span><span>28</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Procedures</div><h1>Aesthetic Treatment Timing</h1><p class="dek">Treatments can refine results, but timing matters.</p>
+<table class="compact"><thead><tr><th>Treatment type</th><th>Best suited for</th><th>Timing note</th></tr></thead><tbody><tr><td>RF microneedling</td><td>Texture, mild laxity, collagen stimulation.</td><td>Often better after body changes slow or stabilize.</td></tr><tr><td>Ultrasound or RF tightening</td><td>Face, neck, or selected body laxity.</td><td>Consider after weight trajectory is clearer.</td></tr><tr><td>Laser / IPL</td><td>Pigment, redness, selected texture concerns.</td><td>Requires professional assessment and sun discipline.</td></tr><tr><td>Body contouring</td><td>Localized fat or contour concerns.</td><td>Best when weight is stable and expectations are realistic.</td></tr><tr><td>Surgery consult</td><td>Significant laxity or excess skin.</td><td>Typically after weight stability; consult qualified surgeon.</td></tr></tbody></table>
+<div class="notice mt"><b>PYPER framing:</b> Procedures are not a failure of lifestyle. They are tools. The right time is when your body is stable enough for the investment to make sense.</div>
+</main><div class="ftr"><span></span><span>29</span><span>PYPER BODY</span></div></section><section class="page dark section"><main>
+<div class="section-art"><div class="ring"></div><div class="panel"></div></div>
+<div class="divider-copy">
+<div class="kicker ondark">PILLAR 07</div>
+<h1>Recovery, Mindset &amp; Maintenance</h1>
+<p class="dek">The quieter work that keeps the visible work from collapsing.</p>
+</div>
+</main></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Recovery</div><h1>Sleep, Stress &amp; Cortisol</h1><p class="dek">Poor sleep and chronic stress can increase cravings, reduce recovery, worsen mood, affect hormones, and make training feel harder.</p>
+<div class="grid two">
+<div class="card"><h3>Recovery standards</h3><p><ul><li>Aim for a consistent sleep and wake schedule when possible.</li><li>Protect 7-9 hours of sleep as a serious health behavior.</li><li>Limit caffeine later in the day if it affects sleep.</li><li>Use breathwork, walking, journaling, therapy, or quiet time as nervous-system support.</li></ul></p></div>
+<div class="card"><h3>Signs recovery is slipping</h3><p><ul><li>Training performance drops for multiple sessions.</li><li>Mood becomes more reactive or flat.</li><li>Cravings return with poor sleep or stress.</li><li>Constipation, headaches, or dehydration become patterns.</li></ul></p></div>
+</div>
+<div class="standard mt"><b>Reframe</b><p>Recovery is not passive. It is the environment where body composition, skin quality, hormones, mood, and adherence can improve.</p></div>
+</main><div class="ftr"><span></span><span>31</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Tolerance support</div><h1>Nausea, Constipation &amp; Hair Shedding</h1><p class="dek">Common issues should be tracked early and discussed before they become patterns. This page gives members language for the check-in, not instructions to self-treat.</p>
+<div class="grid two">
+<div class="card"><h3>Nausea management</h3><ul><li>Eat smaller meals more frequently.</li><li>Avoid greasy, fried, and very heavy meals.</li><li>Do not lie down immediately after eating.</li><li>Try bland protein, cold foods, ginger, or peppermint tea if tolerated.</li><li>Contact your prescriber if nausea is severe, persistent, or prevents hydration.</li></ul></div>
+<div class="card"><h3>Constipation pattern</h3><ul><li>Review water, electrolytes, fiber, walking, meal volume, and medication timing.</li><li>Pair fiber with enough fluid.</li><li>Bring bowel frequency, pain, bloating, and vomiting notes to the clinician.</li><li>Do not normalize severe or prolonged constipation.</li></ul></div>
+<div class="card"><h3>Hair shedding</h3><ul><li>Rapid loss, low protein, stress, iron, thyroid, vitamin D, B12, and zinc may contribute.</li><li>Avoid aggressive calorie restriction.</li><li>Ask about labs if shedding is persistent or extreme.</li></ul></div>
+<div class="card"><h3>Appetite too low</h3><ul><li>Use scheduled meals instead of waiting for hunger.</li><li>Lean on tolerated liquid nutrition when needed.</li><li>Flag inability to meet protein, hydration, or medication tolerance goals.</li></ul></div>
+</div>
+</main><div class="ftr"><span></span><span>32</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Mindset</div><h1>Mental Health + Body Image</h1><p class="dek">Rapid body change can bring confidence, but it can also bring anxiety, comparison, fear of regain, body dysmorphia, and mood changes.</p>
+<div class="notice"><b>Seek support immediately:</b> Contact your clinician or emergency resources if you experience suicidal thoughts, severe depression, inability to function, panic symptoms, or concerning mood changes. Do not wait for a scheduled check-in if symptoms feel serious.</div>
+<div class="grid two mt">
+<div class="card"><h3>Body image standards</h3><p><ul><li>Limit before-and-after scrolling if it causes comparison.</li><li>Use monthly photos as objective data, not punishment.</li><li>Do not let the scale become the only evidence of progress.</li><li>Notice strength, clothing fit, energy, skin tolerance, and consistency.</li></ul></p></div>
+<div class="card"><h3>Identity transition</h3><p><ul><li>You may need time to adjust to a changing body.</li><li>Compliments can feel complicated.</li><li>Fear of regain is common and should be discussed.</li><li>Maintenance is not the end of support.</li></ul></p></div>
+</div>
+</main><div class="ftr"><span></span><span>33</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Tracking standard</div><h1>The Progress Dashboard</h1><p class="dek">The scale is one data point, not the identity of your transformation. PYPER prioritizes a broader dashboard that reflects muscle, skin, energy, mood, and tolerance.</p>
+<table><thead><tr><th>Track instead</th><th>Frequency</th><th>Why</th></tr></thead><tbody>
+<tr><td>Measurements</td><td>Weekly or biweekly</td><td>Shows inch changes and body-composition shifts.</td></tr>
+<tr><td>Progress photos</td><td>Monthly</td><td>Creates an objective visual record without daily judgment.</td></tr>
+<tr><td>Strength</td><td>Each workout</td><td>Shows muscle preservation and progression.</td></tr>
+<tr><td>Energy / mood</td><td>Daily quick rating</td><td>Reveals recovery and medication tolerance.</td></tr>
+<tr><td>Side effects</td><td>Weekly</td><td>Helps clinician adjust care.</td></tr>
+</tbody></table>
+<div class="grid two mt"><div class="card"><h3>Photo protocol</h3><p>Use the same lighting, distance, clothing, and angles. Review monthly, not daily. The goal is data, not self-criticism.</p></div><div class="card"><h3>Scale protocol</h3><p>Use trends, not emotional reactions to one weigh-in. Hydration, cycle changes, salt, constipation, and training can all shift weight temporarily.</p></div></div>
+</main><div class="ftr"><span></span><span>34</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Safety</div><h1>Red Flags</h1><p class="dek">Trust your instincts. If something feels seriously wrong, seek medical attention.</p>
+<table class=""><thead><tr><th>Contact clinician promptly</th><th>Seek urgent / emergency help</th></tr></thead><tbody><tr><td>Persistent or severe nausea, vomiting, inability to hydrate, severe constipation, significant abdominal pain, gallbladder-type symptoms, worsening depression or anxiety, vision changes, rapid resting heart rate, medication uncertainty.</td><td>Difficulty breathing or swallowing, chest pain, fainting or loss of consciousness, signs of severe allergic reaction, severe abdominal pain with vomiting, suicidal thoughts or immediate mental-health crisis.</td></tr></tbody></table>
+<div class="grid three mt">
+<div class="card"><h3>Do not troubleshoot alone</h3><p>Medication symptoms deserve clinician review, especially when symptoms interfere with eating, hydration, sleep, mood, or daily functioning.</p></div>
+<div class="card"><h3>Document clearly</h3><p>Track timing, dose day, what changed, severity, hydration, constipation, food, alcohol, travel, and supplements.</p></div>
+<div class="card"><h3>Escalate fast</h3><p>If symptoms feel severe, urgent, or unusual, do not wait for a routine check-in.</p></div>
+</div>
+</main><div class="ftr"><span></span><span>35</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Beyond medication</div><h1>Maintaining Beyond GLP-1</h1><p class="dek">Appetite may return when medication is reduced or stopped. This does not mean you failed. It means the training phase is over and your systems need to hold.</p>
+<div class="grid two">
+<div class="card"><h3>Maintenance defenses</h3><p><ul><li>Protein remains the anchor.</li><li>Strength training remains metabolic protection.</li><li>Meal structure prevents grazing and decision fatigue.</li><li>Sleep and stress management reduce cravings and impulsive eating.</li><li>Check-ins catch relapse patterns early.</li></ul></p></div>
+<div class="card"><h3>Transition signals</h3><p><ul><li>Weight trend stabilizes.</li><li>Training is consistent.</li><li>Meals feel repeatable.</li><li>Skin routine is tolerated.</li><li>Side effects are manageable or resolved.</li><li>You can handle travel, restaurants, and busy weeks without losing the thread.</li></ul></p></div>
+</div>
+<div class="quote smallq">Maintenance is not a softer phase. It is the skill that proves the transformation belongs to you.</div>
+</main><div class="ftr"><span></span><span>36</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Experience map</div><h1>Member Journey Map</h1><p class="dek">A premium transformation experience should show members when to do the work, not only what to do.</p>
+<table class="compact tiny"><thead><tr><th>Stage</th><th>Focus</th><th>Member actions</th><th>Clinician / support touchpoint</th></tr></thead><tbody><tr><td>Before start</td><td>Baseline and safety</td><td>Complete intake, measurements, photos, medication history, skin concerns, supplements, and training status.</td><td>Provider reviews eligibility, contraindications, treatment goals, and next steps.</td></tr><tr><td>Weeks 1-4</td><td>Tolerance and rhythm</td><td>Build protein, hydration, walking, meal order, symptom tracking, and body-care basics.</td><td>Dose/tolerance review and early side-effect support.</td></tr><tr><td>Months 2-4</td><td>Body composition</td><td>Progressive strength, consistent protein, skin pathway refinement, dining protocols.</td><td>Check-ins for dose, symptoms, progress, and treatment response.</td></tr><tr><td>Months 4-6+</td><td>Refinement</td><td>Adjust nutrition, training, body-skin care, travel/social systems, and photos.</td><td>Review progress, maintenance readiness, and next clinical decisions.</td></tr><tr><td>Maintenance</td><td>Stability</td><td>Use maintenance calories, strength anchors, skin maintenance, and relapse prevention.</td><td>Support tapering/continuation decisions and long-term planning.</td></tr></tbody></table>
+</main><div class="ftr"><span></span><span>37</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Check-in tool</div><h1>PYPER Check-In Dashboard</h1><p class="dek">Use this page before each clinician or member support check-in.</p>
+<table class="compact"><thead><tr><th>Area</th><th>What to review</th><th>Bring to check-in</th></tr></thead><tbody><tr><td>Medication</td><td>Dose, injection day, missed doses, side effects, appetite level.</td><td>Treatment tracker, side-effect notes, questions for prescriber.</td></tr><tr><td>Nutrition</td><td>Protein target, hydration, constipation prevention, food tolerance.</td><td>3-day food snapshot, protein average, digestion notes.</td></tr><tr><td>Training</td><td>Strength sessions, walking, Pilates, recovery, injuries.</td><td>Workout log, energy, soreness, performance changes.</td></tr><tr><td>Skin</td><td>Dryness, irritation, pigment, acne, texture, barrier status.</td><td>Photos, product use, application frequency, irritation timeline.</td></tr><tr><td>Mindset</td><td>Mood, stress, sleep, body image, social pressure.</td><td>Patterns, triggers, support needed, concerns that feel heavy.</td></tr><tr><td>Maintenance</td><td>Habits that feel automatic vs fragile.</td><td>Relapse points, travel/social plans, next-month priorities.</td></tr></tbody></table>
+<div class="notice mt"><b>Check-in principle:</b> Bring data, not shame. Data lets the provider adjust the plan.</div>
+</main><div class="ftr"><span></span><span>38</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Membership layer</div><h1>Member Support, Discord &amp; Partner Perks</h1><p class="dek">The guide should function as the manual for the full member experience: clinician-led care, structured education, community accountability, and real-life support.</p>
+<div class="grid two">
+<div class="card"><h3>Private member community</h3><p>Use the Discord for consistency prompts, body-skin education, guide discussions, training reminders, hydration reminders, partner perks, and accountability.</p></div>
+<div class="card"><h3>Medical boundary</h3><p>Medication questions, side effects, contraindications, dosing, prescription changes, and urgent symptoms go to the licensed provider, not the community.</p></div>
+<div class="card"><h3>Partner perks</h3><p>Restaurant, fitness, Pilates, recovery, wellness, and lifestyle perks should support the method without replacing the clinical plan.</p></div>
+<div class="card"><h3>Monthly rhythm</h3><p>Each month: update metrics, review symptoms, check skin tolerance, plan travel/social moments, refresh meals, and protect strength sessions.</p></div>
+</div>
+<div class="standard mt"><b>Member promise</b><p>Support should feel elevated and useful. The member should know what to do this week, what to track, when to ask for help, and how to maintain the result.</p></div>
+</main><div class="ftr"><span></span><span>39</span><span>PYPER BODY</span></div></section><section class="page dark section"><main>
+<div class="section-art"><div class="ring"></div><div class="panel"></div></div>
+<div class="divider-copy">
+<div class="kicker ondark">TOOLS </div>
+<h1>Appendices &amp; Member Tools</h1>
+<p class="dek">Print, track, review, repeat.</p>
+</div>
+</main></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Appendix A</div><h1>Complete 5-Day Workout Program</h1><p class="dek">Use as a template and modify for injury, experience level, equipment, and clinician/trainer guidance.</p>
+<table class="compact tiny"><thead><tr><th>Day</th><th>Exercise</th><th>Sets</th><th>Reps</th><th>Rest</th><th>Notes</th></tr></thead><tbody><tr><td>Day 1</td><td>Back squat or leg press</td><td>4</td><td>8-10</td><td>90s</td><td>Quad focus, controlled depth.</td></tr><tr><td>Day 1</td><td>Split squat</td><td>3</td><td>8-10/side</td><td>75s</td><td>Use support if needed.</td></tr><tr><td>Day 2</td><td>Chest press</td><td>4</td><td>8-10</td><td>90s</td><td>Strong shoulder position.</td></tr><tr><td>Day 2</td><td>Cable row</td><td>4</td><td>10-12</td><td>75s</td><td>Pause at contraction.</td></tr><tr><td>Day 3</td><td>Romanian deadlift</td><td>4</td><td>8-10</td><td>90s</td><td>Hinge, neutral spine.</td></tr><tr><td>Day 3</td><td>Hip thrust</td><td>4</td><td>10-12</td><td>75s</td><td>Full lockout, no rush.</td></tr><tr><td>Day 4</td><td>Lat pulldown</td><td>3</td><td>10-12</td><td>75s</td><td>Pull elbows down.</td></tr><tr><td>Day 4</td><td>Shoulder press</td><td>3</td><td>8-10</td><td>90s</td><td>No painful range.</td></tr><tr><td>Day 5</td><td>Incline walk or Zone 2</td><td>1</td><td>25-40 min</td><td>-</td><td>Easy breathing pace.</td></tr></tbody></table>
+</main><div class="ftr"><span></span><span>41</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Appendix B + C</div><h1>Supplement Timing &amp; Grocery List</h1><p class="dek">A practical shopping and timing reference for easier execution.</p>
+<table class="compact tiny"><thead><tr><th>Option</th><th>Suggested timing to discuss</th><th>Typical purpose</th><th>With food?</th></tr></thead><tbody>
+<tr><td>Protein powder</td><td>Morning or post-workout</td><td>Protein target support</td><td>Optional</td></tr>
+<tr><td>Multivitamin</td><td>Morning</td><td>Micronutrient baseline</td><td>Yes</td></tr>
+<tr><td>Omega-3</td><td>Morning or evening</td><td>Fatty acid support</td><td>Yes</td></tr>
+<tr><td>Vitamin D3/K2</td><td>Morning</td><td>Vitamin D support</td><td>Yes</td></tr>
+<tr><td>Collagen</td><td>Anytime</td><td>Skin and connective tissue support</td><td>Optional</td></tr>
+<tr><td>Fiber</td><td>Between meals</td><td>Regularity and satiety</td><td>With water</td></tr>
+<tr><td>Electrolytes</td><td>Throughout day</td><td>Hydration support</td><td>No</td></tr>
+<tr><td>Magnesium</td><td>Evening</td><td>Sleep and regularity support</td><td>Optional</td></tr>
+<tr><td>Creatine</td><td>Consistent daily timing</td><td>Strength and muscle support</td><td>Optional</td></tr>
+</tbody></table>
+<div class="grid two mt"><div class="card"><h3>Proteins + vegetables</h3><p>Chicken, turkey, lean beef, steak, fish, shrimp, eggs, Greek yogurt, cottage cheese, protein powder, tuna packets. Spinach, arugula, romaine, broccoli, cauliflower, Brussels sprouts, zucchini, asparagus, green beans, cucumber, bell peppers.</p></div><div class="card"><h3>Fats, smart carbs + pantry</h3><p>Avocado, olive oil, avocado oil, nuts, seeds, ghee or butter if tolerated. Sweet potatoes, quinoa, berries, certified GF oats if tolerated. Electrolytes, lemons, vinegar, herbs, salsa, mustard, jerky, sparkling water.</p></div></div>
+<div class="notice mt"><b>Safety note:</b> Supplement quality, dosing, and interactions matter. Use this chart as a conversation starter with your clinician, not as a prescription.</div>
+</main><div class="ftr"><span></span><span>42</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Appendix D + E</div><h1>Weekly Food &amp; Symptom Logs</h1><p class="dek">The missing tracker layer: food structure plus tolerability.</p>
+<table class="tracker"><thead><tr><th>Day</th><th>Meal 1</th><th>Protein</th><th>Meal 2</th><th>Protein</th><th>Meal 3</th><th>Protein</th><th>Hydration</th><th>Symptoms</th></tr></thead><tbody><tr><td>Mon</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Tue</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Wed</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Thu</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Fri</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Sat</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Sun</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table>
+<div class="grid two mt">
+<div class="card"><h3>Symptom scale</h3><p>0 = none, 1 = mild, 2 = moderate, 3 = severe. Track nausea, reflux, constipation, dizziness, abdominal pain, mood, and hydration.</p></div>
+<div class="card"><h3>Pattern notes</h3><p>Record dose day, travel, alcohol, new supplements, restaurant meals, stress, cycle phase, sleep, and training changes.</p></div>
+</div>
+</main><div class="ftr"><span></span><span>43</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Appendix F + G</div><h1>Workout &amp; Measurement Trackers</h1><p class="dek">The missing measurement page turns progress into a monthly review, not a daily judgment.</p>
+<table class="tracker"><thead><tr><th>Exercise</th><th>Week 1</th><th>Week 2</th><th>Week 3</th><th>Week 4</th><th>Notes</th></tr></thead><tbody><tr><td>Squat / leg press</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Bench / push</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Deadlift / hinge</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Row / pull</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Overhead press</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Hip thrust / glute</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Walk / Zone 2</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table>
+<div class="measuregrid mt">
+<div><b>Date</b><span></span></div><div><b>Weight trend</b><span></span></div><div><b>Waist</b><span></span></div><div><b>Hip</b><span></span></div><div><b>Arm</b><span></span></div><div><b>Thigh</b><span></span></div><div><b>Photos taken?</b><span></span></div><div><b>Skin notes</b><span></span></div>
+</div>
+</main><div class="ftr"><span></span><span>44</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Appendix H + I</div><h1>Restaurant Card &amp; Common Problems</h1><p class="dek">Quick-use scripts for real life.</p>
+<div class="phonecard">
+<div class="kicker">Copy into a phone note</div>
+<p>Dietary restrictions: Please keep preparation simple. I cannot have breading, flour, sugary sauces, or heavy dressings. Please grill or bake the protein if possible. Olive oil, avocado oil, or butter is preferred. Vegetables steamed, grilled, or plain. Dressing on the side. Thank you.</p>
+</div>
+<table class="compact tiny"><thead><tr><th>Problem</th><th>First checks</th><th>Next step</th></tr></thead><tbody><tr><td>Plateau</td><td>Protein, hydration, sleep, hidden calories, cycle phase, training consistency.</td><td>Review trend over 2-4 weeks; bring data to check-in.</td></tr><tr><td>Nausea</td><td>Meal size, fat load, fried foods, dehydration, dose day, speed of eating.</td><td>Simplify meals and contact clinician if persistent or severe.</td></tr><tr><td>Constipation</td><td>Water, electrolytes, fiber, walking, meal volume, magnesium discussion.</td><td>Contact clinician if severe, painful, prolonged, or paired with vomiting.</td></tr><tr><td>Low energy</td><td>Protein, calories, hydration, sleep, iron/B12/vitamin D discussion.</td><td>Adjust with clinician/provider support.</td></tr><tr><td>Skin irritation</td><td>Application amount, frequency, layering, friction, folds, sun exposure.</td><td>Pause as directed and contact clinician for significant irritation.</td></tr></tbody></table>
+</main><div class="ftr"><span></span><span>45</span><span>PYPER BODY</span></div></section><section class="page light"><div class="hdr"><span>PYPER METHOD</span><span>MEMBER GUIDE</span></div><main>
+<div class="kicker">Appendix J</div><h1>Emergency Meal Ideas</h1><p class="dek">Keep these ingredients stocked so busy days do not become unstructured days.</p>
+<table class="compact"><thead><tr><th>Time</th><th>Meal</th><th>Protein note</th></tr></thead><tbody><tr><td>5 min</td><td>Rotisserie chicken with pre-washed salad, olive oil, avocado.</td><td>Protein-forward, no cooking.</td></tr><tr><td>5 min</td><td>Tuna packets over greens with cucumber and olive oil mayo.</td><td>Easy travel or office option.</td></tr><tr><td>8 min</td><td>Greek yogurt, protein powder, berries, nuts.</td><td>Soft, high-protein, quick.</td></tr><tr><td>10 min</td><td>Egg scramble with spinach and turkey slices.</td><td>Breakfast or dinner fallback.</td></tr><tr><td>10 min</td><td>Shrimp with frozen vegetables and cauliflower rice.</td><td>Fast cooked option.</td></tr><tr><td>12 min</td><td>Turkey burger patties with bagged salad.</td><td>Simple dinner without decision fatigue.</td></tr></tbody></table>
+<div class="closing">
+<div class="kicker">PYPER METHOD</div>
+<h2>Build the body. Support the skin. Protect the result.</h2>
+<p>This is the member rhythm: assess, treat, support, maintain. Return to it whenever the process gets noisy.</p>
+</div>
+</main><div class="ftr"><span></span><span>46</span><span>PYPER BODY</span></div></section></body></html>
