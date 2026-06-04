@@ -53,7 +53,7 @@ export function Shell({
       {/* Desktop sidebar */}
       <aside className="hidden lg:flex flex-col w-64 shrink-0 border-r border-[var(--border)] bg-[var(--ivory)] px-6 py-8 sticky top-0 h-screen">
         <div className="mb-10">
-          <div className="mono-label mb-2">Interactive Guide</div>
+          <div className="mono-label mb-2">Interactive Guide + PWA</div>
           <div style={{ fontFamily: "var(--font-serif)" }} className="text-2xl tracking-tight">
             The PYPER Method
           </div>
@@ -90,7 +90,7 @@ export function Shell({
         {/* Mobile top bar */}
         <header className="lg:hidden sticky top-0 z-30 bg-[var(--porcelain)]/90 backdrop-blur border-b border-[var(--border)] px-5 py-3 flex items-center justify-between">
           <div>
-            <div className="mono-label">Interactive Guide</div>
+            <div className="mono-label">Interactive Guide + PWA</div>
             <div style={{ fontFamily: "var(--font-serif)" }} className="text-lg leading-none mt-0.5">
               The PYPER Method
             </div>
