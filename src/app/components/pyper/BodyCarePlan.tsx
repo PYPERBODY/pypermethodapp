@@ -1,6 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AlertTriangle, CalendarDays, Camera, CheckCircle2, ClipboardList, History, MessageSquarePlus, ShieldCheck, Sun } from "lucide-react";
 import { Surface } from "./Shell";
+import { useGuideAuth } from "../auth/AuthGate";
+import { backendUnavailableMessage, createUserRow, deleteUserRow, isBackendAvailable, listUserRows, updateUserRow, type GuideStorageRecord } from "../../../lib/secureGuideStorage";
 import { Slider } from "../ui/slider";
 import {
   BODY_AREA_ROUTINES,
@@ -108,6 +110,8 @@ export function BodyCarePlan() {
         </div>
       </Surface>
 
+      <SecureBodyCareStoragePanel />
+
       <Surface className="p-2 overflow-x-auto">
         <div className="flex gap-2 min-w-max">
           {SECTIONS.map((item) => (
@@ -134,6 +138,230 @@ export function BodyCarePlan() {
       {section === "history" && <PlanHistory />}
     </div>
   );
+}
+
+function SecureBodyCareStoragePanel() {
+  const { user } = useGuideAuth();
+  const [counts, setCounts] = useState<Record<string, number>>({});
+  const [status, setStatus] = useState("Secure storage is ready for authenticated guide data.");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    void loadCounts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
+
+  async function loadCounts() {
+    if (!user?.id) return;
+    if (!isBackendAvailable()) {
+      setStatus(backendUnavailableMessage);
+      return;
+    }
+    setLoading(true);
+    try {
+      const [plans, products, applications, tolerance, spf, versions] = await Promise.all([
+        listUserRows("body_care_plans", user.id, "created_at"),
+        listUserRows("body_care_products", user.id, "created_at"),
+        listUserRows("body_care_applications", user.id, "application_date"),
+        listUserRows("body_care_skin_tolerance_logs", user.id, "entry_date"),
+        listUserRows("body_care_spf_logs", user.id, "entry_date"),
+        listUserRows("body_care_plan_versions", user.id, "effective_date"),
+      ]);
+      setCounts({ plans: plans.length, products: products.length, applications: applications.length, tolerance: tolerance.length, spf: spf.length, versions: versions.length });
+      setStatus("Loaded your saved PYPER Body-Care Plan records. Demo data is not mixed into storage unless you choose to save it to a fictional test account.");
+    } catch {
+      setStatus("Failed to load saved body-care records. Check Supabase availability and try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function saveDemoPlan() {
+    if (!user?.id || !isBackendAvailable()) {
+      setStatus(backendUnavailableMessage);
+      return;
+    }
+    setLoading(true);
+    try {
+      const plan = await createUserRow("body_care_plans", user.id, { plan_name: "Demo PYPER Body-Care Plan", plan_status: "Clinician-Approved" });
+      await Promise.all(BODY_CARE_PLAN_PRODUCTS.map((product) => createUserRow("body_care_products", user.id, bodyCareProductToDb(product, String(plan.id || "")))));
+      await createUserRow("body_care_plan_versions", user.id, { plan_id: plan.id, version_number: 1, effective_date: "2026-06-01", changed_by: "Dr. Elaine Mercer", reason_for_change: "Initial fictional test plan", previous_plan_archived: false, is_active: true, version_data: { source: "Phase 6 fictional demo" } });
+      setStatus("Saved fictional body-care plan, products, and active version to secure storage for this signed-in user.");
+      await loadCounts();
+    } catch {
+      setStatus("Failed to save the body-care plan. Nothing was silently stored.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function saveDemoLogs() {
+    if (!user?.id || !isBackendAvailable()) {
+      setStatus(backendUnavailableMessage);
+      return;
+    }
+    setLoading(true);
+    try {
+      await Promise.all(BODY_CARE_APPLICATION_LOG.map((entry) => createUserRow("body_care_applications", user.id, bodyCareApplicationToDb(entry))));
+      await createUserRow("body_care_skin_tolerance_logs", user.id, {
+        entry_date: new Date().toISOString().slice(0, 10),
+        body_area: "Upper arms",
+        dryness: 3,
+        irritation: 4,
+        itching: 2,
+        burning_stinging: 1,
+        peeling: 2,
+        redness_discoloration: 3,
+        acne_flare: 1,
+        texture_concern: 5,
+        pigmentation_concern: 4,
+        eczema_flare: 0,
+        new_rash: false,
+        swelling: false,
+        blistering: false,
+        open_broken_skin: false,
+        signs_of_infection: false,
+        product_wrong_area: false,
+        product_eyes_mouth: false,
+        contact_clinician_requested: false,
+        notes: "Fictional Phase 6 test tolerance log.",
+        reviewed_for_checkin: true,
+        include_in_export: true,
+      });
+      await createUserRow("body_care_spf_logs", user.id, {
+        entry_date: new Date().toISOString().slice(0, 10),
+        spf_product: BODY_CARE_SPF_PLAN.spfProduct,
+        spf_level: BODY_CARE_SPF_PLAN.spfLevel,
+        body_areas: BODY_CARE_SPF_TRACKING.bodyAreasCovered.split(", "),
+        applied_today: BODY_CARE_SPF_TRACKING.appliedToday,
+        reapplication_completed: BODY_CARE_SPF_TRACKING.reapplicationCompleted,
+        outdoor_exposure_expected: BODY_CARE_SPF_PLAN.outdoorExposureExpected,
+        swimming_or_sweating_expected: BODY_CARE_SPF_PLAN.swimmingOrSweatingExpected,
+        skipped_reason: BODY_CARE_SPF_TRACKING.skippedReason,
+        notes: BODY_CARE_SPF_TRACKING.notes,
+        reviewed_for_checkin: true,
+        include_in_export: true,
+      });
+      setStatus("Saved fictional application, tolerance, and SPF logs to secure storage for this signed-in user.");
+      await loadCounts();
+    } catch {
+      setStatus("Failed to save body-care logs. Nothing was silently stored.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function archiveFirstProduct() {
+    if (!user?.id || !isBackendAvailable()) return;
+    setLoading(true);
+    try {
+      const products = await listUserRows("body_care_products", user.id, "created_at");
+      const first = products[0];
+      if (!first?.id) {
+        setStatus("No saved product to archive yet. Start by saving the demo plan.");
+      } else {
+        await updateUserRow("body_care_products", user.id, String(first.id), { archived: true, plan_status: "Archived" });
+        setStatus("Archived one saved body-care product. Archived products are not reactivated automatically.");
+      }
+      await loadCounts();
+    } catch {
+      setStatus("Failed to archive product.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function deleteLatestApplication() {
+    if (!user?.id || !isBackendAvailable()) return;
+    if (!window.confirm("Delete the latest saved body-care application log?")) return;
+    setLoading(true);
+    try {
+      const applications = await listUserRows("body_care_applications", user.id, "application_date");
+      const first = applications[0];
+      if (!first?.id) setStatus("No application log to delete yet.");
+      else {
+        await deleteUserRow("body_care_applications", user.id, String(first.id));
+        setStatus("Deleted latest saved body-care application log.");
+      }
+      await loadCounts();
+    } catch {
+      setStatus("Failed to delete application log.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <Surface className="p-5">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <div className="mono-label mb-2">Secure body-care storage</div>
+          <h3>Authenticated, user-specific records</h3>
+          <p className="mt-2 text-sm text-[var(--soft-text)]">{status}</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {Object.entries(counts).map(([key, value]) => <Badge key={key}>{key}: {value}</Badge>)}
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button disabled={loading} onClick={loadCounts} className="rounded-md border border-[var(--border)] px-3 py-2 text-sm hover:bg-[var(--ivory)]">Load saved</button>
+          <button disabled={loading} onClick={saveDemoPlan} className="rounded-md bg-[var(--graphite)] px-3 py-2 text-sm text-[var(--porcelain)] disabled:opacity-50">Create plan + products</button>
+          <button disabled={loading} onClick={saveDemoLogs} className="rounded-md border border-[var(--border)] px-3 py-2 text-sm hover:bg-[var(--ivory)]">Save application/SPF/tolerance logs</button>
+          <button disabled={loading} onClick={archiveFirstProduct} className="rounded-md border border-[var(--border)] px-3 py-2 text-sm hover:bg-[var(--ivory)]">Archive product</button>
+          <button disabled={loading} onClick={deleteLatestApplication} className="rounded-md border border-[var(--border)] px-3 py-2 text-sm hover:bg-[var(--ivory)]">Delete latest log</button>
+        </div>
+      </div>
+    </Surface>
+  );
+}
+
+function bodyCareProductToDb(product: any, planId: string): GuideStorageRecord {
+  return {
+    plan_id: planId,
+    product_name: product.productName,
+    brand: product.brand,
+    product_type: product.productType,
+    pyper_pathway: product.pathway,
+    pyper_tier: product.tier,
+    active_ingredient: product.activeIngredient,
+    strength: product.strength,
+    formulation: product.formulation,
+    prescriber_name: product.prescriberName,
+    plan_status: product.planStatus,
+    treatment_purpose: product.treatmentPurpose,
+    body_areas: String(product.bodyArea || "").split(", ").filter(Boolean),
+    prescribed_amount: product.prescribedAmount,
+    amount_unit: product.amountUnit,
+    frequency: product.frequency,
+    days_of_week: String(product.daysOfWeek || "").split(", ").filter(Boolean),
+    time_of_day: product.timeOfDay,
+    start_date: product.startDate || null,
+    end_date: product.endDate || null,
+    review_date: product.reviewDate || null,
+    cycle_or_rest_period: product.cycleOrRestPeriod,
+    layering_order: product.layeringOrder,
+    special_instructions: product.specialInstructions,
+    spf_required: product.spfRequired,
+    refill_reminder: Boolean(product.refillReminder),
+    notes: product.notes,
+  };
+}
+
+function bodyCareApplicationToDb(entry: any): GuideStorageRecord {
+  return {
+    application_date: entry.date,
+    time_applied: entry.timeApplied,
+    body_area: entry.bodyArea,
+    amount_applied: entry.amountApplied,
+    applied_as_prescribed: entry.appliedAsPrescribed === "Yes",
+    application_status: entry.status,
+    moisturizer_layered: entry.moisturizerLayered,
+    spf_used: entry.spfUsed,
+    reapplication_needed: entry.reapplicationNeeded,
+    irritation_after_application: entry.irritationAfter,
+    notes: entry.notes,
+    reviewed_for_checkin: true,
+    include_in_export: true,
+  };
 }
 
 function MyPlan() {

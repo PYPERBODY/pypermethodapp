@@ -1,8 +1,22 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PageHeader, Surface } from "./Shell";
 import { BodyCarePlan } from "./BodyCarePlan";
 import { CHAPTERS } from "./data";
 import { Slider } from "../ui/slider";
+import { useGuideAuth } from "../auth/AuthGate";
+import {
+  backendUnavailableMessage,
+  createUserRow,
+  dateRangeForView,
+  deleteRoutineTemplate,
+  deleteUserRow,
+  isBackendAvailable,
+  listRoutineTemplates,
+  listUserRows,
+  saveRoutineTemplate,
+  updateUserRow,
+  type GuideStorageRecord,
+} from "../../../lib/secureGuideStorage";
 import {
   AlertTriangle,
   Bookmark,
@@ -74,6 +88,79 @@ const DUPLICATE_OPTIONS = [
   "Duplicate last week",
   "Duplicate selected date",
 ];
+
+type TrackerStorage = { table: string; dateColumn: string };
+
+const TRACKER_STORAGE: Partial<Record<TrackerKey, TrackerStorage>> = {
+  body: { table: "weight_logs", dateColumn: "entry_date" },
+  medication: { table: "dose_logs", dateColumn: "entry_date" },
+  supplements: { table: "supplement_logs", dateColumn: "entry_date" },
+  tolerance: { table: "symptom_logs", dateColumn: "entry_date" },
+  emotional: { table: "mental_health_logs", dateColumn: "entry_date" },
+  nutrition: { table: "nutrition_logs", dateColumn: "entry_date" },
+  training: { table: "training_logs", dateColumn: "entry_date" },
+  provider: { table: "provider_questions", dateColumn: "created_at" },
+  chapters: { table: "chapter_progress", dateColumn: "last_opened_at" },
+};
+
+const FIELD_TO_COLUMN: Record<string, string> = {
+  entryDate: "entry_date",
+  clothingFit: "clothing_fit",
+  medicationName: "medication_name",
+  doseAmount: "dose_amount",
+  doseUnit: "dose_unit",
+  injectionDate: "injection_date",
+  injectionTime: "injection_time",
+  injectionSite: "injection_site",
+  missedDose: "missed_dose",
+  sideEffectsAfterDose: "side_effects_after_dose",
+  notesForProvider: "notes_for_provider",
+  supplementName: "supplement_name",
+  timeTaken: "time_taken",
+  clinicianApproved: "clinician_approved",
+  sideEffectsOrTolerance: "side_effects_or_tolerance",
+  abdominalPain: "abdominal_pain",
+  unableToHydrate: "unable_to_hydrate",
+  bowelMovement: "bowel_movement",
+  appetiteTooLow: "appetite_too_low",
+  sleepQuality: "sleep_quality",
+  bodyImageConcern: "body_image_concern",
+  emotionalEatingUrge: "emotional_eating_urge",
+  fearOfRegain: "fear_of_regain",
+  socialPressure: "social_pressure_trigger",
+  medicationMoodConcern: "medication_related_mood_concern",
+  panicSymptoms: "panic_symptoms",
+  severeDepression: "severe_mental_health_concern",
+  inabilityToFunction: "inability_to_function",
+  selfHarmConcern: "self_harm_concern",
+  suicidalThoughts: "suicidal_thoughts",
+  notesForProviderSupport: "notes_for_provider",
+  proteinTarget: "protein_target",
+  proteinConsumed: "protein_consumed",
+  waterTarget: "water_target",
+  waterConsumed: "water_consumed",
+  foodNoise: "food_noise",
+  mealTolerance: "meal_tolerance",
+  constipationSupportNote: "constipation_support_note",
+  strengthSession: "strength_session",
+  workoutType: "workout_type",
+  duration: "duration_minutes",
+  injuryOrPainNote: "injury_or_pain_note",
+  createdDate: "created_at",
+  linkedTracker: "linked_tracker",
+  linkedGuideSection: "linked_guide_section",
+  includeInExport: "include_in_export",
+  reviewedForCheckIn: "reviewed_for_checkin",
+  copiedFromEntryId: "duplicated_from_entry_id",
+  chapterId: "chapter_id",
+  chapterTitle: "chapter_title",
+  lastOpened: "last_opened_at",
+  relatedTracker: "related_tracker",
+  relatedReminderPlaceholder: "related_reminder_placeholder",
+};
+
+const COLUMN_TO_FIELD = Object.fromEntries(Object.entries(FIELD_TO_COLUMN).map(([field, column]) => [column, field]));
+
 
 const trackerConfigs: TrackerConfig[] = [
   {
@@ -494,45 +581,167 @@ function TrackerOverview({ onSelect }: { onSelect: (key: TrackerKey) => void }) 
 }
 
 function TrackerWorkspace({ config }: { config: TrackerConfig }) {
-  const [entries, setEntries] = useState<Entry[]>(config.entries);
+  const storage = TRACKER_STORAGE[config.key];
+  const { user } = useGuideAuth();
+  const [entries, setEntries] = useState<Entry[]>([]);
+  const [templates, setTemplates] = useState<GuideStorageRecord[]>([]);
   const [draft, setDraft] = useState<Entry>(() => makeBlankEntry(config));
   const [editingId, setEditingId] = useState<string | null>(null);
   const [view, setView] = useState("Week");
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 10));
   const [notice, setNotice] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   const safety = config.safety?.(draft);
   const statuses = config.status?.(draft) || [];
+  const backendReady = Boolean(user?.id && storage && isBackendAvailable());
 
-  function makeCopy(source: Entry | undefined, label: string) {
-    const copied = source || config.entries[0] || makeBlankEntry(config);
-    setDraft({ ...copied, id: crypto.randomUUID(), entryDate: new Date().toISOString().slice(0, 10), copiedFrom: label, reviewedForCheckIn: false });
-    setEditingId(null);
-    setNotice(`Copied from ${label}. Review and update before saving.`);
-  }
-
-  function saveEntry() {
-    const normalized = { ...draft, reviewedForCheckIn: !!draft.reviewedForCheckIn, includeInExport: draft.includeInExport !== false };
-    if (editingId) {
-      setEntries(entries.map((entry) => entry.id === editingId ? normalized : entry));
-      setNotice("Entry updated. Review before adding to summaries.");
-    } else {
-      setEntries([normalized, ...entries]);
-      setNotice("New demo entry created. No production storage connected.");
-    }
+  useEffect(() => {
     setDraft(makeBlankEntry(config));
     setEditingId(null);
+    setNotice(null);
+    setError(null);
+  }, [config.key]);
+
+  useEffect(() => {
+    void loadEntries();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [config.key, user?.id, view]);
+
+  async function loadEntries() {
+    if (!storage) return;
+    if (!user?.id) {
+      setError("Signed out state. Sign in to load secure tracker entries.");
+      return;
+    }
+    if (!isBackendAvailable()) {
+      setEntries([]);
+      setError(backendUnavailableMessage);
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      const rows = await listUserRows(storage.table, user.id, storage.dateColumn, dateRangeForView(view));
+      setEntries(rows.map((row) => fromDbRecord(row, config)));
+      const storedTemplates = await listRoutineTemplates(user.id, config.key);
+      setTemplates(storedTemplates);
+    } catch (err) {
+      setError(toFriendlyError(err, "Failed to load saved entries."));
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function updateDraft(next: Entry) {
+    setDraft(next);
+    setHasUnsavedChanges(true);
+  }
+
+  function makeCopy(source: Entry | undefined, label: string) {
+    const copied = source || makeBlankEntry(config);
+    setDraft({
+      ...copied,
+      id: crypto.randomUUID(),
+      entryDate: new Date().toISOString().slice(0, 10),
+      copiedFrom: label,
+      copiedFromEntryId: source?.id,
+      reviewedForCheckIn: false,
+    });
+    setEditingId(null);
+    setHasUnsavedChanges(true);
+    setNotice("Copied from a previous entry. Review and update before saving.");
+  }
+
+  async function saveEntry() {
+    if (!storage || !user?.id) return;
+    const validation = validateEntry(config, draft);
+    if (validation) {
+      setError(validation);
+      return;
+    }
+    if (!isBackendAvailable()) {
+      setError(backendUnavailableMessage);
+      return;
+    }
+    setSaving(true);
+    setError(null);
+    try {
+      const payload = toDbPayload(config, draft);
+      if (editingId) {
+        await updateUserRow(storage.table, user.id, editingId, payload);
+        setNotice("Saved successfully. Entry updated in secure guide storage.");
+      } else {
+        await createUserRow(storage.table, user.id, payload);
+        setNotice("Saved successfully. Entry created in secure guide storage.");
+      }
+      setDraft(makeBlankEntry(config));
+      setEditingId(null);
+      setHasUnsavedChanges(false);
+      await loadEntries();
+    } catch (err) {
+      setError(toFriendlyError(err, "Failed to save. Your entry was not stored."));
+    } finally {
+      setSaving(false);
+    }
   }
 
   function editEntry(entry: Entry) {
+    if (hasUnsavedChanges && !window.confirm("You have unsaved changes. Discard them and edit this entry?")) return;
     setDraft({ ...entry });
     setEditingId(entry.id);
-    setNotice("Editing copied demo entry. Changes stay in component state only.");
+    setHasUnsavedChanges(false);
+    setNotice("Editing saved entry. Review changes before saving.");
   }
 
-  function deleteEntry(id: string) {
-    setEntries(entries.filter((entry) => entry.id !== id));
-    setNotice("Demo entry deleted from local component state.");
+  async function deleteEntry(id: string) {
+    if (!storage || !user?.id) return;
+    if (!window.confirm("Delete this saved guide entry? This cannot be undone.")) return;
+    setError(null);
+    try {
+      await deleteUserRow(storage.table, user.id, id);
+      setNotice("Entry deleted.");
+      await loadEntries();
+    } catch (err) {
+      setError(toFriendlyError(err, "Failed to delete entry."));
+    }
+  }
+
+  async function saveTemplate() {
+    if (!user?.id) return;
+    if (!isBackendAvailable()) {
+      setError(backendUnavailableMessage);
+      return;
+    }
+    try {
+      await saveRoutineTemplate(user.id, config.key, `${config.navLabel} template`, toDbPayload(config, draft));
+      setNotice("Routine template saved securely.");
+      setTemplates(await listRoutineTemplates(user.id, config.key));
+    } catch (err) {
+      setError(toFriendlyError(err, "Failed to save routine template."));
+    }
+  }
+
+  function applyTemplate(template: GuideStorageRecord) {
+    const data = (template.template_data || {}) as GuideStorageRecord;
+    setDraft({ ...fromDbRecord(data, config), id: crypto.randomUUID(), entryDate: new Date().toISOString().slice(0, 10), copiedFrom: String(template.template_name || "template") });
+    setHasUnsavedChanges(true);
+    setNotice("Template applied. Review and update before saving.");
+  }
+
+  async function removeTemplate(id: string) {
+    if (!user?.id) return;
+    if (!window.confirm("Delete this routine template?")) return;
+    try {
+      await deleteRoutineTemplate(user.id, id);
+      setTemplates(await listRoutineTemplates(user.id, config.key));
+      setNotice("Routine template deleted.");
+    } catch (err) {
+      setError(toFriendlyError(err, "Failed to delete routine template."));
+    }
   }
 
   return (
@@ -544,7 +753,7 @@ function TrackerWorkspace({ config }: { config: TrackerConfig }) {
             <h2>{config.title}</h2>
             <p className="text-sm text-[var(--soft-text)] mt-2 max-w-3xl">{config.subtitle}</p>
           </div>
-          <button onClick={() => { setDraft(makeBlankEntry(config)); setEditingId(null); setNotice("Blank entry ready. Demo state only."); }} className="inline-flex items-center gap-2 bg-[var(--graphite)] text-[var(--porcelain)] px-4 py-2.5 rounded-md text-sm">
+          <button onClick={() => { setDraft(makeBlankEntry(config)); setEditingId(null); setHasUnsavedChanges(false); setNotice("Blank entry ready."); }} className="inline-flex items-center gap-2 bg-[var(--graphite)] text-[var(--porcelain)] px-4 py-2.5 rounded-md text-sm">
             <Plus size={14} /> Create new entry
           </button>
         </div>
@@ -553,31 +762,51 @@ function TrackerWorkspace({ config }: { config: TrackerConfig }) {
           {config.highlights.map((item) => <Metric key={item.label} {...item} />)}
         </div>
 
+        <div className="mb-4 rounded-md border border-[var(--border)] bg-[var(--ivory)] p-3 text-sm">
+          Secure storage: {backendReady ? `Connected to ${storage?.table}. Queries are scoped to your signed-in user.` : "Unavailable. Sign in and configure Supabase to save entries."}
+        </div>
         {config.quickCopy && <p className="text-sm text-[var(--soft-text)] mb-4">{config.quickCopy}</p>}
         {config.caution && <SafetyNotice>{config.caution}</SafetyNotice>}
         {statuses.length > 0 && <div className="flex flex-wrap gap-2 mb-4">{statuses.map((status) => <Badge key={status}>{status}</Badge>)}</div>}
         {safety && <SafetyNotice>{safety}</SafetyNotice>}
+        {error && <SafetyNotice>{error}</SafetyNotice>}
         {notice && <div className="mb-4 border border-[var(--border)] bg-[var(--ivory)] rounded-md p-3 text-sm">{notice}</div>}
+        {hasUnsavedChanges && <div className="mb-4 rounded-md border border-[var(--border)] p-3 text-sm">Unsaved changes. Save or reset before leaving this entry.</div>}
 
         <DuplicateControls
           selectedDate={selectedDate}
           onSelectedDate={setSelectedDate}
-          onDuplicate={(label) => makeCopy(entries[0], label)}
-          onTemplate={() => setNotice("Routine template saved in demo state only.")}
+          onDuplicate={(label) => makeCopy(findDuplicateSource(entries, label, selectedDate), label)}
+          onTemplate={saveTemplate}
         />
+
+        {templates.length > 0 && (
+          <div className="mb-4 mt-4 rounded-md border border-[var(--border)] p-4">
+            <div className="mono-label mb-2">Routine templates</div>
+            <div className="flex flex-wrap gap-2">
+              {templates.map((template) => (
+                <span key={String(template.id)} className="inline-flex items-center gap-2 rounded-md border border-[var(--border)] px-3 py-2 text-xs">
+                  {String(template.template_name)}
+                  <button type="button" onClick={() => applyTemplate(template)} className="underline">Apply</button>
+                  <button type="button" onClick={() => removeTemplate(String(template.id))} className="underline">Delete</button>
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
 
         <details className="mt-6" open>
           <summary className="cursor-pointer text-sm font-medium py-2">Quick entry and full detail</summary>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-5 pt-4">
-            {config.fields.map((field) => <TrackerField key={field.key} field={field} draft={draft} setDraft={setDraft} />)}
-            <ToggleField label="Marked for Weekly Review" checked={!!draft.reviewedForCheckIn} onChange={(checked) => setDraft({ ...draft, reviewedForCheckIn: checked })} />
-            <ToggleField label="Add to Check-In Summary" checked={draft.includeInExport !== false} onChange={(checked) => setDraft({ ...draft, includeInExport: checked })} />
+            {config.fields.map((field) => <TrackerField key={field.key} field={field} draft={draft} setDraft={updateDraft} />)}
+            <ToggleField label="Marked for Weekly Review" checked={!!draft.reviewedForCheckIn} onChange={(checked) => updateDraft({ ...draft, reviewedForCheckIn: checked })} />
+            <ToggleField label="Add to Check-In Summary" checked={draft.includeInExport !== false} onChange={(checked) => updateDraft({ ...draft, includeInExport: checked })} />
           </div>
         </details>
 
         <div className="flex flex-wrap gap-2 mt-6">
-          <button onClick={saveEntry} className="inline-flex items-center gap-2 bg-[var(--graphite)] text-[var(--porcelain)] px-5 py-2.5 rounded-md text-sm"><Save size={14} /> {editingId ? "Save edits" : "Save entry"}</button>
-          {config.actions?.map((action) => <button key={action} onClick={() => setNotice(`${action} placeholder added to Provider Questions demo queue.`)} className="inline-flex items-center gap-2 border border-[var(--border)] px-5 py-2.5 rounded-md text-sm hover:bg-[var(--ivory)]"><ClipboardList size={14} /> {action}</button>)}
+          <button disabled={saving || !backendReady} onClick={saveEntry} className="inline-flex items-center gap-2 bg-[var(--graphite)] text-[var(--porcelain)] px-5 py-2.5 rounded-md text-sm disabled:opacity-50"><Save size={14} /> {saving ? "Saving..." : editingId ? "Save edits" : "Save entry"}</button>
+          {config.actions?.map((action) => <button key={action} onClick={() => setNotice(`${action} placeholder added to Provider Questions demo queue. No data sent.`)} className="inline-flex items-center gap-2 border border-[var(--border)] px-5 py-2.5 rounded-md text-sm hover:bg-[var(--ivory)]"><ClipboardList size={14} /> {action}</button>)}
           <button onClick={() => setNotice("Export selected date range placeholder only. Nothing is sent.")} className="inline-flex items-center gap-2 border border-[var(--border)] px-5 py-2.5 rounded-md text-sm hover:bg-[var(--ivory)]"><Download size={14} /> Export selected date range</button>
         </div>
       </Surface>
@@ -596,6 +825,8 @@ function TrackerWorkspace({ config }: { config: TrackerConfig }) {
             ))}
           </div>
         </div>
+        {loading && <div className="rounded-md border border-[var(--border)] p-4 text-sm">Loading saved entries...</div>}
+        {!loading && entries.length === 0 && <div className="rounded-md border border-dashed border-[var(--border)] p-6 text-sm text-[var(--soft-text)]">Your first entry will appear here. Track only what is useful. You do not need to log everything every day.</div>}
         <div className="space-y-3">
           {entries.map((entry) => <EntryRow key={entry.id} entry={entry} config={config} onEdit={editEntry} onDelete={deleteEntry} />)}
         </div>
@@ -672,6 +903,101 @@ function makeBlankEntry(config: TrackerConfig): Entry {
     else entry[field.key] = "";
   });
   return entry;
+}
+
+function toDbPayload(config: TrackerConfig, entry: Entry): GuideStorageRecord {
+  const payload: GuideStorageRecord = {};
+  const allowedKeys = new Set(config.fields.map((field) => field.key));
+  allowedKeys.add("reviewedForCheckIn");
+  allowedKeys.add("includeInExport");
+  allowedKeys.add("copiedFromEntryId");
+  if (config.key !== "provider" && config.key !== "chapters") allowedKeys.add("entryDate");
+
+  for (const key of allowedKeys) {
+    if (key === "photo" || key === "supplementType" || key === "copiedFrom" || key === "id") continue;
+    const value = entry[key];
+    if (value === undefined || value === "") continue;
+    const column = FIELD_TO_COLUMN[key] || camelToSnake(key);
+    payload[column] = value;
+  }
+
+  if (config.key === "provider") {
+    payload.created_at = entry.createdDate || new Date().toISOString();
+  }
+  if (config.key === "chapters") {
+    payload.last_opened_at = entry.lastOpened ? `${entry.lastOpened}T00:00:00.000Z` : new Date().toISOString();
+  }
+
+  return payload;
+}
+
+function fromDbRecord(row: GuideStorageRecord, config: TrackerConfig): Entry {
+  const entry: Entry = { id: String(row.id || crypto.randomUUID()) };
+  for (const [key, value] of Object.entries(row)) {
+    if (key === "user_id") continue;
+    const field = COLUMN_TO_FIELD[key] || snakeToCamel(key);
+    if (field === "lastOpened" && typeof value === "string") entry[field] = value.slice(0, 10);
+    else if (field === "createdDate" && typeof value === "string") entry[field] = value.slice(0, 10);
+    else entry[field] = value as string | number | boolean;
+  }
+  if (!entry.entryDate && typeof row.entry_date === "string") entry.entryDate = row.entry_date;
+  if (config.key === "provider" && !entry.entryDate && typeof row.created_at === "string") entry.entryDate = row.created_at.slice(0, 10);
+  if (config.key === "chapters" && !entry.entryDate && typeof row.last_opened_at === "string") entry.entryDate = row.last_opened_at.slice(0, 10);
+  return entry;
+}
+
+function validateEntry(config: TrackerConfig, entry: Entry) {
+  const dateValue = String(entry.entryDate || entry.createdDate || entry.lastOpened || "");
+  if (!dateValue) return "Add a valid date before saving.";
+  if (dateValue && Number.isNaN(Date.parse(dateValue))) return "Use a valid date format before saving.";
+
+  for (const field of config.fields) {
+    const value = entry[field.key];
+    if (field.kind === "number" && Number(value) < 0) {
+      return `${field.label} cannot be negative.`;
+    }
+    if (field.kind === "slider" && (Number(value) < 0 || Number(value) > 10)) {
+      return `${field.label} must be between 0 and 10.`;
+    }
+  }
+
+  if (config.key === "medication" && Number(entry.doseAmount || 0) < 0) return "Dose cannot be negative.";
+  if (config.key === "body" && ["weight", "waist", "hips", "chest", "arm", "thigh"].some((key) => Number(entry[key] || 0) < 0)) return "Weight and measurements cannot be negative.";
+  if (config.key === "nutrition" && ["proteinTarget", "proteinConsumed", "waterTarget", "waterConsumed"].some((key) => Number(entry[key] || 0) < 0)) return "Protein and water values cannot be negative.";
+  return null;
+}
+
+function findDuplicateSource(entries: Entry[], label: string, selectedDate: string) {
+  if (!entries.length) return undefined;
+  if (label.includes("selected date")) return entries.find((entry) => entry.entryDate === selectedDate) || entries[0];
+  if (label.includes("yesterday")) return entries.find((entry) => isDaysAgo(entry.entryDate, 1)) || entries[0];
+  if (label.includes("last week")) return entries.find((entry) => isDaysAgo(entry.entryDate, 7)) || entries[0];
+  return entries[0];
+}
+
+function isDaysAgo(value: unknown, days: number) {
+  if (typeof value !== "string") return false;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return false;
+  const target = new Date();
+  target.setDate(target.getDate() - days);
+  return date.toISOString().slice(0, 10) === target.toISOString().slice(0, 10);
+}
+
+function camelToSnake(value: string) {
+  return value.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+}
+
+function snakeToCamel(value: string) {
+  return value.replace(/_([a-z])/g, (_match, letter) => letter.toUpperCase());
+}
+
+function toFriendlyError(error: unknown, fallback: string) {
+  if (error instanceof Error) {
+    if (/Failed to fetch|NetworkError|fetch/i.test(error.message)) return backendUnavailableMessage;
+    return fallback;
+  }
+  return fallback;
 }
 
 function formatValue(value: unknown) {
