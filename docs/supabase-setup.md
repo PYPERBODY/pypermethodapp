@@ -52,3 +52,13 @@ For user-owned tables, users can select, insert, update, and delete only rows wh
 For `profiles`, users can select, insert, and update only the profile row where `id = auth.uid()`.
 
 Affiliate products may be publicly readable only when active. Partner offer details require authentication unless explicitly configured as active, non-member, non-unique-code public offers. Private offer codes are readable only by the assigned user.
+
+
+## Compatibility with Supabase setup snippets
+
+This repository is a Vite React app, not a Next.js app. Use `src/lib/supabaseClient.ts` or `utils/supabase/client.ts` for browser auth. Do not add Next-only `page.tsx`, `server.ts`, or middleware files unless the app is migrated to Next.
+
+The Vite config exposes both `VITE_*` and `NEXT_PUBLIC_*` prefixes, so the following public variables are also supported:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
