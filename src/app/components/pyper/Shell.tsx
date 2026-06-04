@@ -37,6 +37,7 @@ const MOBILE_NAV: { key: TabKey; label: string; icon: any }[] = [
   { key: "progress", label: "Progress", icon: TrendingUp },
   { key: "edit", label: "The PYPER Edit", icon: Sparkles },
   { key: "safety", label: "Safety", icon: ShieldAlert },
+  { key: "progress", label: "Progress", icon: TrendingUp },
 ];
 
 export function Shell({

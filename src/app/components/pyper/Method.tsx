@@ -101,7 +101,7 @@ export function Method() {
             </AccordionTrigger>
             <AccordionContent>
               <div className="flex flex-wrap gap-2 text-xs">
-                {["Tolerance Tracker", "Protein + Hydration", "Medication Rhythm", "Body-Care Routine"].map(
+                {["Tolerance Tracker", "Protein + Hydration", "Medication Rhythm", "PYPER Body-Care Plan"].map(
                   (t) => (
                     <span
                       key={t}
