@@ -3,7 +3,7 @@ import { AlertTriangle, ArrowRight, LockKeyhole, LogOut, Mail } from "lucide-rea
 import { supabase, supabaseConfigMessage, isSupabaseConfigured } from "../../../lib/supabaseClient";
 
 type AuthMode = "signin" | "signup" | "forgot" | "reset";
-type AuthUser = { email?: string } | null;
+type AuthUser = { id: string; email?: string } | null;
 
 export function useGuideAuth() {
   const [user, setUser] = useState<AuthUser>(null);
@@ -19,12 +19,12 @@ export function useGuideAuth() {
 
     supabase.auth.getSession().then(({ data }) => {
       if (!active) return;
-      setUser(data.session?.user ? { email: data.session.user.email || undefined } : null);
+      setUser(data.session?.user ? { id: data.session.user.id, email: data.session.user.email || undefined } : null);
       setLoading(false);
     });
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ? { email: session.user.email || undefined } : null);
+      setUser(session?.user ? { id: session.user.id, email: session.user.email || undefined } : null);
       setLoading(false);
     });
 
