@@ -16,7 +16,7 @@ export function Today({ onGoExport }: { onGoExport: () => void }) {
       <PageHeader
         eyebrow={fmtDate()}
         title={`Good morning, ${MEMBER.firstName}.`}
-        subtitle="Your PYPER Method Guide for today. Learn, track, review, and maintain a steady rhythm through the interactive guide."
+        subtitle="Your installable PYPER Method Guide for today. Learn, track, review, and maintain a steady rhythm through the interactive guide."
       />
 
       {/* Next best action */}

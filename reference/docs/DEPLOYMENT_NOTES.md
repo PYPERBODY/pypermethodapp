@@ -125,3 +125,8 @@ src/app/
     tailwind.css                   Tailwind v4 source config
     index.css                      Root CSS entrypoint
 ```
+
+
+## Delivery System Scope
+
+Primary product: The PYPER Method Interactive Guide + installable PWA. Companion formats: The PYPER Method Goodnotes Edition and The PYPER Method Printable PDF Edition, generated from the same approved content source.

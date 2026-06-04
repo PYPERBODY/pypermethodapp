@@ -8,6 +8,18 @@ You are an advanced product designer, brand systems designer, healthcare UX stra
 
 We are building The PYPER Method Interactive Guide.
 
+Approved delivery system:
+- Primary product: The PYPER Method Interactive Guide + installable PWA
+- Companion format: The PYPER Method Goodnotes Edition
+- Companion format: The PYPER Method Printable PDF Edition
+- Companion formats must be generated from the same approved content source. Do not create separate, inconsistent guide versions.
+
+This project is not the main PYPER member portal or patient portal for pyperbody.com. The Guide remains the heart of the product.
+
+Product rhythm:
+Learn → Track → Review → Maintain
+
+
 PYPER is a premium body-focused dermatology, GLP-1, metabolic transformation, and lifestyle-support brand. The portal should feel like Equinox discipline, luxury dermatology precision, and calm clinical support. It should not feel like a diet app, a cheap tracker, a PDF flipbook, a generic interactive clinical-lifestyle guide, or a wellness template.
 
 Use the attached `preview.html` as the core content and visual direction source. Preserve the PYPER Method content, structure, tone, safety language, guide chapters, pillars, tables, check-in concepts, and member tools from `preview.html`, but do not keep it as a fixed PDF-style layout.
@@ -26,7 +38,7 @@ Do not connect health logs to unsecured forms, email, Google Sheets, Airtable, N
 Do not add advertising pixels, retargeting scripts, behavioral tracking, or session replay inside the logged-in interactive guide.
 Do not pass member health data into affiliate links, partner links, analytics, or third-party tools.
 
-Build this as a responsive private interactive guide with:
+Build this as a responsive private interactive guide and installable PWA with:
 - Method guide chapters
 - interactive trackers
 - repeatable entries
@@ -71,7 +83,7 @@ Mobile bottom navigation:
 - Safety
 
 
-The experience should open to Today, with the Guide section remaining the heart of the product.
+The experience should open to Today, with the Guide section remaining the heart of the product. The app should also be installable as a PWA.
 
 TODAY DASHBOARD REQUIREMENTS
 

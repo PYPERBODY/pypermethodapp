@@ -103,3 +103,8 @@ The downloadable Phase 2 source package excludes font files, `.git`, `node_modul
 - `terms.html`
 - `utils/supabase/info.tsx`
 - `vite.config.ts`
+
+
+## Delivery System Scope
+
+Primary product: The PYPER Method Interactive Guide + installable PWA. Companion formats: The PYPER Method Goodnotes Edition and The PYPER Method Printable PDF Edition, generated from the same approved content source.
