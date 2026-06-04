@@ -1,4 +1,4 @@
-# PYPER Member Portal — Phase 1 Deployment Notes
+# The PYPER Method Interactive Guide — Phase 1 Deployment Notes
 
 ## Commit
 
@@ -6,7 +6,7 @@
 |---|---|
 | Commit hash | `20a27b5` |
 | Branch | `claude/festive-fermi-JxbSF` |
-| Commit message | Build Phase 1 PYPER Member Portal |
+| Commit message | Build Phase 1 The PYPER Method Interactive Guide |
 | Files | 82 source files, 12,584 insertions |
 
 ---

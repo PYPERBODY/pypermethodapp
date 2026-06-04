@@ -16,7 +16,7 @@ export function Today({ onGoExport }: { onGoExport: () => void }) {
       <PageHeader
         eyebrow={fmtDate()}
         title={`Good morning, ${MEMBER.firstName}.`}
-        subtitle="Today in PYPER. Calm rhythm, steady protocol. Your protocol is supported — not enforced — by this portal."
+        subtitle="Your PYPER Method Guide for today. Learn, track, review, and maintain a steady rhythm through the interactive guide."
       />
 
       {/* Next best action */}
@@ -93,13 +93,13 @@ export function Today({ onGoExport }: { onGoExport: () => void }) {
             <li className="flex items-center gap-2"><Check size={14} /> Body metrics reviewed</li>
             <li className="flex items-center gap-2"><Check size={14} /> Medication rhythm logged</li>
             <li className="flex items-center gap-2"><Clock size={14} /> Tolerance summary pending</li>
-            <li className="flex items-center gap-2"><Clock size={14} /> 2 provider questions open</li>
+            <li className="flex items-center gap-2"><Clock size={14} /> 2 guide questions saved</li>
           </ul>
           <button
             onClick={onGoExport}
             className="mt-auto inline-flex items-center justify-center gap-2 border border-[var(--graphite)] text-[var(--graphite)] px-4 py-2.5 rounded-md text-sm hover:bg-[var(--graphite)] hover:text-[var(--porcelain)] transition-colors"
           >
-            Export check-in summary
+            Export guide summary
             <ArrowUpRight size={14} />
           </button>
         </Surface>
