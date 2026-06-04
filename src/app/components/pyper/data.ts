@@ -353,6 +353,7 @@ export const BODY_CARE_TODAY_ROUTINE = [
   { id: "shower-cleanser", timeOfDay: "After shower", bodyArea: "Back, Chest, Shoulders", productName: "Fragrance-Free Body Cleanser", productType: "Non-Prescription", amount: "custom instruction", instructions: "Use gentle pressure. Avoid scrubbing irritated skin.", spfRequirement: "No SPF requirement", dueStatus: "Complete" },
   { id: "pm-texture", timeOfDay: "PM", bodyArea: "Upper arms", productName: "Texture Rx Smoothing Cream", productType: "PYPER Clinical Body Care", amount: "pea-sized amount", instructions: "Monday, Wednesday, Friday. Apply only to upper arms.", spfRequirement: "SPF required tomorrow", dueStatus: "Pending" },
   { id: "pm-recover", timeOfDay: "PM", bodyArea: "Upper arms, Chest", productName: "Recover Barrier Balm", productType: "PYPER Clinical Body Care", amount: "thin layer", instructions: "Layer after active products unless clinician says otherwise.", spfRequirement: "No SPF requirement", dueStatus: "Pending" },
+  { id: "training-spf", timeOfDay: "After training", bodyArea: "Shoulders, Upper arms, Hands", productName: "Mineral Body SPF 50", productType: "Non-Prescription", amount: "prescribed amount", instructions: "Reapply if outdoor training, swimming, or sweating occurred.", spfRequirement: "SPF reapplication support", dueStatus: "Not due" },
 ];
 
 export const BODY_CARE_APPLICATION_LOG = [

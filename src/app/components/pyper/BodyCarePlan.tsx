@@ -260,7 +260,7 @@ function TodaysRoutine() {
     return ["AM", "PM", "After shower", "After training", "SPF", "Custom time"].map((group) => ({
       group,
       items: BODY_CARE_TODAY_ROUTINE.filter((item) => item.timeOfDay === group || (group === "SPF" && item.spfRequirement.includes("SPF"))),
-    })).filter((group) => group.items.length);
+    }));
   }, []);
 
   return (
@@ -283,6 +283,11 @@ function TodaysRoutine() {
             <div key={group}>
               <div className="mono-label mb-3">{group}</div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {items.length === 0 && (
+                  <div className="border border-dashed border-[var(--border)] rounded-md p-5 text-sm text-[var(--soft-text)] bg-[var(--porcelain)]">
+                    No scheduled body-care items for this time bucket today.
+                  </div>
+                )}
                 {items.map((item) => {
                   const action = actions[item.id] || "";
                   return (
@@ -463,12 +468,28 @@ function SpfSupport() {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <div className="border border-[var(--border)] rounded-md p-4">
-          <h4 className="mb-3">SPF plan</h4>
-          <DefinitionGrid items={[["SPF product", BODY_CARE_SPF_PLAN.spfProduct], ["SPF level", BODY_CARE_SPF_PLAN.spfLevel], ["Exposed areas", BODY_CARE_SPF_PLAN.exposedBodyAreas], ["Usual time", BODY_CARE_SPF_PLAN.usualApplicationTime], ["Outdoor exposure", BODY_CARE_SPF_PLAN.outdoorExposureExpected ? "Expected" : "Not expected"], ["Swimming / sweating", BODY_CARE_SPF_PLAN.swimmingOrSweatingExpected ? "Expected" : "Not expected"], ["Reapplication", BODY_CARE_SPF_PLAN.reapplicationReminderPreference], ["Water resistant", BODY_CARE_SPF_PLAN.waterResistant ? "Yes" : "No"], ["Notes", BODY_CARE_SPF_PLAN.notes]]} />
+          <h4 className="mb-3">SPF plan fields</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <TextField label="SPF product" placeholder={BODY_CARE_SPF_PLAN.spfProduct} />
+            <TextField label="SPF level" placeholder={BODY_CARE_SPF_PLAN.spfLevel} />
+            <TextField label="Exposed body areas" placeholder={BODY_CARE_SPF_PLAN.exposedBodyAreas} />
+            <TextField label="Usual application time" placeholder={BODY_CARE_SPF_PLAN.usualApplicationTime} />
+            <SelectField label="Outdoor exposure expected" options={["Yes", "No"]} />
+            <SelectField label="Swimming or sweating expected" options={["Yes", "No"]} />
+            <TextField label="Reapplication reminder preference" placeholder={BODY_CARE_SPF_PLAN.reapplicationReminderPreference} className="sm:col-span-2" />
+            <SelectField label="Water-resistant" options={["Yes", "No"]} />
+            <TextField label="Notes" placeholder={BODY_CARE_SPF_PLAN.notes} className="sm:col-span-2" />
+          </div>
         </div>
         <div className="border border-[var(--border)] rounded-md p-4">
-          <h4 className="mb-3">SPF tracking</h4>
-          <DefinitionGrid items={[["Applied today", BODY_CARE_SPF_TRACKING.appliedToday ? "Yes" : "No"], ["Areas covered", BODY_CARE_SPF_TRACKING.bodyAreasCovered], ["Reapplication completed", BODY_CARE_SPF_TRACKING.reapplicationCompleted ? "Yes" : "No"], ["Skipped reason", BODY_CARE_SPF_TRACKING.skippedReason || "None"], ["Notes", BODY_CARE_SPF_TRACKING.notes]]} />
+          <h4 className="mb-3">SPF tracking fields</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <SelectField label="Applied today" options={[BODY_CARE_SPF_TRACKING.appliedToday ? "Yes" : "No", BODY_CARE_SPF_TRACKING.appliedToday ? "No" : "Yes"]} />
+            <TextField label="Body areas covered" placeholder={BODY_CARE_SPF_TRACKING.bodyAreasCovered} />
+            <SelectField label="Reapplication completed" options={[BODY_CARE_SPF_TRACKING.reapplicationCompleted ? "Yes" : "No", BODY_CARE_SPF_TRACKING.reapplicationCompleted ? "No" : "Yes"]} />
+            <TextField label="Skipped reason" placeholder={BODY_CARE_SPF_TRACKING.skippedReason || "none"} />
+            <TextField label="Notes" placeholder={BODY_CARE_SPF_TRACKING.notes} className="sm:col-span-2" />
+          </div>
           <div className="rule my-4" />
           <div className="grid gap-2 text-sm">
             <Badge>PYPER reminder: sun protection check</Badge>
@@ -498,10 +519,14 @@ function SkinProgress() {
           <Metric label="Monthly adherence" value="74%" hint="all body-care actions" />
           <Metric label="SPF consistency" value={`${latest.spf}%`} hint="logged coverage" />
           <Metric label="Held or missed" value="3 days" hint="includes clinician-held" />
+          <Metric label="Flare frequency" value="1 / week" hint="acne or eczema flare logged" />
+          <Metric label="Unresolved questions" value="3" hint="ready for clinician review" />
+          <Metric label="Treatment cycle status" value="Week 4 / 6" hint="active Texture Rx cycle" />
+          <Metric label="Monthly photo" value="Placeholder" hint="future secure upload" />
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           <div className="border border-[var(--border)] rounded-md p-5">
-            <h4 className="mb-3">Tolerance trend</h4>
+            <h4 className="mb-3">Dryness trend · Irritation trend · Flare frequency · SPF consistency</h4>
             <div className="space-y-3">
               {BODY_CARE_TOLERANCE_TREND.map((week) => (
                 <div key={week.week} className="grid grid-cols-[40px_1fr] gap-3 items-center text-sm">
