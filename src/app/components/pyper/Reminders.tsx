@@ -35,7 +35,7 @@ export function Reminders() {
         <Lock size={16} className="text-[var(--steel)] mt-1 shrink-0" />
         <div className="text-sm">
           Push notifications use private labels like “PYPER reminder: hydration check.” Sensitive
-          details stay inside the portal.
+          details stay inside The Guide.
         </div>
       </Surface>
 

@@ -8,7 +8,7 @@ export function Safety() {
       <PageHeader
         eyebrow="Safety"
         title="Boundaries that protect the protocol."
-        subtitle="This portal does not provide diagnosis, treatment, dose recommendations, or emergency care. It supports your work with your clinician."
+        subtitle="This guide does not provide diagnosis, treatment, dose recommendations, emergency care, or portal-based clinical services. It supports your work with your clinician."
       />
 
       <Surface className="p-6 mb-6 border-l-4 border-l-[#8a2a2a] bg-[#fdf4f4]">
@@ -21,7 +21,7 @@ export function Safety() {
             <p className="text-sm">
               If you are experiencing a medical or mental health emergency, call your local
               emergency number or go to the nearest emergency department. Do not rely on this
-              portal for urgent medical decisions.
+              guide for urgent medical decisions.
             </p>
           </div>
         </div>

@@ -1,4 +1,4 @@
-# PYPER Member Portal — Phase 2 File Manifest
+# The PYPER Method Interactive Guide — Phase 2 File Manifest
 
 Total files: 97
 

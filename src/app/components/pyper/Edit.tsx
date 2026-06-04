@@ -23,13 +23,13 @@ export function Edit() {
       <PageHeader
         eyebrow="The PYPER Edit"
         title="Curated for the protocol."
-        subtitle="Member-only partner offers and curated products that support the PYPER Method. Available exclusively inside the private PYPER Member Portal."
+        subtitle="Guide-related partner offers and curated products that support The PYPER Method. Available inside The PYPER Method Interactive Guide."
       />
 
       <Surface className="p-5 mb-6 text-sm bg-[var(--ivory)]">
         PYPER may earn commission, referral fees, sponsorship fees, or other compensation from some
         products and partner offers featured inside The PYPER Edit. Member Partner Offers are
-        available exclusively to PYPER members inside the private PYPER Member Portal. These
+        available inside The PYPER Method Interactive Guide. These
         recommendations do not replace medical advice, diagnosis, treatment, or clinician guidance.
       </Surface>
 
@@ -61,7 +61,7 @@ export function Edit() {
                     : "border-[var(--med-blue)] text-[var(--med-blue)]"
                 }`}
               >
-                {o.type === "Portal Exclusive" && <Lock size={10} className="inline -mt-0.5 mr-1" />}
+                {o.type === "Guide Exclusive" && <Lock size={10} className="inline -mt-0.5 mr-1" />}
                 {o.type}
               </span>
             </div>

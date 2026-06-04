@@ -1,11 +1,11 @@
 
-  # App Builder
+  # The PYPER Method Interactive Guide
 
-  This is a code bundle for App Builder. The original project is available at https://www.figma.com/design/EJlyLcR2h1lgqVLBn8npts/App-Builder.
+  A responsive digital replacement for the static PYPER Method GLP-1 guide, built for web, mobile phones, and tablets.
 
   ## Running the code
 
-  Run `npm i` to install the dependencies.
+  Run `pnpm install` to install the dependencies.
 
-  Run `npm run dev` to start the development server.
+  Run `pnpm run dev` to start the development server.
   

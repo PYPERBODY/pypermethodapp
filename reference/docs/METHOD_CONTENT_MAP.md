@@ -1,4 +1,4 @@
-# PYPER Member Portal — Phase 2 Method Content Map
+# The PYPER Method Interactive Guide — Phase 2 Method Content Map
 
 Phase 2 converts the complete patient-facing content from `previewv2.html` into the responsive Method library. The PDF-style cover and decorative divider pages are intentionally not rendered as member content.
 

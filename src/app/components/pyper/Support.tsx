@@ -12,8 +12,8 @@ export function Support() {
   return (
     <>
       <PageHeader
-        eyebrow="Support"
-        title="Provider questions, exports, and community."
+        eyebrow="Guide support"
+        title="Guide questions, exports, and community boundaries."
         subtitle="Prepare your check-ins. Export a clean summary. Community guidelines keep the conversation safe."
       />
 
@@ -22,7 +22,7 @@ export function Support() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <div className="mono-label mb-1">Provider queue</div>
-              <h3>Questions for provider</h3>
+              <h3>Guide questions for your clinician</h3>
             </div>
             <button className="text-xs inline-flex items-center gap-1.5 border border-[var(--border)] px-3 py-1.5 rounded-md hover:bg-[var(--ivory)]">
               <MessageSquarePlus size={14} /> Add question
@@ -67,7 +67,7 @@ export function Support() {
             </button>
           </div>
           <div className="mono-label mt-4">
-            Exports do not automatically send to email or provider. Secure send-to-provider arrives
+            Guide exports do not automatically send to email or a clinician. Secure send-to-clinician support arrives
             with the clinical workflow.
           </div>
         </Surface>
@@ -75,12 +75,12 @@ export function Support() {
 
       <Surface className="p-6 mb-8">
         <div className="mono-label mb-2">Community guidelines</div>
-        <h3 className="mb-3">Member community</h3>
+        <h3 className="mb-3">Guide community</h3>
         <ul className="text-sm space-y-2 text-[var(--soft-text)]">
-          <li>· No medical or dose advice between members.</li>
+          <li>· No medical or dose advice in guide community spaces.</li>
           <li>· No body shaming, before/after pressure, or supplement pushing.</li>
           <li>· Escalate medical concerns to your clinician — not the community.</li>
-          <li>· Discord / member community link is reserved for verified members.</li>
+          <li>· Community link is reserved for verified guide access.</li>
         </ul>
       </Surface>
 

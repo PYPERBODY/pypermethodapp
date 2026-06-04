@@ -92,7 +92,7 @@ export const OFFERS = [
     brand: "SkinCeuticals",
     title: "Barrier-first regimen",
     category: "Skin + Body Care",
-    type: "Portal Exclusive",
+    type: "Guide Exclusive",
     reason: "Dermatology-grade actives paired for sensitive transformation skin.",
     benefit: "Member-only consultation",
     disclosure: "Partner offer. PYPER may receive compensation from this brand.",
@@ -140,7 +140,7 @@ export const PROGRESS_SERIES = [
 export const SAFETY_ITEMS = [
   {
     title: "Urgent red flags",
-    body: "Severe abdominal pain, repeated vomiting, inability to hydrate, fainting, chest pain, allergic reaction, suicidal thoughts, or severe mental health concerns may require urgent medical attention. Contact your clinician or seek urgent/emergency care. Do not rely on this portal for urgent medical decisions.",
+    body: "Severe abdominal pain, repeated vomiting, inability to hydrate, fainting, chest pain, allergic reaction, suicidal thoughts, or severe mental health concerns may require urgent medical attention. Contact your clinician or seek urgent/emergency care. Do not rely on this guide for urgent medical decisions.",
   },
   {
     title: "Missed-dose guidance",
@@ -148,7 +148,7 @@ export const SAFETY_ITEMS = [
   },
   {
     title: "Mental health crisis",
-    body: "If you feel unsafe or at risk of harming yourself, contact your clinician, crisis support, or emergency services immediately. This portal does not provide therapy or crisis intervention.",
+    body: "If you feel unsafe or at risk of harming yourself, contact your clinician, crisis support, or emergency services immediately. This guide does not provide therapy or crisis intervention.",
   },
   {
     title: "Supplement caution",

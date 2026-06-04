@@ -1,4 +1,4 @@
-# PYPER Member Portal — Phase 2 Notes
+# The PYPER Method Interactive Guide — Phase 2 Notes
 
 ## Scope completed
 
