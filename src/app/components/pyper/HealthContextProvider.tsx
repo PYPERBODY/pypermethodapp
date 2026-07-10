@@ -34,6 +34,7 @@ type HealthContextApi = {
   updateMedication: (id: string, patch: Partial<MedicationEntry>) => void;
   removeMedication: (id: string) => void;
   addSymptom: (name: string) => void;
+  selectSymptom: (name: string) => void;
   updateSymptom: (id: string, patch: Partial<SymptomEntry>) => void;
   removeSymptom: (id: string) => void;
   pushTimeline: (label: string) => void;
@@ -213,6 +214,36 @@ export function HealthContextProvider({ children }: { children: ReactNode }) {
             "Significant symptom change recorded"
           )
         );
+      },
+      selectSymptom: (name) => {
+        const exclusive = ["None", "Prefer not to answer"];
+        setState((prev) => {
+          if (prev.symptoms.some((s) => s.name === name)) return prev;
+          const symptom: SymptomEntry = {
+            id: uid("sx"),
+            name,
+            severity: "mild",
+            startDate: "",
+            pattern: "",
+            notes: "",
+            addToProviderQuestions: false,
+            includeInExport: true,
+          };
+          let nextSymptoms: SymptomEntry[];
+          if (exclusive.includes(name)) {
+            nextSymptoms = [symptom];
+          } else {
+            nextSymptoms = [
+              symptom,
+              ...prev.symptoms.filter((s) => !exclusive.includes(s.name)),
+            ];
+          }
+          return withUpdate(
+            prev,
+            { symptoms: nextSymptoms },
+            "Significant symptom change recorded"
+          );
+        });
       },
       updateSymptom: (id, patch) => {
         setState((prev) =>

@@ -69,16 +69,14 @@ const PHASE2_MODULE_IDS: HealthModuleId[] = [
 ];
 
 /**
- * Phase 2 — interactive Health Context onboarding:
- * module selection, Body Metrics/BMI, and conditional module sections.
- * Medications, symptoms, and export controls are deferred to later phases.
+ * Phase 3 — medication & symptom tracking beyond GLP-1.
  * Prototype React state only — production requires authenticated secure storage.
+ * Health Context data never flows to partner/affiliate/member-benefit features.
  */
 export function HealthContextPanel({ onBack, embedded }: PanelProps) {
   const hc = useHealthContext();
   const { state } = hc;
   const hasModules = state.selectedModules.some((m) => PHASE2_MODULE_IDS.includes(m));
-  const wantsMedication = state.selectedModules.includes("medication");
 
   return (
     <div>
@@ -120,7 +118,7 @@ export function HealthContextPanel({ onBack, embedded }: PanelProps) {
           <p className="mono-label">
             Storage mode: {state.storageMode} · prototype React state only · production health data
             requires secure authenticated storage with RLS · never sent to forms, sheets, analytics,
-            partners, affiliates, or email marketing
+            partners, affiliates, member benefits, or email marketing
           </p>
         </div>
       </Surface>
@@ -130,22 +128,8 @@ export function HealthContextPanel({ onBack, embedded }: PanelProps) {
       <div className="mt-8 space-y-6">
         <BodyMetricsSection />
         {hasModules && <ConditionalModules />}
-        {wantsMedication && (
-          <Surface className="p-6">
-            <div className="mono-label mb-2">Medication and treatment history</div>
-            <h3 className="mb-2">Selected for your profile</h3>
-            <p className="text-sm text-[var(--soft-text)]">
-              Medication and treatment recording expands beyond GLP-1 in a later phase. No dose
-              changes, diagnoses, or treatment advice are generated here.
-            </p>
-            <button
-              type="button"
-              className="mt-3 text-xs border border-[var(--border)] px-3 py-1.5 rounded-md hover:bg-[var(--ivory)]"
-            >
-              Skip for now
-            </button>
-          </Surface>
-        )}
+        <MedicationsSection />
+        <SymptomsSection />
       </div>
 
       <div className="mt-8 flex flex-wrap gap-3">
@@ -828,6 +812,25 @@ function ConditionalModules() {
 
 function MedicationsSection() {
   const { state, addMedication, updateMedication, removeMedication } = useHealthContext();
+  const [skipped, setSkipped] = useState(false);
+
+  if (skipped) {
+    return (
+      <Surface className="p-6 flex items-center justify-between gap-4 flex-wrap">
+        <div>
+          <div className="mono-label mb-1">Medications & treatments</div>
+          <p className="text-sm text-[var(--soft-text)]">Section skipped. You can return anytime.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setSkipped(false)}
+          className="text-xs border border-[var(--border)] px-3 py-1.5 rounded-md hover:bg-[var(--ivory)]"
+        >
+          Edit medications
+        </button>
+      </Surface>
+    );
+  }
 
   return (
     <Surface className="p-6">
@@ -836,150 +839,213 @@ function MedicationsSection() {
           <div className="mono-label mb-2">Medications & treatments</div>
           <h3>Beyond GLP-1</h3>
           <p className="text-sm mt-2 text-[var(--soft-text)] max-w-xl">{MEDICATION_CHANGE_NOTE}</p>
+          <p className="text-sm mt-2 text-[var(--soft-text)] max-w-xl">
+            Record medications and treatments privately. This section does not suggest medication
+            changes or generate treatment recommendations. Data stays in Health Context — never in
+            partner or member-benefit features.
+          </p>
         </div>
-        <button
-          type="button"
-          onClick={() => addMedication({ name: "New medication" })}
-          className="inline-flex items-center gap-1.5 border border-[var(--border)] px-3 py-2 rounded-md text-sm hover:bg-[var(--ivory)]"
-        >
-          <Plus size={14} /> Add entry
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => setSkipped(true)}
+            className="text-xs border border-[var(--border)] px-3 py-1.5 rounded-md hover:bg-[var(--ivory)]"
+          >
+            Skip section
+          </button>
+          <button
+            type="button"
+            onClick={() => addMedication({ name: "" })}
+            className="inline-flex items-center gap-1.5 border border-[var(--border)] px-3 py-2 rounded-md text-sm hover:bg-[var(--ivory)]"
+          >
+            <Plus size={14} /> Add entry
+          </button>
+        </div>
       </div>
 
-      <div className="space-y-4">
-        {state.medications.map((m) => (
-          <div key={m.id} className="border border-[var(--border)] rounded-md p-4 bg-[var(--porcelain)]">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              <Field label="Medication or treatment name">
-                <TextInput value={m.name} onChange={(v) => updateMedication(m.id, { name: v })} />
-              </Field>
-              <Field label="Category">
-                <select
-                  value={m.category}
-                  onChange={(e) => updateMedication(m.id, { category: e.target.value })}
-                  className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm bg-white"
+      {state.medications.length === 0 ? (
+        <p className="text-sm text-[var(--soft-text)]">
+          No medications recorded yet. Add an entry or skip this section.
+        </p>
+      ) : (
+        <div className="space-y-4">
+          {state.medications.map((m) => (
+            <div
+              key={m.id}
+              className="border border-[var(--border)] rounded-md p-4 bg-[var(--porcelain)]"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <Field label="Medication or treatment name">
+                  <TextInput
+                    value={m.name}
+                    onChange={(v) => updateMedication(m.id, { name: v })}
+                    placeholder="Name"
+                  />
+                </Field>
+                <Field label="Category">
+                  <select
+                    value={m.category}
+                    onChange={(e) => updateMedication(m.id, { category: e.target.value })}
+                    className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm bg-white"
+                  >
+                    {MEDICATION_CATEGORIES.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+                <Field label="Formulation">
+                  <TextInput
+                    value={m.formulation}
+                    onChange={(v) => updateMedication(m.id, { formulation: v })}
+                    placeholder="e.g. tablet, injection"
+                  />
+                </Field>
+                <Field label="Dose, optional">
+                  <TextInput value={m.dose} onChange={(v) => updateMedication(m.id, { dose: v })} />
+                </Field>
+                <Field label="Frequency">
+                  <TextInput
+                    value={m.frequency}
+                    onChange={(v) => updateMedication(m.id, { frequency: v })}
+                  />
+                </Field>
+                <Field label="Currently taking">
+                  <select
+                    value={m.currentlyTaking ? "yes" : "no"}
+                    onChange={(e) =>
+                      updateMedication(m.id, { currentlyTaking: e.target.value === "yes" })
+                    }
+                    className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm bg-white"
+                  >
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </Field>
+                <Field label="Start date">
+                  <input
+                    type="date"
+                    value={m.startDate}
+                    onChange={(e) => updateMedication(m.id, { startDate: e.target.value })}
+                    className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm bg-white"
+                  />
+                </Field>
+                <Field label="End date, if applicable">
+                  <input
+                    type="date"
+                    value={m.endDate}
+                    onChange={(e) => updateMedication(m.id, { endDate: e.target.value })}
+                    className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm bg-white"
+                  />
+                </Field>
+                <Field label="Reason prescribed, optional">
+                  <TextInput
+                    value={m.reason}
+                    onChange={(v) => updateMedication(m.id, { reason: v })}
+                    placeholder="Optional"
+                  />
+                </Field>
+                <Field label="Member-observed changes">
+                  <TextInput
+                    value={m.observedChanges}
+                    onChange={(v) => updateMedication(m.id, { observedChanges: v })}
+                  />
+                </Field>
+                <Field label="Side effects or tolerance">
+                  <TextInput
+                    value={m.sideEffects}
+                    onChange={(v) => updateMedication(m.id, { sideEffects: v })}
+                  />
+                </Field>
+                <Field label="Notes for healthcare provider">
+                  <TextInput
+                    value={m.notesForProvider}
+                    onChange={(v) => updateMedication(m.id, { notesForProvider: v })}
+                  />
+                </Field>
+              </div>
+              <div className="mt-3 flex items-center justify-between">
+                <label className="inline-flex items-center gap-2 text-xs">
+                  <input
+                    type="checkbox"
+                    checked={m.includeInExport}
+                    onChange={(e) =>
+                      updateMedication(m.id, { includeInExport: e.target.checked })
+                    }
+                  />
+                  Include in provider export, yes/no
+                </label>
+                <button
+                  type="button"
+                  onClick={() => removeMedication(m.id)}
+                  className="inline-flex items-center gap-1.5 text-xs text-[var(--steel)] hover:text-[var(--graphite)]"
                 >
-                  {MEDICATION_CATEGORIES.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
-                </select>
-              </Field>
-              <Field label="Formulation">
-                <TextInput
-                  value={m.formulation}
-                  onChange={(v) => updateMedication(m.id, { formulation: v })}
-                />
-              </Field>
-              <Field label="Dose (optional)">
-                <TextInput value={m.dose} onChange={(v) => updateMedication(m.id, { dose: v })} />
-              </Field>
-              <Field label="Frequency">
-                <TextInput
-                  value={m.frequency}
-                  onChange={(v) => updateMedication(m.id, { frequency: v })}
-                />
-              </Field>
-              <Field label="Currently taking">
-                <select
-                  value={m.currentlyTaking ? "yes" : "no"}
-                  onChange={(e) =>
-                    updateMedication(m.id, { currentlyTaking: e.target.value === "yes" })
-                  }
-                  className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm bg-white"
-                >
-                  <option value="yes">Yes</option>
-                  <option value="no">No</option>
-                </select>
-              </Field>
-              <Field label="Start date">
-                <input
-                  type="date"
-                  value={m.startDate}
-                  onChange={(e) => updateMedication(m.id, { startDate: e.target.value })}
-                  className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm bg-white"
-                />
-              </Field>
-              <Field label="End date (if applicable)">
-                <input
-                  type="date"
-                  value={m.endDate}
-                  onChange={(e) => updateMedication(m.id, { endDate: e.target.value })}
-                  className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm bg-white"
-                />
-              </Field>
-              <Field label="Current prescriber (optional)">
-                <TextInput
-                  value={m.prescriber}
-                  onChange={(v) => updateMedication(m.id, { prescriber: v })}
-                />
-              </Field>
-              <Field label="Member-observed changes">
-                <TextInput
-                  value={m.observedChanges}
-                  onChange={(v) => updateMedication(m.id, { observedChanges: v })}
-                />
-              </Field>
-              <Field label="Side effects or tolerance">
-                <TextInput
-                  value={m.sideEffects}
-                  onChange={(v) => updateMedication(m.id, { sideEffects: v })}
-                />
-              </Field>
-              <Field label="Notes for healthcare provider">
-                <TextInput
-                  value={m.notesForProvider}
-                  onChange={(v) => updateMedication(m.id, { notesForProvider: v })}
-                />
-              </Field>
+                  <Trash2 size={14} /> Delete
+                </button>
+              </div>
             </div>
-            <div className="mt-3 flex items-center justify-between">
-              <label className="inline-flex items-center gap-2 text-xs">
-                <input
-                  type="checkbox"
-                  checked={m.includeInExport}
-                  onChange={(e) => updateMedication(m.id, { includeInExport: e.target.checked })}
-                />
-                Include in provider export
-              </label>
-              <button
-                type="button"
-                onClick={() => removeMedication(m.id)}
-                className="inline-flex items-center gap-1.5 text-xs text-[var(--steel)] hover:text-[var(--graphite)]"
-              >
-                <Trash2 size={14} /> Delete
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </Surface>
   );
 }
 
 function SymptomsSection() {
-  const { state, addSymptom, updateSymptom, removeSymptom, pushTimeline } = useHealthContext();
+  const { state, selectSymptom, updateSymptom, removeSymptom, pushTimeline } = useHealthContext();
+  const [skipped, setSkipped] = useState(false);
+  const exclusive = ["None", "Prefer not to answer"];
+
   const available = useMemo(
     () => HEALTH_SYMPTOMS.filter((s) => !state.symptoms.some((x) => x.name === s)),
     [state.symptoms]
   );
 
+  if (skipped) {
+    return (
+      <Surface className="p-6 flex items-center justify-between gap-4 flex-wrap">
+        <div>
+          <div className="mono-label mb-1">Symptom baseline</div>
+          <p className="text-sm text-[var(--soft-text)]">Section skipped. You can return anytime.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setSkipped(false)}
+          className="text-xs border border-[var(--border)] px-3 py-1.5 rounded-md hover:bg-[var(--ivory)]"
+        >
+          Edit symptoms
+        </button>
+      </Surface>
+    );
+  }
+
   return (
     <Surface className="p-6">
-      <div className="mono-label mb-2">Hormonal & metabolic symptom baseline</div>
-      <h3 className="mb-2">Track symptoms over time</h3>
-      <p className="text-sm mb-4 text-[var(--soft-text)]">
-        Do not automatically assign symptoms to a condition. No diagnosis is generated from these
-        selections.
-      </p>
+      <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
+        <div>
+          <div className="mono-label mb-2">Hormonal & metabolic symptom baseline</div>
+          <h3 className="mb-2">Track symptoms over time</h3>
+          <p className="text-sm text-[var(--soft-text)] max-w-xl">
+            Symptoms are recorded without assigning them to a diagnosis. No medication changes or
+            treatment recommendations are generated from these selections.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setSkipped(true)}
+          className="text-xs border border-[var(--border)] px-3 py-1.5 rounded-md hover:bg-[var(--ivory)]"
+        >
+          Skip section
+        </button>
+      </div>
 
       <div className="flex flex-wrap gap-2 mb-5">
-        {available.slice(0, 18).map((s) => (
+        {available.map((s) => (
           <button
             key={s}
             type="button"
-            onClick={() => addSymptom(s)}
+            onClick={() => selectSymptom(s)}
             className="px-3 py-1.5 rounded-md border border-[var(--border)] text-xs hover:bg-[var(--ivory)]"
           >
             + {s}
@@ -988,7 +1054,9 @@ function SymptomsSection() {
       </div>
 
       {state.symptoms.length === 0 ? (
-        <p className="text-sm text-[var(--soft-text)]">No symptoms recorded yet. Skip if preferred.</p>
+        <p className="text-sm text-[var(--soft-text)]">
+          No symptoms recorded yet. Skip if preferred.
+        </p>
       ) : (
         <ul className="space-y-3">
           {state.symptoms.map((s) => (
@@ -1004,59 +1072,68 @@ function SymptomsSection() {
                   <Trash2 size={16} />
                 </button>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                <Field label="Severity">
-                  <select
-                    value={s.severity}
-                    onChange={(e) =>
-                      updateSymptom(s.id, { severity: e.target.value as SymptomSeverity })
-                    }
-                    className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm bg-white"
-                  >
-                    <option value="mild">Mild</option>
-                    <option value="moderate">Moderate</option>
-                    <option value="significant">Significant</option>
-                  </select>
-                </Field>
-                <Field label="Start date (optional)">
-                  <input
-                    type="date"
-                    value={s.startDate}
-                    onChange={(e) => updateSymptom(s.id, { startDate: e.target.value })}
-                    className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm bg-white"
-                  />
-                </Field>
-                <Field label="Pattern or frequency (optional)">
-                  <TextInput
-                    value={s.pattern}
-                    onChange={(v) => updateSymptom(s.id, { pattern: v })}
-                  />
-                </Field>
-                <Field label="Notes (optional)">
-                  <TextInput value={s.notes} onChange={(v) => updateSymptom(s.id, { notes: v })} />
-                </Field>
-              </div>
-              <div className="mt-3 flex flex-wrap gap-4 text-xs">
-                <label className="inline-flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={s.addToProviderQuestions}
-                    onChange={(e) => {
-                      updateSymptom(s.id, { addToProviderQuestions: e.target.checked });
-                      if (e.target.checked) pushTimeline("Provider question added");
-                    }}
-                  />
-                  Add to provider questions
-                </label>
-                <label className="inline-flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={s.includeInExport}
-                    onChange={(e) => updateSymptom(s.id, { includeInExport: e.target.checked })}
-                  />
-                  Include in provider export
-                </label>
-              </div>
+              {!exclusive.includes(s.name) && (
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <Field label="Severity">
+                      <select
+                        value={s.severity}
+                        onChange={(e) =>
+                          updateSymptom(s.id, { severity: e.target.value as SymptomSeverity })
+                        }
+                        className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm bg-white"
+                      >
+                        <option value="mild">Mild</option>
+                        <option value="moderate">Moderate</option>
+                        <option value="significant">Significant</option>
+                      </select>
+                    </Field>
+                    <Field label="Start date, optional">
+                      <input
+                        type="date"
+                        value={s.startDate}
+                        onChange={(e) => updateSymptom(s.id, { startDate: e.target.value })}
+                        className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm bg-white"
+                      />
+                    </Field>
+                    <Field label="Pattern or frequency, optional">
+                      <TextInput
+                        value={s.pattern}
+                        onChange={(v) => updateSymptom(s.id, { pattern: v })}
+                      />
+                    </Field>
+                    <Field label="Notes, optional">
+                      <TextInput
+                        value={s.notes}
+                        onChange={(v) => updateSymptom(s.id, { notes: v })}
+                      />
+                    </Field>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-4 text-xs">
+                    <label className="inline-flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={s.addToProviderQuestions}
+                        onChange={(e) => {
+                          updateSymptom(s.id, { addToProviderQuestions: e.target.checked });
+                          if (e.target.checked) pushTimeline("Provider question added");
+                        }}
+                      />
+                      Add to provider questions
+                    </label>
+                    <label className="inline-flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={s.includeInExport}
+                        onChange={(e) =>
+                          updateSymptom(s.id, { includeInExport: e.target.checked })
+                        }
+                      />
+                      Include in provider export, yes/no
+                    </label>
+                  </div>
+                </>
+              )}
             </li>
           ))}
         </ul>
