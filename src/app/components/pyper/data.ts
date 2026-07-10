@@ -38,6 +38,12 @@ export const CHAPTERS = [
   { id: "phases", title: "Three-Phase Standard", time: "7 min", tag: "Framework" },
   { id: "window", title: "The Medication Window", time: "9 min", tag: "GLP-1" },
   { id: "composition", title: "Body Composition", time: "8 min", tag: "Physical" },
+  {
+    id: "health-context",
+    title: "Health, Hormonal & Metabolic Context",
+    time: "14 min",
+    tag: "Private profile",
+  },
   { id: "nutrition", title: "Metabolic Nutrition", time: "12 min", tag: "Nutrition" },
   { id: "dining", title: "Dining, Travel & Social Protocols", time: "9 min", tag: "Lifestyle" },
   { id: "training", title: "Supplements, Strength & Movement", time: "11 min", tag: "Physical" },
@@ -61,6 +67,11 @@ export const PILLARS = [
 export const TRACKERS = [
   { id: "body", name: "Body Metrics", note: "Weight · waist · hips · chest · arm · thigh" },
   { id: "medication", name: "Medication Rhythm", note: "Dose · site · missed-dose handling" },
+  {
+    id: "treatments",
+    name: "Medications & Treatments",
+    note: "Health Context · non-GLP-1 history",
+  },
   { id: "supplements", name: "Supplement Routine", note: "Clinician-approved · time taken" },
   { id: "tolerance", name: "Tolerance Tracker", note: "Severity sliders · red-flag logic" },
   { id: "emotional", name: "Emotional Check-In", note: "Mood · sleep · body image" },
@@ -149,6 +160,18 @@ export const SAFETY_ITEMS = [
   {
     title: "Mental health crisis",
     body: "If you feel unsafe or at risk of harming yourself, contact your clinician, crisis support, or emergency services immediately. This portal does not provide therapy or crisis intervention.",
+  },
+  {
+    title: "Hormonal & reproductive red flags",
+    body: "Sudden or severe testicular pain, inability to urinate, blood in urine, severe pelvic pain, or rapidly worsening urinary symptoms require prompt medical assessment. Do not wait for a routine PYPER check-in. This portal is not an emergency service.",
+  },
+  {
+    title: "Medication & hormone changes",
+    body: "Do not start, stop, restart, or change the dose of a prescription medication or hormone treatment based on information in this guide. Contact your licensed healthcare provider.",
+  },
+  {
+    title: "Pregnancy & fertility caution",
+    body: "Pregnancy, conception planning, breastfeeding, or chestfeeding must be discussed with your prescribing clinician before starting or continuing weight-management medication or changing treatment. This guide does not provide medication clearance.",
   },
   {
     title: "Supplement caution",

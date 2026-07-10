@@ -1,5 +1,10 @@
 import { PageHeader, Surface } from "./Shell";
 import { SAFETY_ITEMS } from "./data";
+import {
+  HEALTH_SCOPE_NOTE,
+  MEDICATION_CHANGE_NOTE,
+  PRIVACY_HEALTH_NOTE,
+} from "./healthContextData";
 import { ShieldAlert, PhoneCall } from "lucide-react";
 
 export function Safety() {
@@ -25,6 +30,13 @@ export function Safety() {
             </p>
           </div>
         </div>
+      </Surface>
+
+      <Surface className="p-6 mb-6">
+        <div className="mono-label mb-2">Health Context scope</div>
+        <p className="text-sm mb-3">{HEALTH_SCOPE_NOTE}</p>
+        <p className="text-sm mb-3">{MEDICATION_CHANGE_NOTE}</p>
+        <p className="text-sm">{PRIVACY_HEALTH_NOTE}</p>
       </Surface>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">

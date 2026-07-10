@@ -31,6 +31,7 @@ export function Edit() {
         products and partner offers featured inside The PYPER Edit. Member Partner Offers are
         available exclusively to PYPER members inside the private PYPER Member Portal. These
         recommendations do not replace medical advice, diagnosis, treatment, or clinician guidance.
+        Health Context and other member health data are never passed to affiliate or partner links.
       </Surface>
 
       <div className="flex gap-2 overflow-x-auto pb-2 mb-6">

@@ -78,6 +78,19 @@ export function Trackers() {
         <div>
           {selected === "tolerance" ? (
             <ToleranceTracker />
+          ) : selected === "treatments" ? (
+            <Surface className="p-8">
+              <div className="mono-label mb-2">Health Context</div>
+              <h3 className="mb-3">Medications & treatments</h3>
+              <p className="text-sm max-w-lg mb-4">
+                Non-GLP-1 medication and hormone treatment history lives in the private Health,
+                Hormonal & Metabolic Context chapter. Do not recommend dose changes from this
+                portal. Secure storage attaches when authentication is connected.
+              </p>
+              <p className="mono-label">
+                Open Method → Health, Hormonal & Metabolic Context to edit entries.
+              </p>
+            </Surface>
           ) : (
             <Surface className="p-8 text-center">
               <div className="mono-label mb-2">
