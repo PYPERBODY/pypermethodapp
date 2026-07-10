@@ -54,7 +54,7 @@ type PanelProps = {
   embedded?: boolean;
 };
 
-const ACTIVE_MODULE_IDS: HealthModuleId[] = [
+const PHASE2_MODULE_IDS: HealthModuleId[] = [
   "general",
   "metabolic",
   "thyroid",
@@ -66,13 +66,19 @@ const ACTIVE_MODULE_IDS: HealthModuleId[] = [
   "prostate",
   "testicular",
   "gender_affirming",
-  "medication",
 ];
 
+/**
+ * Phase 2 — interactive Health Context onboarding:
+ * module selection, Body Metrics/BMI, and conditional module sections.
+ * Medications, symptoms, and export controls are deferred to later phases.
+ * Prototype React state only — production requires authenticated secure storage.
+ */
 export function HealthContextPanel({ onBack, embedded }: PanelProps) {
   const hc = useHealthContext();
   const { state } = hc;
-  const hasModules = state.selectedModules.some((m) => ACTIVE_MODULE_IDS.includes(m));
+  const hasModules = state.selectedModules.some((m) => PHASE2_MODULE_IDS.includes(m));
+  const wantsMedication = state.selectedModules.includes("medication");
 
   return (
     <div>
@@ -86,6 +92,7 @@ export function HealthContextPanel({ onBack, embedded }: PanelProps) {
 
       {onBack && (
         <button
+          type="button"
           onClick={onBack}
           className="mb-6 inline-flex items-center gap-2 text-sm text-[var(--steel)] hover:text-[var(--graphite)]"
         >
@@ -95,7 +102,7 @@ export function HealthContextPanel({ onBack, embedded }: PanelProps) {
 
       {embedded && (
         <div className="mb-6">
-          <div className="mono-label mb-2">Chapter 08 · Private profile</div>
+          <div className="mono-label mb-2">Private profile · Health Context</div>
           <h2 className="mb-2">Your Health Context</h2>
           <p className="text-sm max-w-2xl">
             This private section helps you record context and prepare for more informed
@@ -111,7 +118,9 @@ export function HealthContextPanel({ onBack, embedded }: PanelProps) {
           <p>{HEALTH_SCOPE_NOTE}</p>
           <p>{PRIVACY_HEALTH_NOTE}</p>
           <p className="mono-label">
-            Storage mode: {state.storageMode} · secure authenticated writes pending backend review
+            Storage mode: {state.storageMode} · prototype React state only · production health data
+            requires secure authenticated storage with RLS · never sent to forms, sheets, analytics,
+            partners, affiliates, or email marketing
           </p>
         </div>
       </Surface>
@@ -121,21 +130,35 @@ export function HealthContextPanel({ onBack, embedded }: PanelProps) {
       <div className="mt-8 space-y-6">
         <BodyMetricsSection />
         {hasModules && <ConditionalModules />}
-        {(state.selectedModules.includes("medication") || hasModules) && <MedicationsSection />}
-        {hasModules && <SymptomsSection />}
-        <PrivacyExportSection />
-        <TimelineSection />
+        {wantsMedication && (
+          <Surface className="p-6">
+            <div className="mono-label mb-2">Medication and treatment history</div>
+            <h3 className="mb-2">Selected for your profile</h3>
+            <p className="text-sm text-[var(--soft-text)]">
+              Medication and treatment recording expands beyond GLP-1 in a later phase. No dose
+              changes, diagnoses, or treatment advice are generated here.
+            </p>
+            <button
+              type="button"
+              className="mt-3 text-xs border border-[var(--border)] px-3 py-1.5 rounded-md hover:bg-[var(--ivory)]"
+            >
+              Skip for now
+            </button>
+          </Surface>
+        )}
       </div>
 
       <div className="mt-8 flex flex-wrap gap-3">
         <button
+          type="button"
           onClick={() => hc.markUpdated("Health Context updated")}
           className="inline-flex items-center gap-2 bg-[var(--graphite)] text-[var(--porcelain)] px-4 py-2.5 rounded-md text-sm"
         >
           <Save size={14} /> Save and continue later
         </button>
         <button
-          onClick={() => hc.markUpdated()}
+          type="button"
+          onClick={() => hc.markUpdated("Health Context reviewed")}
           className="inline-flex items-center gap-2 border border-[var(--border)] px-4 py-2.5 rounded-md text-sm hover:bg-[var(--ivory)]"
         >
           Mark section reviewed
@@ -166,10 +189,13 @@ function ModuleSelection() {
   return (
     <Surface className="p-6">
       <div className="mono-label mb-2">Health module selection</div>
-      <h3 className="mb-2">Which health areas would you like to include?</h3>
+      <h3 className="mb-2">
+        Which health areas would you like to include in your private profile? Select all that
+        apply.
+      </h3>
       <p className="text-sm mb-5 text-[var(--soft-text)]">
-        Select all that apply. Only questions connected to your selections will appear. You can
-        add or remove modules later. This is not a binary gender form.
+        Only questions connected to your selections will appear. You can add or remove modules
+        later. This is not a binary male/female form. Every question can be skipped.
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         {HEALTH_MODULES.map((m) => {
@@ -260,83 +286,128 @@ function TextInput({
 function BodyMetricsSection() {
   const { state, updateBodyMetrics, startingBmi, currentBmi, bmiChange } = useHealthContext();
   const bm = state.bodyMetrics;
+  const [skipped, setSkipped] = useState(false);
+
+  if (skipped) {
+    return (
+      <Surface className="p-6 flex items-center justify-between gap-4 flex-wrap">
+        <div>
+          <div className="mono-label mb-1">Body metrics & BMI</div>
+          <p className="text-sm text-[var(--soft-text)]">Section skipped. You can return anytime.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setSkipped(false)}
+          className="text-xs border border-[var(--border)] px-3 py-1.5 rounded-md hover:bg-[var(--ivory)]"
+        >
+          Edit body metrics
+        </button>
+      </Surface>
+    );
+  }
 
   return (
     <Surface className="p-6">
-      <div className="mono-label mb-2">Body metrics & BMI</div>
-      <h3 className="mb-4">Screening measurements</h3>
+      <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
+        <div>
+          <div className="mono-label mb-2">Body metrics & BMI</div>
+          <h3>Screening measurements</h3>
+        </div>
+        <button
+          type="button"
+          onClick={() => setSkipped(true)}
+          className="text-xs border border-[var(--border)] px-3 py-1.5 rounded-md hover:bg-[var(--ivory)]"
+        >
+          Skip section
+        </button>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-5">
-        <Field label="Height (inches)">
-          <NumInput value={bm.heightInches} onChange={(v) => updateBodyMetrics({ heightInches: v })} />
+        <Field label="Height">
+          <NumInput
+            value={bm.heightInches}
+            onChange={(v) => updateBodyMetrics({ heightInches: v })}
+            placeholder="inches"
+          />
         </Field>
-        <Field label="Starting weight (lb)">
+        <Field label="Starting weight">
           <NumInput
             value={bm.startingWeightLb}
             onChange={(v) => updateBodyMetrics({ startingWeightLb: v })}
+            placeholder="lb"
           />
         </Field>
-        <Field label="Current weight (lb)">
+        <Field label="Current weight">
           <NumInput
             value={bm.currentWeightLb}
             onChange={(v) => updateBodyMetrics({ currentWeightLb: v })}
+            placeholder="lb"
           />
         </Field>
-        <Field label="Goal weight (optional)">
+        <Field label="Goal weight, optional">
           <NumInput
             value={bm.goalWeightLb}
             onChange={(v) => updateBodyMetrics({ goalWeightLb: v })}
+            placeholder="lb"
           />
         </Field>
-        <Field label="Highest adult weight (optional)">
+        <Field label="Highest adult weight, optional">
           <NumInput
             value={bm.highestAdultWeightLb}
             onChange={(v) => updateBodyMetrics({ highestAdultWeightLb: v })}
+            placeholder="lb"
           />
         </Field>
-        <Field label="Lowest adult weight (optional)">
+        <Field label="Lowest adult weight, optional">
           <NumInput
             value={bm.lowestAdultWeightLb}
             onChange={(v) => updateBodyMetrics({ lowestAdultWeightLb: v })}
+            placeholder="lb"
           />
         </Field>
-        <Field label="Waist (optional)">
+        <Field label="Waist measurement, optional">
           <NumInput value={bm.waist} onChange={(v) => updateBodyMetrics({ waist: v })} />
         </Field>
-        <Field label="Hips (optional)">
+        <Field label="Hip measurement, optional">
           <NumInput value={bm.hips} onChange={(v) => updateBodyMetrics({ hips: v })} />
         </Field>
-        <Field label="Chest (optional)">
+        <Field label="Chest measurement, optional">
           <NumInput value={bm.chest} onChange={(v) => updateBodyMetrics({ chest: v })} />
         </Field>
-        <Field label="Arm (optional)">
+        <Field label="Arm measurement, optional">
           <NumInput value={bm.arm} onChange={(v) => updateBodyMetrics({ arm: v })} />
         </Field>
-        <Field label="Thigh (optional)">
+        <Field label="Thigh measurement, optional">
           <NumInput value={bm.thigh} onChange={(v) => updateBodyMetrics({ thigh: v })} />
         </Field>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
-        <Field label="Weight change during previous 12 months">
+        <Field label="Weight change during the previous 12 months">
           <TextInput
             value={bm.weightChange12Months}
             onChange={(v) => updateBodyMetrics({ weightChange12Months: v })}
+            placeholder="Skip if preferred"
           />
         </Field>
         <Field label="Recent unexplained weight gain or loss">
           <TextInput
             value={bm.unexplainedChange}
             onChange={(v) => updateBodyMetrics({ unexplainedChange: v })}
-            placeholder="Optional"
+            placeholder="Skip if preferred"
           />
         </Field>
         <Field label="Clothing fit">
           <TextInput
             value={bm.clothingFit}
             onChange={(v) => updateBodyMetrics({ clothingFit: v })}
+            placeholder="Skip if preferred"
           />
         </Field>
         <Field label="Notes">
-          <TextInput value={bm.notes} onChange={(v) => updateBodyMetrics({ notes: v })} />
+          <TextInput
+            value={bm.notes}
+            onChange={(v) => updateBodyMetrics({ notes: v })}
+            placeholder="Skip if preferred"
+          />
         </Field>
       </div>
 
@@ -700,7 +771,7 @@ function ConditionalModules() {
             onChange={(e) => setDraftModule(e.target.value as HealthModuleId)}
             className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm bg-white"
           >
-            {ACTIVE_MODULE_IDS.map((id) => (
+            {PHASE2_MODULE_IDS.map((id) => (
               <option key={id} value={id}>
                 {HEALTH_MODULES.find((m) => m.id === id)?.label ?? id}
               </option>

@@ -13,10 +13,15 @@ import {
 import { ArrowLeft, Lock } from "lucide-react";
 
 /**
- * Phase 1 — readable Method chapter only.
- * Interactive Health Context forms are deferred to later phases.
+ * Phase 1 readable chapter + Phase 2 entry to interactive Health Context profile.
  */
-export function HealthContextChapter({ onBack }: { onBack: () => void }) {
+export function HealthContextChapter({
+  onBack,
+  onOpenProfile,
+}: {
+  onBack: () => void;
+  onOpenProfile: () => void;
+}) {
   return (
     <>
       <button
@@ -30,7 +35,7 @@ export function HealthContextChapter({ onBack }: { onBack: () => void }) {
       <PageHeader
         eyebrow="Chapter 08 · Private profile"
         title="Health, Hormonal & Metabolic Context"
-        subtitle="A private educational chapter for health, hormonal, reproductive, endocrine, and metabolic context. Recording tools arrive in later phases."
+        subtitle="A private educational chapter for health, hormonal, reproductive, endocrine, and metabolic context — with optional interactive Health Context recording."
       />
 
       <Surface className="p-5 mb-6 flex items-start gap-3 bg-[var(--ivory)]">
@@ -40,6 +45,25 @@ export function HealthContextChapter({ onBack }: { onBack: () => void }) {
             <p key={p}>{p}</p>
           ))}
         </div>
+      </Surface>
+
+      <Surface className="p-6 mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <div className="mono-label mb-2">Phase 2 · Interactive profile</div>
+          <h3 className="mb-2">Open Health Context</h3>
+          <p className="text-sm max-w-xl text-[var(--soft-text)]">
+            Choose health modules, record body metrics with neutral BMI screening, and complete
+            only the conditional sections that apply. Prototype state only — production requires
+            secure storage.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={onOpenProfile}
+          className="self-start inline-flex items-center gap-2 bg-[var(--graphite)] text-[var(--porcelain)] px-5 py-3 rounded-md text-sm"
+        >
+          Open Health Context
+        </button>
       </Surface>
 
       <Surface className="p-6 lg:p-8 mb-8">
@@ -89,10 +113,6 @@ export function HealthContextChapter({ onBack }: { onBack: () => void }) {
           ))}
         </Accordion>
       </Surface>
-
-      <p className="mono-label mt-6">
-        Private chapter · no forms in this phase · secure recording arrives later
-      </p>
     </>
   );
 }

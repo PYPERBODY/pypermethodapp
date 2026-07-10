@@ -2,6 +2,7 @@ import { useState } from "react";
 import { PageHeader, Surface } from "./Shell";
 import { CHAPTERS, PILLARS } from "./data";
 import { HealthContextChapter } from "./HealthContextChapter";
+import { HealthContextPanel } from "./HealthContext";
 import {
   Accordion,
   AccordionContent,
@@ -13,8 +14,22 @@ import { Bookmark, CheckCircle2, Lock, MessageSquarePlus } from "lucide-react";
 export function Method() {
   const [openChapter, setOpenChapter] = useState<string | null>(null);
 
+  if (openChapter === "health-context-profile") {
+    return (
+      <HealthContextPanel
+        embedded
+        onBack={() => setOpenChapter("health-context")}
+      />
+    );
+  }
+
   if (openChapter === "health-context") {
-    return <HealthContextChapter onBack={() => setOpenChapter(null)} />;
+    return (
+      <HealthContextChapter
+        onBack={() => setOpenChapter(null)}
+        onOpenProfile={() => setOpenChapter("health-context-profile")}
+      />
+    );
   }
 
   return (
@@ -117,18 +132,27 @@ export function Method() {
             </div>
             <h2 className="mb-2">Health, Hormonal & Metabolic Context</h2>
             <p className="text-sm max-w-xl">
-              Private educational chapter covering health modules, body metrics and BMI language,
-              hormonal and metabolic context, medications, provider export, and privacy — without
-              diagnosis logic or forms in this phase.
+              Private chapter plus interactive Health Context onboarding — module selection, body
+              metrics with neutral BMI screening, and conditional health modules. No diagnosis
+              logic.
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => setOpenChapter("health-context")}
-            className="self-start inline-flex items-center gap-2 bg-[var(--graphite)] text-[var(--porcelain)] px-5 py-3 rounded-md text-sm"
-          >
-            Read chapter
-          </button>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setOpenChapter("health-context")}
+              className="self-start inline-flex items-center gap-2 border border-[var(--border)] px-5 py-3 rounded-md text-sm hover:bg-[var(--ivory)]"
+            >
+              Read chapter
+            </button>
+            <button
+              type="button"
+              onClick={() => setOpenChapter("health-context-profile")}
+              className="self-start inline-flex items-center gap-2 bg-[var(--graphite)] text-[var(--porcelain)] px-5 py-3 rounded-md text-sm"
+            >
+              Open Health Context
+            </button>
+          </div>
         </div>
       </Surface>
 
