@@ -1,14 +1,22 @@
+import { useState } from "react";
 import { PageHeader, Surface } from "./Shell";
 import { CHAPTERS, PILLARS } from "./data";
+import { HealthContextPanel } from "./HealthContext";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
-import { Bookmark, CheckCircle2, MessageSquarePlus } from "lucide-react";
+import { Bookmark, CheckCircle2, Lock, MessageSquarePlus } from "lucide-react";
 
 export function Method() {
+  const [openChapter, setOpenChapter] = useState<string | null>(null);
+
+  if (openChapter === "health-context") {
+    return <HealthContextPanel embedded onBack={() => setOpenChapter(null)} />;
+  }
+
   return (
     <>
       <PageHeader
@@ -24,7 +32,7 @@ export function Method() {
             <div className="mono-label mb-2">Chapter 04 · Foundation</div>
             <h2>Seven PYPER Pillars</h2>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <ChapterAction icon={<Bookmark size={14} />} label="Save section" />
             <ChapterAction icon={<MessageSquarePlus size={14} />} label="Add to provider questions" />
             <ChapterAction icon={<CheckCircle2 size={14} />} label="Mark complete" />
@@ -84,44 +92,81 @@ export function Method() {
             </AccordionTrigger>
             <AccordionContent>
               <div className="flex flex-wrap gap-2 text-xs">
-                {["Tolerance Tracker", "Protein + Hydration", "Medication Rhythm", "Body-Care Routine"].map(
-                  (t) => (
-                    <span
-                      key={t}
-                      className="px-3 py-1.5 rounded-full border border-[var(--border)] bg-[var(--porcelain)]"
-                    >
-                      {t}
-                    </span>
-                  )
-                )}
+                {[
+                  "Tolerance Tracker",
+                  "Protein + Hydration",
+                  "Medication Rhythm",
+                  "Body-Care Routine",
+                  "Health Context",
+                ].map((t) => (
+                  <span
+                    key={t}
+                    className="px-3 py-1.5 rounded-full border border-[var(--border)] bg-[var(--porcelain)]"
+                  >
+                    {t}
+                  </span>
+                ))}
               </div>
             </AccordionContent>
           </AccordionItem>
         </Accordion>
       </Surface>
 
+      {/* Featured: Health Context */}
+      <Surface className="p-6 mb-10 border-l-4 border-l-[var(--med-blue)]">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <div className="mono-label mb-2 inline-flex items-center gap-2">
+              <Lock size={12} /> Chapter 08 · Private profile
+            </div>
+            <h2 className="mb-2">Health, Hormonal & Metabolic Context</h2>
+            <p className="text-sm max-w-xl">
+              Record private health, hormonal, reproductive, endocrine, and metabolic context for
+              clinician conversations — without binary gender forms, diagnosis logic, or public
+              exposure.
+            </p>
+          </div>
+          <button
+            onClick={() => setOpenChapter("health-context")}
+            className="self-start inline-flex items-center gap-2 bg-[var(--graphite)] text-[var(--porcelain)] px-5 py-3 rounded-md text-sm"
+          >
+            Open Health Context
+          </button>
+        </div>
+      </Surface>
+
       {/* Chapter list */}
       <div className="mono-label mb-3">All chapters</div>
       <Surface className="divide-y divide-[var(--border)] overflow-hidden">
-        {CHAPTERS.map((c, i) => (
-          <div
-            key={c.id}
-            className="flex items-center justify-between px-5 py-4 hover:bg-[var(--ivory)] transition-colors cursor-pointer"
-          >
-            <div className="flex items-center gap-5 min-w-0">
-              <span className="mono-label w-10 shrink-0">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <div className="min-w-0">
-                <div className="truncate" style={{ fontFamily: "var(--font-serif)" }}>
-                  {c.title}
+        {CHAPTERS.map((c, i) => {
+          const isHealth = c.id === "health-context";
+          return (
+            <button
+              key={c.id}
+              type="button"
+              onClick={() => {
+                if (isHealth) setOpenChapter("health-context");
+              }}
+              className="w-full flex items-center justify-between px-5 py-4 hover:bg-[var(--ivory)] transition-colors text-left"
+            >
+              <div className="flex items-center gap-5 min-w-0">
+                <span className="mono-label w-10 shrink-0">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div className="min-w-0">
+                  <div className="truncate flex items-center gap-2" style={{ fontFamily: "var(--font-serif)" }}>
+                    {isHealth && <Lock size={14} className="text-[var(--steel)] shrink-0" />}
+                    {c.title}
+                  </div>
+                  <div className="mono-label mt-0.5">
+                    {c.tag} · {c.time}
+                  </div>
                 </div>
-                <div className="mono-label mt-0.5">{c.tag} · {c.time}</div>
               </div>
-            </div>
-            <span className="text-[var(--steel)] hidden sm:inline">→</span>
-          </div>
-        ))}
+              <span className="text-[var(--steel)] hidden sm:inline">→</span>
+            </button>
+          );
+        })}
       </Surface>
     </>
   );

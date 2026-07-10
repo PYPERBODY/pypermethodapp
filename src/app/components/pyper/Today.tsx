@@ -1,6 +1,7 @@
 import { PageHeader, Surface } from "./Shell";
 import { MEMBER, TODAY_CARDS, REMINDERS_TODAY } from "./data";
-import { ArrowUpRight, Check, Clock } from "lucide-react";
+import { useHealthContext } from "./HealthContextProvider";
+import { ArrowUpRight, Check, Clock, Lock } from "lucide-react";
 
 function fmtDate() {
   return new Date().toLocaleDateString(undefined, {
@@ -10,7 +11,16 @@ function fmtDate() {
   });
 }
 
-export function Today({ onGoExport }: { onGoExport: () => void }) {
+export function Today({
+  onGoExport,
+  onGoMethod,
+}: {
+  onGoExport: () => void;
+  onGoMethod?: () => void;
+}) {
+  const { state, currentBmi } = useHealthContext();
+  const showHealth = state.showDashboardReminders;
+
   return (
     <>
       <PageHeader
@@ -32,6 +42,33 @@ export function Today({ onGoExport }: { onGoExport: () => void }) {
           <ArrowUpRight size={16} />
         </button>
       </Surface>
+
+      {showHealth && (
+        <Surface className="p-5 mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <div className="mono-label mb-1 inline-flex items-center gap-1.5">
+              <Lock size={12} /> Health Context reminder
+            </div>
+            <div className="text-sm">
+              {state.selectedModules.length === 0
+                ? "Health Context needs review — choose modules when ready."
+                : `Health Context active · BMI ${currentBmi ?? "—"} · ${state.medications.filter((m) => m.currentlyTaking).length} current treatments`}
+            </div>
+            <p className="mono-label mt-1">
+              Diagnoses stay private. Detailed context opens only after you choose to view it.
+            </p>
+          </div>
+          {onGoMethod && (
+            <button
+              onClick={onGoMethod}
+              className="self-start inline-flex items-center gap-2 border border-[var(--border)] px-4 py-2 rounded-md text-sm hover:bg-[var(--ivory)]"
+            >
+              Open Health Context
+              <ArrowUpRight size={14} />
+            </button>
+          )}
+        </Surface>
+      )}
 
       {/* Card grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
