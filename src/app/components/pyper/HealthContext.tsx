@@ -69,7 +69,7 @@ const PHASE2_MODULE_IDS: HealthModuleId[] = [
 ];
 
 /**
- * Phase 3 — medication & symptom tracking beyond GLP-1.
+ * Phase 4 — provider export, privacy controls, neutral timeline, safety scope.
  * Prototype React state only — production requires authenticated secure storage.
  * Health Context data never flows to partner/affiliate/member-benefit features.
  */
@@ -130,6 +130,9 @@ export function HealthContextPanel({ onBack, embedded }: PanelProps) {
         {hasModules && <ConditionalModules />}
         <MedicationsSection />
         <SymptomsSection />
+        <PrivacyExportSection />
+        <TimelineSection />
+        <HealthContextSafetyNotes />
       </div>
 
       <div className="mt-8 flex flex-wrap gap-3">
@@ -507,7 +510,8 @@ function ModuleBlock({
 }
 
 function ConditionalModules() {
-  const { state, addCondition, removeCondition, setMultiGroup } = useHealthContext();
+  const { state, addCondition, updateCondition, removeCondition, setMultiGroup } =
+    useHealthContext();
   const mods = state.selectedModules;
   const [draftName, setDraftName] = useState("");
   const [draftStatus, setDraftStatus] = useState<ConditionStatus>("diagnosed");
@@ -786,22 +790,51 @@ function ConditionalModules() {
           {state.conditions.map((c) => (
             <li
               key={c.id}
-              className="flex items-center justify-between gap-3 border border-[var(--border)] rounded-md px-4 py-3 text-sm"
+              className="border border-[var(--border)] rounded-md px-4 py-3 text-sm space-y-2"
             >
-              <div>
-                <div>{c.name}</div>
-                <div className="mono-label mt-0.5">
-                  {CONDITION_STATUSES.find((s) => s.id === c.status)?.label} · {c.module}
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <div>{c.name}</div>
+                  <div className="mono-label mt-0.5">
+                    {CONDITION_STATUSES.find((s) => s.id === c.status)?.label} · {c.module}
+                  </div>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => removeCondition(c.id)}
+                  className="text-[var(--steel)] hover:text-[var(--graphite)]"
+                  aria-label={`Delete ${c.name}`}
+                >
+                  <Trash2 size={16} />
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={() => removeCondition(c.id)}
-                className="text-[var(--steel)] hover:text-[var(--graphite)]"
-                aria-label={`Delete ${c.name}`}
-              >
-                <Trash2 size={16} />
-              </button>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <Field label="Edit status">
+                  <select
+                    value={c.status}
+                    onChange={(e) =>
+                      updateCondition(c.id, { status: e.target.value as ConditionStatus })
+                    }
+                    className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm bg-white"
+                  >
+                    {CONDITION_STATUSES.map((s) => (
+                      <option key={s.id} value={s.id}>
+                        {s.label}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+                <label className="inline-flex items-center gap-2 text-xs self-end pb-2">
+                  <input
+                    type="checkbox"
+                    checked={c.includeInExport}
+                    onChange={(e) =>
+                      updateCondition(c.id, { includeInExport: e.target.checked })
+                    }
+                  />
+                  Include this item in provider export: {c.includeInExport ? "Yes" : "No"}
+                </label>
+              </div>
             </li>
           ))}
         </ul>
@@ -974,7 +1007,7 @@ function MedicationsSection() {
                       updateMedication(m.id, { includeInExport: e.target.checked })
                     }
                   />
-                  Include in provider export, yes/no
+                  Include this item in provider export: {m.includeInExport ? "Yes" : "No"}
                 </label>
                 <button
                   type="button"
@@ -1129,7 +1162,7 @@ function SymptomsSection() {
                           updateSymptom(s.id, { includeInExport: e.target.checked })
                         }
                       />
-                      Include in provider export, yes/no
+                      Include this item in provider export: {s.includeInExport ? "Yes" : "No"}
                     </label>
                   </div>
                 </>
@@ -1144,26 +1177,30 @@ function SymptomsSection() {
 
 function PrivacyExportSection() {
   const { state, setShowDashboardReminders, toggleExportSection } = useHealthContext();
+  const [showExport, setShowExport] = useState(false);
 
   return (
     <Surface className="p-6">
       <div className="mono-label mb-2">Privacy & export controls</div>
       <h3 className="mb-3">Member-controlled visibility</h3>
       <p className="text-sm mb-5 text-[var(--soft-text)]">
-        Sensitive diagnoses are not placed on the main dashboard unless you enable reminders.
-        Health Context never appears in public profiles, community, referral, partner, affiliate,
-        or marketing flows.
+        All Health Context export sections are optional. Health information must not appear in
+        public profiles, community features, partner offers, referral systems, social sharing,
+        affiliate tracking, or marketing tools.
       </p>
 
-      <label className="flex items-center justify-between gap-4 border border-[var(--border)] rounded-md px-4 py-3 mb-5">
+      <div className="flex items-center justify-between gap-4 border border-[var(--border)] rounded-md px-4 py-3 mb-5">
         <div>
           <div className="text-sm">Show health-context reminders on my dashboard</div>
-          <div className="mono-label mt-0.5">Off by default for privacy</div>
+          <div className="mono-label mt-0.5">
+            {state.showDashboardReminders ? "On" : "Off"} · Off by default · no diagnoses on dashboard
+          </div>
         </div>
         <button
           type="button"
           role="switch"
           aria-checked={state.showDashboardReminders}
+          aria-label="Show health-context reminders on my dashboard"
           onClick={() => setShowDashboardReminders(!state.showDashboardReminders)}
           className={`relative w-12 h-7 rounded-full transition-colors ${
             state.showDashboardReminders ? "bg-[var(--graphite)]" : "bg-[var(--bone)]"
@@ -1175,12 +1212,12 @@ function PrivacyExportSection() {
             }`}
           />
         </button>
-      </label>
+      </div>
 
       <div className="mono-label mb-2">Provider export sections</div>
       <p className="text-sm mb-3 text-[var(--soft-text)]">
-        Choose what may appear in a clinician-facing summary. Partner activity, affiliate clicks,
-        and community browsing are never included.
+        Before export, choose which sections to include. Uncheck any section to exclude it. Partner
+        activity, affiliate clicks, and community browsing are never included.
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
         {EXPORT_SECTIONS.map((s) => {
@@ -1195,13 +1232,198 @@ function PrivacyExportSection() {
                 checked={on}
                 onChange={() => toggleExportSection(s.id)}
               />
-              {s.label}
+              <span>
+                {s.label}
+                <span className="mono-label block mt-0.5">{on ? "Include: Yes" : "Include: No"}</span>
+              </span>
             </label>
           );
         })}
       </div>
-      <p className="text-sm border-l-2 border-[var(--med-blue)] pl-3">{EXPORT_DISCLAIMER}</p>
+
+      <p className="text-sm border-l-2 border-[var(--med-blue)] pl-3 mb-5">{EXPORT_DISCLAIMER}</p>
+
+      <div className="flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={() => setShowExport(true)}
+          className="inline-flex items-center gap-2 bg-[var(--graphite)] text-[var(--porcelain)] px-4 py-2 rounded-md text-sm"
+        >
+          View provider summary
+        </button>
+        <button
+          type="button"
+          className="inline-flex items-center gap-2 border border-[var(--border)] px-4 py-2 rounded-md text-sm hover:bg-[var(--ivory)]"
+        >
+          Prefer not to answer
+        </button>
+      </div>
+
+      {showExport && <HealthContextExportModal onClose={() => setShowExport(false)} />}
     </Surface>
+  );
+}
+
+function HealthContextExportModal({ onClose }: { onClose: () => void }) {
+  const { state, startingBmi, currentBmi, bmiChange, toggleExportSection } = useHealthContext();
+  const enabled = useMemo(() => new Set(state.exportSections), [state.exportSections]);
+  const include = (id: (typeof EXPORT_SECTIONS)[number]["id"]) => enabled.has(id);
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[85vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white border-b border-[var(--border)] p-5 flex items-center justify-between gap-4">
+          <div>
+            <div className="mono-label">Provider-facing summary</div>
+            <h3>Health Context export</h3>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-sm text-[var(--steel)] hover:text-[var(--graphite)]"
+          >
+            Close
+          </button>
+        </div>
+        <div className="p-6 space-y-5 text-sm">
+          <p className="text-xs text-[var(--soft-text)] border-l-2 border-[var(--med-blue)] pl-3">
+            {EXPORT_DISCLAIMER}
+          </p>
+
+          <div>
+            <div className="mono-label mb-2">Exclude any section before sharing</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
+              {EXPORT_SECTIONS.map((s) => {
+                const on = include(s.id);
+                return (
+                  <label
+                    key={s.id}
+                    className="flex items-center gap-3 border border-[var(--border)] rounded-md px-3 py-2 text-xs"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={on}
+                      onChange={() => toggleExportSection(s.id)}
+                    />
+                    {s.label}
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+
+          {include("body_bmi") && (
+            <ExportBlock title="Body metrics and BMI">
+              Height {state.bodyMetrics.heightInches ?? "—"} · starting BMI {startingBmi ?? "—"} ·
+              current BMI {currentBmi ?? "—"} · change {bmiChange == null ? "—" : bmiChange}. BMI is
+              a screening measurement only.
+            </ExportBlock>
+          )}
+          {include("weight_trend") && (
+            <ExportBlock title="Weight trend">
+              {state.bodyMetrics.weightChange12Months || "No 12-month note recorded."}
+            </ExportBlock>
+          )}
+          {include("medications") && (
+            <ExportBlock title="Current medications and treatments">
+              {state.medications
+                .filter((m) => m.includeInExport)
+                .map((m) => `${m.name || "Unnamed"} (${m.category}${m.currentlyTaking ? ", current" : ""})`)
+                .join(" · ") || "None selected for export."}
+            </ExportBlock>
+          )}
+          {include("conditions") && (
+            <ExportBlock title="Diagnosed or suspected conditions">
+              {state.conditions
+                .filter((c) => c.includeInExport)
+                .map((c) => `${c.name} — ${CONDITION_STATUSES.find((s) => s.id === c.status)?.label}`)
+                .join("; ") ||
+                Object.entries(state.multiSelect)
+                  .filter(([k]) => ["general", "metabolic", "thyroid"].includes(k))
+                  .flatMap(([, v]) => v)
+                  .filter((v) => v !== "None known" && v !== "Prefer not to answer")
+                  .join("; ") ||
+                "No conditions selected for export."}
+            </ExportBlock>
+          )}
+          {include("hormonal") && (
+            <ExportBlock title="Hormonal and reproductive context">
+              {[
+                ...(state.multiSelect.menstrual ?? []),
+                ...(state.multiSelect.pcos ?? []),
+                ...(state.multiSelect.perimenopause ?? []),
+                ...(state.multiSelect.pregnancy ?? []),
+                ...(state.multiSelect.reproductive ?? []),
+              ]
+                .filter((v) => v !== "Prefer not to answer")
+                .join("; ") || "No hormonal/reproductive items selected for export."}
+            </ExportBlock>
+          )}
+          {include("testosterone") && (
+            <ExportBlock title="Testosterone and androgen context">
+              {[...(state.multiSelect.testosterone ?? []), ...(state.multiSelect.androgen_symptoms ?? [])]
+                .filter((v) => !["Prefer not to answer", "None"].includes(v))
+                .join("; ") || "No testosterone/androgen items selected for export."}
+            </ExportBlock>
+          )}
+          {include("prostate_urinary_testicular") && (
+            <ExportBlock title="Prostate, urinary or testicular context">
+              {[
+                ...(state.multiSelect.prostate ?? []),
+                ...(state.multiSelect.urinary ?? []),
+                ...(state.multiSelect.testicular ?? []),
+                ...(state.multiSelect.testicular_symptoms ?? []),
+              ]
+                .filter((v) => !["None known", "Prefer not to answer"].includes(v))
+                .join("; ") || "No prostate/urinary/testicular items selected for export."}
+            </ExportBlock>
+          )}
+          {include("symptoms") && (
+            <ExportBlock title="Selected symptoms and severity">
+              {state.symptoms
+                .filter((s) => s.includeInExport)
+                .map((s) =>
+                  ["None", "Prefer not to answer"].includes(s.name)
+                    ? s.name
+                    : `${s.name} (${s.severity})`
+                )
+                .join("; ") || "No symptoms marked for export."}
+            </ExportBlock>
+          )}
+          {include("timeline") && (
+            <ExportBlock title="Timeline changes">
+              {state.timeline
+                .slice(0, 8)
+                .map((t) => t.label)
+                .join(" · ") || "No timeline markers."}
+            </ExportBlock>
+          )}
+          {include("provider_questions") && (
+            <ExportBlock title="Questions for provider">
+              {state.symptoms
+                .filter((s) => s.addToProviderQuestions)
+                .map((s) => `Discuss ${s.name.toLowerCase()} (${s.severity})`)
+                .join(" · ") || "No provider questions from Health Context."}
+            </ExportBlock>
+          )}
+
+          {state.exportSections.length === 0 && (
+            <p className="text-sm text-[var(--soft-text)]">
+              No sections selected. Check at least one section above to include it in the summary.
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ExportBlock({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <div className="mono-label mb-1">{title}</div>
+      <div>{children}</div>
+    </div>
   );
 }
 
@@ -1210,9 +1432,10 @@ function TimelineSection() {
   return (
     <Surface className="p-6">
       <div className="mono-label mb-2">Private timeline</div>
-      <h3 className="mb-3">Factual markers only</h3>
+      <h3 className="mb-3">Neutral markers only</h3>
       <p className="text-sm mb-4 text-[var(--soft-text)]">
-        Timeline language stays factual. It does not claim that a condition caused a result.
+        Timeline language stays factual. It does not say a condition caused a weight, skin, muscle,
+        mood, or hormonal change.
       </p>
       <ul className="divide-y divide-[var(--border)]">
         {state.timeline.slice(0, 12).map((t) => (
@@ -1229,6 +1452,37 @@ function TimelineSection() {
           </li>
         ))}
       </ul>
+    </Surface>
+  );
+}
+
+function HealthContextSafetyNotes() {
+  return (
+    <Surface className="p-6">
+      <div className="mono-label mb-2">Safety & scope</div>
+      <h3 className="mb-3">Boundaries</h3>
+      <div className="space-y-3 text-sm">
+        <p>{HEALTH_SCOPE_NOTE}</p>
+        <p>{MEDICATION_CHANGE_NOTE}</p>
+        <p>{PRIVACY_HEALTH_NOTE}</p>
+      </div>
+      <div className="mt-5 space-y-3">
+        <div className="flex gap-2 items-start border border-[#8a2a2a]/30 bg-[#fdf4f4] rounded-md p-3 text-sm">
+          <ShieldAlert size={16} className="text-[#8a2a2a] mt-0.5 shrink-0" />
+          <span>
+            Severe or persistent abdominal pain, repeated vomiting, inability to hydrate, fainting,
+            chest pain, allergic reaction, or suicidal thoughts / immediate mental-health danger may
+            require urgent medical attention. Contact your clinician or seek urgent/emergency care.
+            Do not rely on this portal for urgent medical decisions.
+          </span>
+        </div>
+        <div className="flex gap-2 items-start border border-[#8a2a2a]/30 bg-[#fdf4f4] rounded-md p-3 text-sm">
+          <ShieldAlert size={16} className="text-[#8a2a2a] mt-0.5 shrink-0" />
+          <span>
+            {TESTICULAR_RED_FLAG} {URINARY_RED_FLAG}
+          </span>
+        </div>
+      </div>
     </Surface>
   );
 }

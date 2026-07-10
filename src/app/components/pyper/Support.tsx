@@ -100,9 +100,11 @@ export function Support() {
         </div>
         <h3 className="mb-3">Choose sections before export</h3>
         <p className="text-sm mb-4 text-[var(--soft-text)]">
-          Partner activity, affiliate clicks, community activity, and unrelated browsing are never
-          included.
+          All sensitive Health Context sections are optional. Partner activity, affiliate clicks,
+          community activity, referral systems, social sharing, and marketing tools never receive
+          this information.
         </p>
+        <p className="text-sm border-l-2 border-[var(--med-blue)] pl-3 mb-4">{EXPORT_DISCLAIMER}</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {EXPORT_SECTIONS.map((s) => {
             const on = hc.state.exportSections.includes(s.id);
@@ -116,7 +118,12 @@ export function Support() {
                   checked={on}
                   onChange={() => hc.toggleExportSection(s.id)}
                 />
-                {s.label}
+                <span>
+                  {s.label}
+                  <span className="mono-label block mt-0.5">
+                    Include this item in provider export: {on ? "Yes" : "No"}
+                  </span>
+                </span>
               </label>
             );
           })}

@@ -527,7 +527,7 @@ export function createInitialHealthContext(): HealthContextState {
       },
     ],
     showDashboardReminders: false,
-    exportSections: EXPORT_SECTIONS.map((s) => s.id),
+    exportSections: [],
     lastUpdated: null,
     storageMode: "prototype-demo",
   };

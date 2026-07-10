@@ -18,7 +18,7 @@ export function Today({
   onGoExport: () => void;
   onGoMethod?: () => void;
 }) {
-  const { state, currentBmi } = useHealthContext();
+  const { state } = useHealthContext();
   const showHealth = state.showDashboardReminders;
 
   return (
@@ -51,11 +51,12 @@ export function Today({
             </div>
             <div className="text-sm">
               {state.selectedModules.length === 0
-                ? "Health Context needs review — choose modules when ready."
-                : `Health Context active · BMI ${currentBmi ?? "—"} · ${state.medications.filter((m) => m.currentlyTaking).length} current treatments`}
+                ? "Health Context needs review."
+                : "Health Context has updates ready for private review."}
             </div>
             <p className="mono-label mt-1">
-              Diagnoses stay private. Detailed context opens only after you choose to view it.
+              Reminder is generic for privacy. Detailed health information opens only after login
+              into Health Context — not on public, community, partner, or marketing surfaces.
             </p>
           </div>
           {onGoMethod && (

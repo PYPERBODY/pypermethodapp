@@ -29,6 +29,7 @@ type HealthContextApi = {
   toggleMulti: (group: string, option: string) => void;
   setMultiGroup: (group: string, values: string[]) => void;
   addCondition: (entry: Omit<ConditionEntry, "id">) => void;
+  updateCondition: (id: string, patch: Partial<ConditionEntry>) => void;
   removeCondition: (id: string) => void;
   addMedication: (entry?: Partial<MedicationEntry>) => void;
   updateMedication: (id: string, patch: Partial<MedicationEntry>) => void;
@@ -95,7 +96,7 @@ export function HealthContextProvider({ children }: { children: ReactNode }) {
             ? (["prefer_not"] as HealthModuleId[])
             : modules.filter((m) => m !== "none" && m !== "prefer_not");
         setState((prev) =>
-          withUpdate(prev, { selectedModules: cleaned }, "Health Context modules updated")
+          withUpdate(prev, { selectedModules: cleaned }, "Health Context updated")
         );
       },
       updateBodyMetrics: (patch) => {
@@ -103,14 +104,14 @@ export function HealthContextProvider({ children }: { children: ReactNode }) {
           withUpdate(
             prev,
             { bodyMetrics: { ...prev.bodyMetrics, ...patch } },
-            "Body metrics / BMI recalculated"
+            "Health Context updated"
           )
         );
       },
       toggleMulti: (group, option) => {
         setState((prev) => {
           const current = prev.multiSelect[group] ?? [];
-          const exclusive = ["None known", "Prefer not to answer", "None", "Prefer not to answer"];
+          const exclusive = ["None known", "Prefer not to answer", "None"];
           let nextVals: string[];
           if (current.includes(option)) {
             nextVals = current.filter((v) => v !== option);
@@ -119,10 +120,21 @@ export function HealthContextProvider({ children }: { children: ReactNode }) {
           } else {
             nextVals = [...current.filter((v) => !exclusive.includes(v)), option];
           }
+          const timelineByGroup: Record<string, string> = {
+            menstrual: "Cycle pattern updated",
+            perimenopause: "Health Context updated",
+            pregnancy: "Health Context updated",
+            testosterone: "Testosterone treatment updated",
+            androgen_symptoms: "Testosterone treatment updated",
+            urinary: "Urinary symptom update recorded",
+            testicular: "Health Context updated",
+            testicular_symptoms: "Health Context updated",
+            gender_affirming: "Hormone treatment updated",
+          };
           return withUpdate(
             prev,
             { multiSelect: { ...prev.multiSelect, [group]: nextVals } },
-            `${group} updated`
+            timelineByGroup[group] ?? "Health Context updated"
           );
         });
       },
@@ -136,7 +148,18 @@ export function HealthContextProvider({ children }: { children: ReactNode }) {
           withUpdate(
             prev,
             { conditions: [{ ...entry, id: uid("cond") }, ...prev.conditions] },
-            "Condition added or status changed"
+            "Health Context updated"
+          )
+        );
+      },
+      updateCondition: (id, patch) => {
+        setState((prev) =>
+          withUpdate(
+            prev,
+            {
+              conditions: prev.conditions.map((c) => (c.id === id ? { ...c, ...patch } : c)),
+            },
+            "Health Context updated"
           )
         );
       },
@@ -145,7 +168,7 @@ export function HealthContextProvider({ children }: { children: ReactNode }) {
           withUpdate(
             prev,
             { conditions: prev.conditions.filter((c) => c.id !== id) },
-            "Condition removed"
+            "Health Context updated"
           )
         );
       },
@@ -169,30 +192,37 @@ export function HealthContextProvider({ children }: { children: ReactNode }) {
           ...entry,
         };
         setState((prev) =>
-          withUpdate(
-            prev,
-            { medications: [med, ...prev.medications] },
-            "Medication started, stopped, or changed"
-          )
+          withUpdate(prev, { medications: [med, ...prev.medications] }, "Medication updated")
         );
       },
       updateMedication: (id, patch) => {
-        setState((prev) =>
-          withUpdate(
-            prev,
-            {
-              medications: prev.medications.map((m) => (m.id === id ? { ...m, ...patch } : m)),
-            },
-            "Medication information changed"
-          )
-        );
+        const hormoneCats = [
+          "Hormonal contraception",
+          "Menopausal hormone therapy",
+          "Testosterone therapy",
+          "Estrogen therapy",
+          "Progesterone therapy",
+          "Anti-androgen medication",
+          "Gender-affirming hormone treatment",
+        ];
+        setState((prev) => {
+          const nextMeds = prev.medications.map((m) => (m.id === id ? { ...m, ...patch } : m));
+          const med = nextMeds.find((m) => m.id === id);
+          const label =
+            med && hormoneCats.includes(med.category)
+              ? med.category === "Testosterone therapy"
+                ? "Testosterone treatment updated"
+                : "Hormone treatment updated"
+              : "Medication updated";
+          return withUpdate(prev, { medications: nextMeds }, label);
+        });
       },
       removeMedication: (id) => {
         setState((prev) =>
           withUpdate(
             prev,
             { medications: prev.medications.filter((m) => m.id !== id) },
-            "Medication removed"
+            "Medication updated"
           )
         );
       },
@@ -207,12 +237,12 @@ export function HealthContextProvider({ children }: { children: ReactNode }) {
           addToProviderQuestions: false,
           includeInExport: true,
         };
+        const label =
+          name === "Urinary changes"
+            ? "Urinary symptom update recorded"
+            : "Health Context updated";
         setState((prev) =>
-          withUpdate(
-            prev,
-            { symptoms: [symptom, ...prev.symptoms] },
-            "Significant symptom change recorded"
-          )
+          withUpdate(prev, { symptoms: [symptom, ...prev.symptoms] }, label)
         );
       },
       selectSymptom: (name) => {
@@ -238,11 +268,11 @@ export function HealthContextProvider({ children }: { children: ReactNode }) {
               ...prev.symptoms.filter((s) => !exclusive.includes(s.name)),
             ];
           }
-          return withUpdate(
-            prev,
-            { symptoms: nextSymptoms },
-            "Significant symptom change recorded"
-          );
+          const label =
+            name === "Urinary changes"
+              ? "Urinary symptom update recorded"
+              : "Health Context updated";
+          return withUpdate(prev, { symptoms: nextSymptoms }, label);
         });
       },
       updateSymptom: (id, patch) => {
