@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { PageHeader, Surface } from "./Shell";
 import { CHAPTERS, PILLARS } from "./data";
-import { HealthContextPanel } from "./HealthContext";
+import { HealthContextChapter } from "./HealthContextChapter";
 import {
   Accordion,
   AccordionContent,
@@ -14,7 +14,7 @@ export function Method() {
   const [openChapter, setOpenChapter] = useState<string | null>(null);
 
   if (openChapter === "health-context") {
-    return <HealthContextPanel embedded onBack={() => setOpenChapter(null)} />;
+    return <HealthContextChapter onBack={() => setOpenChapter(null)} />;
   }
 
   return (
@@ -92,50 +92,47 @@ export function Method() {
             </AccordionTrigger>
             <AccordionContent>
               <div className="flex flex-wrap gap-2 text-xs">
-                {[
-                  "Tolerance Tracker",
-                  "Protein + Hydration",
-                  "Medication Rhythm",
-                  "Body-Care Routine",
-                  "Health Context",
-                ].map((t) => (
-                  <span
-                    key={t}
-                    className="px-3 py-1.5 rounded-full border border-[var(--border)] bg-[var(--porcelain)]"
-                  >
-                    {t}
-                  </span>
-                ))}
+                {["Tolerance Tracker", "Protein + Hydration", "Medication Rhythm", "Body-Care Routine"].map(
+                  (t) => (
+                    <span
+                      key={t}
+                      className="px-3 py-1.5 rounded-full border border-[var(--border)] bg-[var(--porcelain)]"
+                    >
+                      {t}
+                    </span>
+                  )
+                )}
               </div>
             </AccordionContent>
           </AccordionItem>
         </Accordion>
       </Surface>
 
-      {/* Featured: Health Context */}
+      {/* Featured: Health Context chapter */}
       <Surface className="p-6 mb-10 border-l-4 border-l-[var(--med-blue)]">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <div className="mono-label mb-2 inline-flex items-center gap-2">
-              <Lock size={12} /> Chapter 08 · Private profile
+              <Lock size={12} /> Chapter 08 · After Body Composition
             </div>
             <h2 className="mb-2">Health, Hormonal & Metabolic Context</h2>
             <p className="text-sm max-w-xl">
-              Record private health, hormonal, reproductive, endocrine, and metabolic context for
-              clinician conversations — without binary gender forms, diagnosis logic, or public
-              exposure.
+              Private educational chapter covering health modules, body metrics and BMI language,
+              hormonal and metabolic context, medications, provider export, and privacy — without
+              diagnosis logic or forms in this phase.
             </p>
           </div>
           <button
+            type="button"
             onClick={() => setOpenChapter("health-context")}
             className="self-start inline-flex items-center gap-2 bg-[var(--graphite)] text-[var(--porcelain)] px-5 py-3 rounded-md text-sm"
           >
-            Open Health Context
+            Read chapter
           </button>
         </div>
       </Surface>
 
-      {/* Chapter list */}
+      {/* Chapter list — order from CHAPTERS (health-context after composition) */}
       <div className="mono-label mb-3">All chapters</div>
       <Surface className="divide-y divide-[var(--border)] overflow-hidden">
         {CHAPTERS.map((c, i) => {
@@ -154,7 +151,10 @@ export function Method() {
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <div className="min-w-0">
-                  <div className="truncate flex items-center gap-2" style={{ fontFamily: "var(--font-serif)" }}>
+                  <div
+                    className="truncate flex items-center gap-2"
+                    style={{ fontFamily: "var(--font-serif)" }}
+                  >
                     {isHealth && <Lock size={14} className="text-[var(--steel)] shrink-0" />}
                     {c.title}
                   </div>
@@ -174,7 +174,10 @@ export function Method() {
 
 function ChapterAction({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
-    <button className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 border border-[var(--border)] rounded-md hover:bg-[var(--ivory)]">
+    <button
+      type="button"
+      className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 border border-[var(--border)] rounded-md hover:bg-[var(--ivory)]"
+    >
       {icon} {label}
     </button>
   );
