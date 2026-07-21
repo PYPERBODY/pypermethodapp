@@ -45,7 +45,7 @@ export default function ProfileTab() {
       ]}
     >
       <Card style={styles.card}>
-        <AppText variant="mono" tone="muted">
+        <AppText variant="eyebrow" tone="muted">
           Access status
         </AppText>
 
@@ -93,7 +93,7 @@ export default function ProfileTab() {
       */}
       {__DEV__ ? (
         <Card tone="muted" style={styles.devCard}>
-          <AppText variant="mono" tone="alert">
+          <AppText variant="tag" tone="alert">
             Development simulation · not member facing
           </AppText>
           <AppText variant="micro" tone="soft" style={styles.devNote}>
@@ -106,7 +106,7 @@ export default function ProfileTab() {
             produces exactly one `trial_started` entry.
           */}
           <View style={styles.devEvents}>
-            <AppText variant="mono" tone="muted">
+            <AppText variant="tag" tone="muted">
               Local events ({events.length})
             </AppText>
             {events.map((event, index) => (
@@ -161,7 +161,7 @@ function DetailRow({ label, value }: { label: string; value: string }) {
       <AppText variant="sub" tone="muted">
         {label}
       </AppText>
-      <AppText variant="bodyStrong" style={styles.detailValue}>
+      <AppText variant="sub" style={styles.detailValue}>
         {value}
       </AppText>
     </View>
@@ -170,7 +170,7 @@ function DetailRow({ label, value }: { label: string; value: string }) {
 
 const styles = StyleSheet.create({
   card: {
-    marginTop: Spacing.xl,
+    marginTop: Spacing.md,
   },
   statusLabel: {
     marginTop: Spacing.sm,
@@ -191,6 +191,7 @@ const styles = StyleSheet.create({
   detailValue: {
     flexShrink: 1,
     textAlign: 'right',
+    fontWeight: '700',
   },
   signOut: {
     marginTop: Spacing.lg,

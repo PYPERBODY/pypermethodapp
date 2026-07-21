@@ -45,7 +45,7 @@ export default function WelcomeScreen() {
   };
 
   return (
-    <Screen scroll>
+    <Screen scroll gutter="welcome">
       <Wordmark />
 
       <AppText variant="lead" style={styles.lead}>
@@ -93,16 +93,18 @@ export default function WelcomeScreen() {
 
         {/* One inline text flow, as in the prototype — the action must not
             break onto its own line. */}
-        <AppText variant="bodyStrong" tone="soft" style={styles.signInRow}>
+        <AppText variant="sub" tone="soft" style={styles.signInRow}>
           {WELCOME_COPY.signInPrompt}
           <AppText
-            variant="bodyStrong"
+            variant="sub"
             tone="accent"
             accessibilityRole="link"
             onPress={() => router.push('/sign-in')}
             style={styles.signInAction}
           >
-            {WELCOME_COPY.signInAction}
+            {/* Non-breaking space so the action never splits across lines;
+                the rendered glyphs are identical to the approved copy. */}
+            {WELCOME_COPY.signInAction.replace(' ', '\u00A0')}
           </AppText>
         </AppText>
 
@@ -112,22 +114,24 @@ export default function WelcomeScreen() {
           onPress={openCare}
           style={({ pressed }) => [styles.careRow, pressed && styles.pressed]}
         >
+          {/* One external-link indicator only: the inline arrow on the title.
+              The prototype also carries a trailing chevron; it was removed as
+              redundant on approver instruction. */}
           <View style={styles.careCopy}>
-            <AppText variant="bodyStrong" style={styles.careTitle}>
+            <AppText variant="h3" style={styles.careTitle}>
               {WELCOME_COPY.careTitle}{' '}
-              <AppText variant="bodyStrong" tone="accent">
+              <AppText variant="h3" tone="accent">
                 ↗
               </AppText>
             </AppText>
-            <AppText variant="micro" tone="soft" style={styles.careDetail}>
+            <AppText variant="sub" tone="soft" style={styles.careDetail}>
               {WELCOME_COPY.careCopy}
             </AppText>
           </View>
-          <Feather name="chevron-right" size={20} color={Colors.accent} />
         </Pressable>
 
         {/* Approved medical disclaimer — preserved exactly. Do not shorten. */}
-        <AppText variant="micro" tone="soft" style={styles.disclaimer}>
+        <AppText variant="fine" tone="soft" style={styles.disclaimer}>
           {WELCOME_COPY.disclaimer}
         </AppText>
       </View>
@@ -158,9 +162,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   spacer: {
+    // .welcomeSpacer — flex:1 1 auto; min-height:16.
+    // Capped so a tall viewport cannot open a blank void between the editorial
+    // top and the anchored actions; the prototype's own gap at 390x844 (inside
+    // its 50pt status bar) is roughly this size.
     flexGrow: 1,
     flexShrink: 1,
     minHeight: 16,
+    maxHeight: 64,
   },
   trialMicro: {
     maxWidth: 350,
@@ -171,12 +180,14 @@ const styles = StyleSheet.create({
     marginTop: 14,
   },
   signInRow: {
+    // .welcomeSignin — margin 14 2 0; 13.5px / 1.4
     marginTop: 14,
     marginHorizontal: 2,
     fontSize: 13.5,
-    lineHeight: 19,
+    lineHeight: 18.9,
   },
   signInAction: {
+    // .welcomeSignin button — 13.5px / 800 / --med / underline
     fontSize: 13.5,
     fontWeight: '800',
     textDecorationLine: 'underline',
@@ -197,17 +208,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   careTitle: {
+    // .exTitle — 14px / 800 / -.01em
     fontSize: 14,
-    fontWeight: '800',
+    letterSpacing: -0.14,
   },
   careDetail: {
+    // .exCopy — 12px / 1.4
     fontSize: 12,
+    lineHeight: 16.8,
     marginTop: 2,
   },
   disclaimer: {
+    // .welcomeDisclaimer — max-width 340; margin 12 0 4
     maxWidth: 340,
     marginTop: Spacing.md,
-    fontSize: 11,
+    marginBottom: Spacing.xs,
   },
   pressed: {
     opacity: 0.7,

@@ -1,8 +1,9 @@
 import Feather from '@expo/vector-icons/Feather';
 import { Redirect, Tabs } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useAccess } from '@/features/access/access-context';
-import { Colors, Spacing } from '@/theme/tokens';
+import { Colors, Type } from '@/theme/tokens';
 
 /**
  * The five approved tabs: Home, Method, Track, Dose, Profile.
@@ -24,6 +25,7 @@ import { Colors, Spacing } from '@/theme/tokens';
  */
 export default function TabLayout() {
   const { isSignedIn } = useAccess();
+  const insets = useSafeAreaInsets();
 
   if (!isSignedIn) {
     return <Redirect href="/" />;
@@ -39,20 +41,28 @@ export default function TabLayout() {
         // Web needs this explicitly; the default heuristic can put the label
         // beside the icon and clip it in a compact bar.
         tabBarLabelPosition: 'below-icon',
+        // .nav — --card fill, 1px --line top rule, 10pt top / 12pt bottom
+        // padding plus the safe-area inset, icons 18pt, labels 11pt uppercase.
         tabBarStyle: {
-          backgroundColor: Colors.bg,
+          backgroundColor: Colors.surface,
           borderTopColor: Colors.border,
-          height: 68,
+          borderTopWidth: 1,
+          // Height must be explicit and must comfortably contain
+          // padding + 18pt icon + 11pt label, or the navigator clips or drops
+          // the label on web.
+          height: 68 + insets.bottom,
+          paddingTop: 8,
+          paddingBottom: 8 + insets.bottom,
         },
+        // .nav .lb — 11px / .03em / uppercase / 500 (700 when active).
+        // `lineHeight` and an explicit height are deliberately omitted: the tab
+        // bar collapses the label element when either is set.
         tabBarLabelStyle: {
-          fontSize: 11,
-          fontWeight: '700',
-        },
-        tabBarItemStyle: {
-          // Keeps the label from being clipped under the icon on web, where
-          // the bar has no safe-area inset to borrow from.
-          paddingTop: Spacing.xs,
-          paddingBottom: Spacing.sm,
+          fontFamily: Type.navLabel.fontFamily,
+          fontSize: Type.navLabel.fontSize,
+          fontWeight: Type.navLabel.fontWeight,
+          letterSpacing: Type.navLabel.letterSpacing,
+          textTransform: 'uppercase',
         },
       }}
     >
@@ -63,8 +73,8 @@ export default function TabLayout() {
           // The icon font renders as text content, so the accessible name is set
           // explicitly rather than being derived from the label plus glyph.
           tabBarAccessibilityLabel: 'Home',
-          tabBarIcon: ({ color, size }) => (
-            <Feather name="home" size={size} color={color} />
+          tabBarIcon: ({ color }) => (
+            <Feather name="home" size={18} color={color} />
           ),
         }}
       />
@@ -75,8 +85,8 @@ export default function TabLayout() {
           // The icon font renders as text content, so the accessible name is set
           // explicitly rather than being derived from the label plus glyph.
           tabBarAccessibilityLabel: 'Method',
-          tabBarIcon: ({ color, size }) => (
-            <Feather name="book-open" size={size} color={color} />
+          tabBarIcon: ({ color }) => (
+            <Feather name="book-open" size={18} color={color} />
           ),
         }}
       />
@@ -87,8 +97,8 @@ export default function TabLayout() {
           // The icon font renders as text content, so the accessible name is set
           // explicitly rather than being derived from the label plus glyph.
           tabBarAccessibilityLabel: 'Track',
-          tabBarIcon: ({ color, size }) => (
-            <Feather name="activity" size={size} color={color} />
+          tabBarIcon: ({ color }) => (
+            <Feather name="activity" size={18} color={color} />
           ),
         }}
       />
@@ -99,8 +109,8 @@ export default function TabLayout() {
           // The icon font renders as text content, so the accessible name is set
           // explicitly rather than being derived from the label plus glyph.
           tabBarAccessibilityLabel: 'Dose',
-          tabBarIcon: ({ color, size }) => (
-            <Feather name="calendar" size={size} color={color} />
+          tabBarIcon: ({ color }) => (
+            <Feather name="calendar" size={18} color={color} />
           ),
         }}
       />
@@ -111,8 +121,8 @@ export default function TabLayout() {
           // The icon font renders as text content, so the accessible name is set
           // explicitly rather than being derived from the label plus glyph.
           tabBarAccessibilityLabel: 'Profile',
-          tabBarIcon: ({ color, size }) => (
-            <Feather name="user" size={size} color={color} />
+          tabBarIcon: ({ color }) => (
+            <Feather name="user" size={18} color={color} />
           ),
         }}
       />

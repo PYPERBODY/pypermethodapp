@@ -62,10 +62,10 @@ export default function PlanScreen() {
       </View>
 
       <Card style={styles.block}>
-        <AppText variant="mono" tone="muted">
+        <AppText variant="eyebrow" tone="muted">
           {PLAN_COPY.includedLabel}
         </AppText>
-        <AppText variant="sub" style={styles.included}>
+        <AppText variant="sub" tone="default" style={styles.included}>
           {PLAN_COPY.included}
         </AppText>
       </Card>
@@ -74,18 +74,19 @@ export default function PlanScreen() {
         {PLAN_COPY.exclusions}
       </AppText>
 
-      <AppText variant="bodyStrong" tone="soft" style={styles.note}>
+      <AppText variant="sub" tone="soft" style={styles.membership}>
         {PLAN_COPY.includedWithMembership}
       </AppText>
 
       <PrimaryButton
         label={START_TRIAL_LABEL}
+        size="action"
         onPress={() => router.push('/purchase')}
-        style={styles.block}
+        style={styles.cta}
       />
 
       {/* Required billing transparency for the selected plan. Verbatim. */}
-      <AppText variant="sub" tone="soft" style={styles.transparency}>
+      <AppText variant="sub" tone="muted" style={styles.transparency}>
         {APP_PLAN_CONFIG[selectedPlan].transparency}
       </AppText>
 
@@ -126,11 +127,11 @@ export default function PlanScreen() {
 
 const styles = StyleSheet.create({
   heading: {
-    marginTop: Spacing.lg,
+    marginTop: 14,
   },
   plans: {
     marginTop: Spacing.lg,
-    gap: Spacing.md,
+    gap: 10,
   },
   block: {
     marginTop: Spacing.lg,
@@ -139,17 +140,24 @@ const styles = StyleSheet.create({
     marginTop: Spacing.md,
   },
   included: {
-    marginTop: Spacing.sm,
+    marginTop: 6,
     lineHeight: 21,
   },
   note: {
     marginTop: Spacing.sm,
     marginHorizontal: 2,
   },
-  transparency: {
-    marginTop: Spacing.md,
+  membership: {
+    marginTop: Spacing.sm,
     marginHorizontal: 2,
-    lineHeight: 19,
+    fontWeight: '600',
+  },
+  cta: {
+    marginTop: 10,
+  },
+  transparency: {
+    marginTop: 10,
+    marginHorizontal: 2,
   },
   footer: {
     marginTop: Spacing.lg,

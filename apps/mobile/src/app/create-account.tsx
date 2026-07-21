@@ -212,21 +212,21 @@ export default function CreateAccountScreen() {
 
 const styles = StyleSheet.create({
   heading: {
-    marginTop: Spacing.lg,
+    marginTop: 14,
   },
   banner: {
-    marginTop: Spacing.lg,
+    marginTop: 14,
   },
   formError: {
     marginTop: Spacing.xs,
   },
   submit: {
-    marginTop: Spacing.xxl,
+    marginTop: 18,
   },
   stacked: {
     marginTop: Spacing.md,
   },
   notice: {
-    marginTop: Spacing.xl,
+    marginTop: 18,
   },
 });

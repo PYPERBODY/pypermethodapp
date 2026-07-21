@@ -58,7 +58,7 @@ export default function PurchaseScreen() {
 
   return (
     <Screen surface="espresso" scroll>
-      <AppText variant="mono" tone="onEspressoMuted">
+      <AppText variant="bannerKey" tone="onEspressoMuted" style={styles.eyebrow}>
         {PURCHASE_COPY.eyebrow}
       </AppText>
 
@@ -70,7 +70,7 @@ export default function PurchaseScreen() {
       >
         {PURCHASE_COPY.title}
       </AppText>
-      <AppText variant="sub" tone="onEspressoSoft">
+      <AppText variant="sub" tone="onEspressoSoft" style={styles.subtitle}>
         {PURCHASE_COPY.subtitle}
       </AppText>
 
@@ -133,7 +133,7 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
         {label}
       </AppText>
       <AppText
-        variant="bodyStrong"
+        variant="sub"
         tone="onEspresso"
         style={styles.summaryValue}
         numberOfLines={2}
@@ -145,6 +145,12 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
 }
 
 const styles = StyleSheet.create({
+  eyebrow: {
+    letterSpacing: 1.36,
+  },
+  subtitle: {
+    marginTop: 2,
+  },
   title: {
     marginTop: Spacing.md,
   },
@@ -162,6 +168,7 @@ const styles = StyleSheet.create({
   summaryValue: {
     flexShrink: 1,
     textAlign: 'right',
+    fontWeight: '700',
   },
   trialNote: {
     marginTop: Spacing.sm,

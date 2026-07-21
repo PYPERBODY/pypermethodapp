@@ -47,7 +47,7 @@ export function PlanOption({ plan, selected, onSelect }: PlanOptionProps) {
             </AppText>
             {plan.popularTag ? (
               <View style={styles.popularTag}>
-                <AppText variant="mono" tone="onEspresso" style={styles.tagText}>
+                <AppText variant="tag" tone="onEspresso" style={styles.tagText}>
                   {plan.popularTag}
                 </AppText>
               </View>
@@ -66,7 +66,7 @@ export function PlanOption({ plan, selected, onSelect }: PlanOptionProps) {
 
           {plan.savingsTag ? (
             <View style={styles.savingsTag}>
-              <AppText variant="mono" tone="muted" style={styles.tagText}>
+              <AppText variant="tag" tone="muted" style={styles.tagText}>
                 {plan.savingsTag}
               </AppText>
             </View>
@@ -105,9 +105,10 @@ const styles = StyleSheet.create({
     gap: Spacing.md,
   },
   radio: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    // 19x19 with a 6px ring when selected
+    width: 19,
+    height: 19,
+    borderRadius: 9.5,
     backgroundColor: Colors.bg,
     marginTop: 2,
   },
@@ -133,29 +134,31 @@ const styles = StyleSheet.create({
   },
   headline: {
     fontSize: 13.5,
+    lineHeight: 18,
     marginTop: 3,
   },
   line: {
-    fontSize: 11,
-    marginTop: 5,
+    fontSize: 10.5,
+    lineHeight: 15,
+    marginTop: 3,
   },
+  // .tag — radius 6, padding 3/7, 1px border
   popularTag: {
     backgroundColor: Colors.espresso,
-    borderRadius: Radius.pill,
-    paddingHorizontal: Spacing.sm,
+    borderRadius: Radius.xs,
+    paddingHorizontal: 7,
     paddingVertical: 3,
   },
   savingsTag: {
     alignSelf: 'flex-start',
     borderWidth: 1,
     borderColor: Colors.border,
-    borderRadius: Radius.pill,
-    paddingHorizontal: Spacing.sm,
+    borderRadius: Radius.xs,
+    paddingHorizontal: 7,
     paddingVertical: 3,
     marginTop: 7,
   },
   tagText: {
-    fontSize: 8.5,
-    letterSpacing: 0.8,
+    fontSize: 7.5,
   },
 });

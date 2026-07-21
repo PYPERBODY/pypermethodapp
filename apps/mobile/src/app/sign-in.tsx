@@ -125,7 +125,9 @@ export default function SignInScreen() {
         thinking a clinical membership is the only way in.
       */}
       <Card tone="muted" style={styles.accessNote}>
-        <AppText variant="bodyStrong">{SIGN_IN_COPY.accessNote}</AppText>
+        <AppText variant="sub" style={styles.accessNoteText}>
+          {SIGN_IN_COPY.accessNote}
+        </AppText>
       </Card>
 
       <SecondaryButton
@@ -171,19 +173,23 @@ export default function SignInScreen() {
 
 const styles = StyleSheet.create({
   heading: {
-    marginTop: Spacing.lg,
+    marginTop: 14,
   },
   banner: {
-    marginTop: Spacing.lg,
+    marginTop: 14,
   },
   submit: {
-    marginTop: Spacing.xxl,
+    marginTop: 18,
   },
   accessNote: {
-    marginTop: Spacing.xl,
+    marginTop: 18,
   },
   stacked: {
     marginTop: Spacing.md,
+  },
+  accessNoteText: {
+    fontWeight: '600',
+    lineHeight: 18.6,
   },
   restoreNote: {
     marginTop: Spacing.sm,
@@ -201,6 +207,6 @@ const styles = StyleSheet.create({
     marginTop: Spacing.xs,
   },
   notice: {
-    marginTop: Spacing.xl,
+    marginTop: 18,
   },
 });

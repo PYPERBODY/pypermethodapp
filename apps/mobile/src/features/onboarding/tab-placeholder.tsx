@@ -44,7 +44,7 @@ export function TabPlaceholder({
       <SectionHeading eyebrow={eyebrow} title={title} detail={detail} />
 
       <Card style={styles.card}>
-        <AppText variant="mono" tone="muted">
+        <AppText variant="eyebrow" tone="muted">
           In this section
         </AppText>
 
@@ -53,12 +53,12 @@ export function TabPlaceholder({
             <View key={section}>
               {index > 0 ? <Rule /> : null}
               <View style={styles.row}>
-                <AppText variant="bodyStrong" style={styles.rowLabel}>
+                <AppText variant="h3" style={styles.rowLabel}>
                   {section}
                 </AppText>
                 <Feather
                   name="chevron-right"
-                  size={18}
+                  size={16}
                   color={Colors.textMuted}
                 />
               </View>
@@ -78,13 +78,13 @@ export function TabPlaceholder({
         >
           <Feather
             name={capabilities.canWriteHealthData ? 'edit-3' : 'lock'}
-            size={13}
+            size={11}
             color={
               capabilities.canWriteHealthData ? Colors.text : Colors.textMuted
             }
           />
           <AppText
-            variant="mono"
+            variant="tag"
             tone={capabilities.canWriteHealthData ? 'default' : 'muted'}
           >
             {capabilities.canWriteHealthData
@@ -105,34 +105,37 @@ export function TabPlaceholder({
 
 const styles = StyleSheet.create({
   card: {
-    marginTop: Spacing.xl,
+    marginTop: Spacing.lg,
   },
   list: {
-    marginTop: Spacing.sm,
+    marginTop: 6,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: Spacing.md,
-    paddingVertical: Spacing.md,
+    paddingVertical: 11,
     minHeight: 44,
   },
   rowLabel: {
+    // .obrow .rt — 14px / 800 / -.01em
     flex: 1,
+    fontSize: 14,
+    letterSpacing: -0.14,
   },
   statusRow: {
     flexDirection: 'row',
-    marginTop: Spacing.lg,
+    marginTop: Spacing.md,
   },
   statusChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: Spacing.sm,
+    gap: 6,
     borderRadius: Radius.pill,
     borderWidth: 1,
-    paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.sm,
+    paddingHorizontal: 11,
+    paddingVertical: 7,
   },
   statusOpen: {
     backgroundColor: Colors.surface,
@@ -143,6 +146,6 @@ const styles = StyleSheet.create({
     borderColor: Colors.planSelectedBorder,
   },
   note: {
-    marginTop: Spacing.md,
+    marginTop: 10,
   },
 });
