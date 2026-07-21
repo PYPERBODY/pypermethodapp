@@ -122,3 +122,41 @@ only.
 Row Level Security must be enabled on every health table when the database is
 connected. No health data may be passed to affiliate links, partner links or
 analytics.
+
+## Typography assets
+
+| Prototype variable | Family | Package | Loaded |
+|---|---|---|---|
+| `--font-display` / `--font-ui` | Hanken Grotesk | `@expo-google-fonts/hanken-grotesk` | 400, 500, 600, 700, 800, 900 |
+| `--font-mono` | JetBrains Mono | `@expo-google-fonts/jetbrains-mono` | 400, 500, 700 |
+| `--font-accent` | Fraunces | — | **Not loaded** |
+
+Fraunces is deliberately absent: it appears only in the greeting, chapter
+subtitles and legal bullets, none of which are migrated in Phase 2A. It must be
+added when those screens arrive.
+
+Fonts load in `src/app/_layout.tsx` via `expo-font`, behind a splash-screen
+hold, so the app never renders a frame in a system fallback face. React Native
+does not synthesise weights for custom families — `src/theme/typography.ts`
+maps each weight to its own family name.
+
+## Visual fidelity correction
+
+The first Phase 2A implementation was functionally correct but visually
+rejected: it rendered in system fallback fonts at inflated sizes. The
+correction transcribed the prototype's CSS into `src/theme/tokens.ts`, with
+every entry naming the rule it came from, and rebuilt the shared primitives
+against it. Screens were not redesigned and no logic changed.
+
+Two deliberate divergences from the prototype are on record:
+
+1. **Welcome care row.** The prototype carries both an inline `↗` and a
+   trailing `›` chevron (`.exChev`, line 2651). The chevron was removed on
+   approver instruction so there is one external-link indicator.
+2. **Welcome spacer.** `.welcomeSpacer` is unbounded (`flex: 1 1 auto`). It is
+   capped at 64pt natively so a tall viewport cannot open a blank void between
+   the editorial top and the anchored actions.
+
+The sentence "Clinical care is managed through the secure PYPER Member Portal."
+was verified as present in the approved Welcome (`.exCopy`, line 2649) and is
+retained.
