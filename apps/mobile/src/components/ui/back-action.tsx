@@ -3,7 +3,7 @@ import { Pressable, StyleSheet } from 'react-native';
 
 import { AppText } from './app-text';
 
-import { Colors, Radius, Spacing, TouchTarget } from '@/theme/tokens';
+import { Colors, Radius, TouchTarget } from '@/theme/tokens';
 
 export interface BackActionProps {
   onPress: () => void;
@@ -22,8 +22,8 @@ export function BackAction({ onPress, label = 'Back' }: BackActionProps) {
       onPress={onPress}
       style={({ pressed }) => [styles.chip, pressed && styles.pressed]}
     >
-      <Feather name="chevron-left" size={16} color={Colors.text} />
-      <AppText variant="bodyStrong">{label}</AppText>
+      <Feather name="chevron-left" size={14} color={Colors.text} />
+      <AppText variant="chip">{label}</AppText>
     </Pressable>
   );
 }
@@ -33,10 +33,10 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: Spacing.xs,
+    gap: 5,
     minHeight: TouchTarget.min,
-    paddingHorizontal: Spacing.md,
-    paddingRight: Spacing.lg,
+    paddingLeft: 11,
+    paddingRight: 14,
     borderRadius: Radius.pill,
     borderWidth: 1,
     borderColor: Colors.border,

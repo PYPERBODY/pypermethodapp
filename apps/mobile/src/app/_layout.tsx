@@ -1,10 +1,18 @@
+import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AccessProvider } from '@/features/access/access-context';
 import { useReducedMotion } from '@/hooks/use-reduced-motion';
 import { Colors } from '@/theme/tokens';
+import { FONT_ASSETS } from '@/theme/typography';
+
+// Hold the splash screen until the approved brand typography is ready, so the
+// app never renders a frame in a system fallback face.
+SplashScreen.preventAutoHideAsync();
 
 /**
  * Root navigator.
@@ -15,6 +23,15 @@ import { Colors } from '@/theme/tokens';
  */
 export default function RootLayout() {
   const reducedMotion = useReducedMotion();
+  const [fontsLoaded, fontError] = useFonts(FONT_ASSETS);
+
+  useEffect(() => {
+    // Hide on error too, otherwise a missing font asset would leave the app
+    // stuck behind the splash screen instead of degrading visibly.
+    if (fontsLoaded || fontError) SplashScreen.hideAsync();
+  }, [fontsLoaded, fontError]);
+
+  if (!fontsLoaded && !fontError) return null;
 
   return (
     <SafeAreaProvider>

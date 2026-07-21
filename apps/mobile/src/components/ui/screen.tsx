@@ -24,6 +24,11 @@ export interface ScreenProps {
   keyboardAware?: boolean;
   /** Espresso canvas for the purchase surface. */
   surface?: 'canvas' | 'espresso';
+  /**
+   * `welcome` uses the public entry's 28pt gutter and 28pt top padding
+   * (`.welcomeScreen`); `app` uses the in-app 20pt gutter (`.scroll`).
+   */
+  gutter?: 'app' | 'welcome';
   contentContainerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
   /** Set false when a bottom tab bar already supplies the bottom inset. */
@@ -39,6 +44,7 @@ export function Screen({
   scroll = false,
   keyboardAware = false,
   surface = 'canvas',
+  gutter = 'app',
   contentContainerStyle,
   style,
   edgeToEdgeBottom = true,
@@ -46,15 +52,17 @@ export function Screen({
   const insets = useSafeAreaInsets();
   const narrow = useNarrowLayout();
 
-  const horizontal = narrow
-    ? Layout.screenPaddingNarrow
-    : Layout.screenPadding;
+  const base =
+    gutter === 'welcome' ? Layout.welcomePadding : Layout.screenPadding;
+  // @media(max-width:349px) drops the Welcome gutter to 20.
+  const horizontal = narrow ? Layout.screenPaddingNarrow : base;
 
   const padding: ViewStyle = {
     paddingHorizontal: horizontal,
-    paddingTop: insets.top + Spacing.xxl,
-    paddingBottom:
-      (edgeToEdgeBottom ? insets.bottom : 0) + Spacing.xxl,
+    // .welcomeScreen padding-top 28; .scroll sits under a 50pt status bar in
+    // the prototype frame, which the safe-area inset supplies natively.
+    paddingTop: insets.top + (gutter === 'welcome' ? Spacing.xxl + 4 : Spacing.lg),
+    paddingBottom: (edgeToEdgeBottom ? insets.bottom : 0) + Spacing.xxl,
   };
 
   const background =

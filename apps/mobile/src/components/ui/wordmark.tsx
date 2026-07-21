@@ -76,7 +76,8 @@ export function LockGlyph({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
 
 const styles = StyleSheet.create({
   hero: {
-    // Tight editorial leading, matching `.welcomeTitle { line-height: .96 }`.
+    // .welcomeTitleLine sets `white-space: nowrap`; the explicit break below
+    // reproduces it so "The PYPER" can never wrap.
     includeFontPadding: false,
   },
   lockChip: {

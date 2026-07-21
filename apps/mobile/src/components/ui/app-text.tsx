@@ -2,17 +2,12 @@ import { StyleSheet, Text, type TextProps, type TextStyle } from 'react-native';
 
 import { Colors, Type } from '@/theme/tokens';
 
-export type TextVariant =
-  | 'display'
-  | 'h2'
-  | 'h3'
-  | 'lead'
-  | 'body'
-  | 'bodyStrong'
-  | 'sub'
-  | 'micro'
-  | 'mono'
-  | 'button';
+/**
+ * Variants map one-to-one onto the frozen prototype's type rules. Pick the
+ * variant that matches the prototype element you are reproducing rather than
+ * overriding `fontSize` at the call site.
+ */
+export type TextVariant = keyof typeof Type;
 
 export type TextTone =
   | 'default'
@@ -30,11 +25,11 @@ export interface AppTextProps extends TextProps {
 }
 
 /**
- * The single text primitive. Every string in the app renders through this so
- * the type scale and tone palette stay consistent across screens.
+ * The single text primitive. Every string renders through this so the approved
+ * families, weights, sizes, leading and tracking stay consistent.
  *
- * `allowFontScaling` is left at its default (true) so the OS text-size setting
- * is honoured; no variant is small enough to break at larger scales.
+ * `allowFontScaling` keeps its default (true) so the OS text-size setting is
+ * honoured.
  */
 export function AppText({
   variant = 'body',
@@ -44,23 +39,28 @@ export function AppText({
 }: AppTextProps) {
   return (
     <Text
-      style={[variantStyles[variant], toneStyles[tone], style]}
+      style={[
+        Type[variant] as TextStyle,
+        UPPERCASE.has(variant) && styles.uppercase,
+        toneStyles[tone],
+        style,
+      ]}
       {...rest}
     />
   );
 }
 
-const variantStyles = StyleSheet.create<Record<TextVariant, TextStyle>>({
-  display: { ...Type.display, fontWeight: '900' },
-  h2: { ...Type.h2, fontWeight: '800' },
-  h3: { ...Type.h3, fontWeight: '800' },
-  lead: { ...Type.lead, fontWeight: '700' },
-  body: { ...Type.body, fontWeight: '400' },
-  bodyStrong: { ...Type.bodyStrong, fontWeight: '600' },
-  sub: { ...Type.sub, fontWeight: '400' },
-  micro: { ...Type.micro, fontWeight: '400' },
-  mono: { ...Type.mono, fontWeight: '600', textTransform: 'uppercase' },
-  button: { ...Type.button, fontWeight: '800' },
+/** Prototype rules that carry `text-transform: uppercase`. */
+const UPPERCASE = new Set<TextVariant>([
+  'eyebrow',
+  'tag',
+  'fieldLabel',
+  'navLabel',
+  'bannerKey',
+]);
+
+const styles = StyleSheet.create({
+  uppercase: { textTransform: 'uppercase' },
 });
 
 const toneStyles = StyleSheet.create<Record<TextTone, TextStyle>>({

@@ -12,23 +12,31 @@ import { AppText } from './app-text';
 
 import { Colors, Radius, Spacing, TouchTarget } from '@/theme/tokens';
 
+/**
+ * Buttons reproduce the prototype's `.btn` family:
+ *
+ *   .btn      background --gph, colour #F7F6F2, radius 999, min-height 44,
+ *             padding 12/20, font-size 14, font-weight 700
+ *   .btn.sec  transparent with a 1px --line border
+ *
+ * Individual prototype CTAs raise the height inline (52 on most primary
+ * actions, 58 on the Welcome hero pair); `size` reproduces that.
+ */
 type BaseProps = Omit<PressableProps, 'style' | 'children'> & {
   label: string;
   onPress: () => void;
   disabled?: boolean;
   /** Shows a spinner and announces the control as busy. */
   busy?: boolean;
-  /** Height floor. Welcome's hero actions use `hero` (58). */
-  size?: 'action' | 'hero';
+  size?: 'base' | 'action' | 'hero';
   style?: StyleProp<ViewStyle>;
   /** Renders for placement on an Espresso surface. */
   onEspresso?: boolean;
 };
 
-function useButtonA11y(disabled: boolean | undefined, busy: boolean | undefined) {
+function useButtonA11y(disabled?: boolean, busy?: boolean) {
   return {
     accessibilityRole: 'button' as const,
-    // Announced by screen readers rather than being conveyed by opacity alone.
     accessibilityState: { disabled: !!disabled || !!busy, busy: !!busy },
     // Explicit ARIA for react-native-web, which does not derive these from
     // `accessibilityState`.
@@ -36,6 +44,12 @@ function useButtonA11y(disabled: boolean | undefined, busy: boolean | undefined)
     'aria-busy': !!busy,
     disabled: !!disabled || !!busy,
   };
+}
+
+function sizeStyle(size: BaseProps['size']) {
+  if (size === 'hero') return styles.hero;
+  if (size === 'action') return styles.action;
+  return styles.base;
 }
 
 /** Espresso pill — the single primary action on a screen. `.btn` */
@@ -49,16 +63,14 @@ export function PrimaryButton({
   onEspresso,
   ...rest
 }: BaseProps) {
-  const a11y = useButtonA11y(disabled, busy);
-
   return (
     <Pressable
       onPress={onPress}
-      {...a11y}
+      {...useButtonA11y(disabled, busy)}
       {...rest}
       style={({ pressed }) => [
-        styles.base,
-        size === 'hero' ? styles.hero : styles.action,
+        styles.shell,
+        sizeStyle(size),
         onEspresso ? styles.primaryOnEspresso : styles.primary,
         (disabled || busy) && styles.dimmed,
         pressed && !disabled && !busy && styles.pressed,
@@ -75,7 +87,7 @@ export function PrimaryButton({
         <AppText
           variant="button"
           tone={onEspresso ? 'default' : 'onEspresso'}
-          style={styles.centeredLabel}
+          style={styles.centered}
         >
           {label}
         </AppText>
@@ -90,21 +102,19 @@ export function SecondaryButton({
   onPress,
   disabled,
   busy,
-  size = 'action',
+  size = 'base',
   style,
   onEspresso,
   ...rest
 }: BaseProps) {
-  const a11y = useButtonA11y(disabled, busy);
-
   return (
     <Pressable
       onPress={onPress}
-      {...a11y}
+      {...useButtonA11y(disabled, busy)}
       {...rest}
       style={({ pressed }) => [
-        styles.base,
-        size === 'hero' ? styles.hero : styles.action,
+        styles.shell,
+        sizeStyle(size),
         onEspresso ? styles.secondaryOnEspresso : styles.secondary,
         (disabled || busy) && styles.dimmed,
         pressed && !disabled && !busy && styles.pressed,
@@ -114,7 +124,7 @@ export function SecondaryButton({
       <AppText
         variant="button"
         tone={onEspresso ? 'onEspresso' : 'default'}
-        style={styles.centeredLabel}
+        style={styles.centered}
       >
         {label}
       </AppText>
@@ -123,9 +133,8 @@ export function SecondaryButton({
 }
 
 /**
- * The Welcome screen's "Explore the app" treatment: canvas fill with a 1.5px
- * Espresso outline, so it reads as a full-weight alternative rather than a
- * quiet link.
+ * The Welcome "Explore the app" treatment: canvas fill with a 1.5px Espresso
+ * outline, so it reads as a full-weight alternative rather than a quiet link.
  */
 export function OutlineButton({
   label,
@@ -135,23 +144,21 @@ export function OutlineButton({
   style,
   ...rest
 }: BaseProps) {
-  const a11y = useButtonA11y(disabled, false);
-
   return (
     <Pressable
       onPress={onPress}
-      {...a11y}
+      {...useButtonA11y(disabled, false)}
       {...rest}
       style={({ pressed }) => [
-        styles.base,
-        size === 'hero' ? styles.hero : styles.action,
+        styles.shell,
+        sizeStyle(size),
         styles.outline,
         disabled && styles.dimmed,
         pressed && !disabled && styles.pressed,
         style,
       ]}
     >
-      <AppText variant="button" style={styles.centeredLabel}>
+      <AppText variant="button" style={styles.centered}>
         {label}
       </AppText>
     </Pressable>
@@ -166,10 +173,7 @@ export interface TextActionProps {
   style?: StyleProp<ViewStyle>;
 }
 
-/**
- * Inline text action (the Welcome "Sign in" link, "Contact Support").
- * Padded to keep a usable touch target without visually inflating the text.
- */
+/** Inline text action. `.consentlink` — 700, underlined, Steel accent. */
 export function TextAction({
   label,
   onPress,
@@ -182,14 +186,10 @@ export function TextAction({
       accessibilityRole="link"
       accessibilityLabel={accessibilityLabel ?? label}
       onPress={onPress}
-      hitSlop={8}
-      style={({ pressed }) => [
-        styles.textAction,
-        pressed && styles.pressed,
-        style,
-      ]}
+      hitSlop={10}
+      style={({ pressed }) => [styles.textAction, pressed && styles.pressed, style]}
     >
-      <AppText variant="bodyStrong" tone={tone} style={styles.underlined}>
+      <AppText variant="sub" tone={tone} style={styles.underlined}>
         {label}
       </AppText>
     </Pressable>
@@ -197,11 +197,17 @@ export function TextAction({
 }
 
 const styles = StyleSheet.create({
-  base: {
+  shell: {
     alignItems: 'center',
     justifyContent: 'center',
+    // .btn padding 12px 20px
     paddingHorizontal: Spacing.xl,
+    paddingVertical: Spacing.md,
     width: '100%',
+  },
+  base: {
+    minHeight: TouchTarget.min,
+    borderRadius: Radius.pill,
   },
   action: {
     minHeight: TouchTarget.action,
@@ -209,7 +215,7 @@ const styles = StyleSheet.create({
   },
   hero: {
     minHeight: TouchTarget.hero,
-    // The Welcome hero actions use a 20pt radius, not a full pill.
+    // The Welcome hero pair uses a 20pt radius, not a full pill.
     borderRadius: Radius.xl,
   },
   content: {
@@ -217,7 +223,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: Spacing.sm,
   },
-  centeredLabel: {
+  centered: {
     textAlign: 'center',
   },
   primary: {
@@ -242,16 +248,16 @@ const styles = StyleSheet.create({
     borderColor: Colors.espresso,
   },
   dimmed: {
-    opacity: 0.5,
+    opacity: 0.45,
   },
   pressed: {
     opacity: 0.75,
   },
   textAction: {
-    paddingVertical: Spacing.xs,
     alignSelf: 'flex-start',
   },
   underlined: {
+    fontWeight: '700',
     textDecorationLine: 'underline',
   },
 });

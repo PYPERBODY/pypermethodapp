@@ -5,53 +5,68 @@ import { AppText } from './app-text';
 
 import { Colors, Radius, Spacing } from '@/theme/tokens';
 
-export type BannerTone = 'info' | 'locked' | 'caution';
+export type BannerTone = 'locked' | 'info' | 'caution';
 
 export interface StatusBannerProps {
   tone?: BannerTone;
-  /** Short status word. Carries the meaning that colour must not carry alone. */
+  /** Short status key. Carries the meaning colour must not carry alone. */
   label: string;
   message: string;
   style?: StyleProp<ViewStyle>;
 }
 
 const ICONS: Record<BannerTone, keyof typeof Feather.glyphMap> = {
-  info: 'info',
   locked: 'lock',
+  info: 'info',
   caution: 'alert-triangle',
 };
 
 /**
- * Status / banner treatment for preview, read-only and caution states.
+ * Status banner. Reproduces the prototype's `.pvban`:
  *
- * Accessibility: the tone is always accompanied by an icon and an explicit
- * text label, so locked status is never communicated by colour alone. The
- * whole banner is a single accessible element with `alert` semantics.
+ *   .pvban       --gph fill, #f4f3ef text, radius 14, padding 10/12, gap 10
+ *   .pvban .pk   mono 8px, .16em, 700
+ *   .pvban .pm   10.5px / 1.35, #d9d6cf
+ *
+ * This is a compact dark strip, not a large card — it must never read as a
+ * headline. `caution` keeps the light alert surface for red-flag messaging.
+ *
+ * Accessibility: one accessible element with `alert` semantics, and the tone is
+ * always paired with an icon and an explicit text key.
  */
 export function StatusBanner({
-  tone = 'info',
+  tone = 'locked',
   label,
   message,
   style,
 }: StatusBannerProps) {
+  const onDark = tone !== 'caution';
+
   return (
     <View
       accessible
       accessibilityRole="alert"
       accessibilityLabel={`${label}. ${message}`}
-      style={[styles.banner, toneStyles[tone], style]}
+      style={[styles.banner, onDark ? styles.dark : styles.caution, style]}
     >
       <Feather
         name={ICONS[tone]}
-        size={16}
-        color={tone === 'caution' ? Colors.alert : Colors.text}
+        size={13}
+        color={onDark ? Colors.onEspresso : Colors.alert}
         style={styles.icon}
       />
       <View style={styles.copy}>
-        <AppText variant="mono" tone={tone === 'caution' ? 'alert' : 'muted'}>
+        <AppText
+          variant="bannerKey"
+          tone={onDark ? 'onEspresso' : 'alert'}
+        >
           {label}
         </AppText>
-        <AppText variant="sub" tone="soft" style={styles.message}>
+        <AppText
+          variant="bannerBody"
+          tone={onDark ? 'onEspressoSoft' : 'alert'}
+          style={styles.message}
+        >
           {message}
         </AppText>
       </View>
@@ -63,34 +78,27 @@ const styles = StyleSheet.create({
   banner: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: Spacing.md,
-    borderRadius: Radius.md,
-    borderWidth: 1,
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.md,
+    gap: 10,
+    borderRadius: Radius.lg,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: 10,
   },
-  icon: {
-    marginTop: 2,
-  },
-  copy: {
-    flex: 1,
-  },
-  message: {
-    marginTop: 3,
-  },
-});
-
-const toneStyles = StyleSheet.create({
-  info: {
-    backgroundColor: Colors.surfaceAlt,
-    borderColor: Colors.border,
-  },
-  locked: {
-    backgroundColor: Colors.surfaceAlt,
-    borderColor: Colors.planSelectedBorder,
+  dark: {
+    backgroundColor: Colors.espresso,
   },
   caution: {
     backgroundColor: Colors.errorSurface,
+    borderWidth: 1,
     borderColor: Colors.errorBorder,
+  },
+  icon: {
+    marginTop: 1,
+  },
+  copy: {
+    flex: 1,
+    minWidth: 0,
+  },
+  message: {
+    marginTop: 3,
   },
 });

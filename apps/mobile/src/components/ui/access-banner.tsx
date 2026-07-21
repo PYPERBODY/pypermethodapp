@@ -4,7 +4,6 @@ import { StatusBanner } from './status-banner';
 
 import { useAccess } from '@/features/access/access-context';
 import { PREVIEW_BANNER, READ_ONLY_BANNER } from '@/features/access/copy';
-import { Spacing } from '@/theme/tokens';
 
 /**
  * Persistent access state banner shown at the top of every tab.
@@ -43,6 +42,7 @@ export function AccessBanner() {
 
 const styles = StyleSheet.create({
   banner: {
-    marginBottom: Spacing.xl,
+    // .pvban — margin-bottom 14
+    marginBottom: 14,
   },
 });

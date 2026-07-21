@@ -3,7 +3,7 @@ import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { AppText } from './app-text';
 
-import { Colors, Radius, Spacing, Shadow } from '@/theme/tokens';
+import { Colors, Layout, Radius, Shadow } from '@/theme/tokens';
 
 export interface CardProps {
   children: ReactNode;
@@ -53,7 +53,7 @@ export function SectionHeading({
     <View style={style}>
       {eyebrow ? (
         <AppText
-          variant="mono"
+          variant="eyebrow"
           tone={onEspresso ? 'onEspressoMuted' : 'muted'}
           style={styles.eyebrow}
         >
@@ -87,16 +87,18 @@ export function Rule({ style }: { style?: StyleProp<ViewStyle> }) {
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: Radius.lg,
+    // .card — radius 16, 1px --line, padding 16, --shadow
+    borderRadius: Radius.card,
     borderWidth: 1,
-    padding: Spacing.lg,
+    padding: Layout.cardPadding,
     ...Shadow.card,
   },
   eyebrow: {
-    marginBottom: Spacing.xs,
+    // .stat .eyebrow — margin-bottom 6
+    marginBottom: 6,
   },
   detail: {
-    marginTop: Spacing.xs,
+    marginTop: 5,
   },
   rule: {
     height: 1,

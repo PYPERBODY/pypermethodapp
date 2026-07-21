@@ -10,7 +10,7 @@ import {
 
 import { AppText } from './app-text';
 
-import { Colors, Radius, Spacing, TouchTarget } from '@/theme/tokens';
+import { Colors, Radius, Spacing, TouchTarget, Type } from '@/theme/tokens';
 
 export interface FormFieldProps extends Omit<TextInputProps, 'style'> {
   label: string;
@@ -21,24 +21,23 @@ export interface FormFieldProps extends Omit<TextInputProps, 'style'> {
 }
 
 /**
- * Labelled text input.
+ * Labelled text input. Reproduces `.field`:
  *
- * Accessibility: the visible label is bound to the input via
- * `accessibilityLabel`, and any error is appended to the field's accessible
- * value so screen readers announce it in the same breath as the field.
+ *   .field           margin-top 12
+ *   .field label     UI 12px, .05em, uppercase, --mut, 600, margin-bottom 6
+ *   .field input     --card2 fill, 1px --line, radius 10, padding 11/12, 14px
+ *   :focus           border-color --med
+ *
+ * Accessibility: the visible label is bound to the input, and any error is
+ * announced with it.
  */
-export function FormField({
-  label,
-  error,
-  hint,
-  ...inputProps
-}: FormFieldProps) {
+export function FormField({ label, error, hint, ...inputProps }: FormFieldProps) {
   const [focused, setFocused] = useState(false);
   const inputId = useId();
 
   return (
     <View style={styles.field}>
-      <AppText variant="mono" tone="muted" nativeID={`${inputId}-label`}>
+      <AppText variant="fieldLabel" tone="muted" nativeID={`${inputId}-label`}>
         {label}
       </AppText>
       {hint ? (
@@ -65,17 +64,20 @@ export function FormField({
   );
 }
 
-/** Calm inline validation. Icon + text, so the state is not colour-only. */
+/**
+ * Calm inline validation. `.inlineerr` — radius 11, padding 10/12, 12px/1.45,
+ * gap 7. Icon plus text, so the state is never colour-only.
+ */
 export function InlineError({ children }: { children: ReactNode }) {
   return (
     <View accessible accessibilityRole="alert" style={styles.error}>
       <Feather
         name="alert-circle"
-        size={14}
+        size={13}
         color={Colors.alert}
         style={styles.errorIcon}
       />
-      <AppText variant="micro" tone="alert" style={styles.errorText}>
+      <AppText variant="sub" tone="alert" style={styles.errorText}>
         {children}
       </AppText>
     </View>
@@ -91,8 +93,8 @@ export interface CheckboxRowProps {
 }
 
 /**
- * Affirmative-action confirmation row. Uses the native checkbox role so the
- * checked state is announced, and keeps a full-width touch target.
+ * Affirmative-action confirmation row. `.reqrow` — gap 11, padding 11 vertical,
+ * hairline top rule; `.cbx` 22x22; `.cbxlabel` 13px / 1.5.
  */
 export function CheckboxRow({
   checked,
@@ -104,8 +106,6 @@ export function CheckboxRow({
     <Pressable
       accessibilityRole="checkbox"
       accessibilityState={{ checked }}
-      // Explicit for react-native-web, which does not derive it from
-      // `accessibilityState`.
       aria-checked={checked}
       accessibilityHint={required ? 'Required to create your account' : undefined}
       onPress={() => onChange(!checked)}
@@ -113,28 +113,24 @@ export function CheckboxRow({
     >
       <View style={[styles.checkbox, checked && styles.checkboxChecked]}>
         {checked ? (
-          <Feather name="check" size={14} color={Colors.onEspresso} />
+          <Feather name="check" size={13} color={Colors.onEspresso} />
         ) : null}
       </View>
       <View style={styles.checkCopy}>
-        <AppText variant="bodyStrong" style={styles.checkLabel}>
+        <AppText style={styles.checkLabel}>
           {children}
-          {required ? (
-            <AppText variant="bodyStrong" tone="alert">
-              {' *'}
-            </AppText>
-          ) : null}
+          {required ? <AppText style={styles.required}> *</AppText> : null}
         </AppText>
       </View>
     </Pressable>
   );
 }
 
-/** Mono micro-label heading a group of fields. `.formsec > .fslabel` */
+/** `.formsec > .fslabel` — mono 9px, .14em, uppercase, --med. */
 export function FieldGroupLabel({ children }: { children: ReactNode }) {
   return (
     <AppText
-      variant="mono"
+      variant="tag"
       tone="accent"
       accessibilityRole="header"
       style={styles.groupLabel}
@@ -146,27 +142,25 @@ export function FieldGroupLabel({ children }: { children: ReactNode }) {
 
 const styles = StyleSheet.create({
   field: {
-    marginTop: Spacing.lg,
+    marginTop: Spacing.md,
   },
   hint: {
     marginTop: 2,
   },
   input: {
-    marginTop: Spacing.sm,
+    marginTop: 6,
     minHeight: TouchTarget.min,
     backgroundColor: Colors.surfaceAlt,
     borderWidth: 1,
     borderColor: Colors.border,
     borderRadius: Radius.sm,
     paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.md,
-    fontSize: 15,
+    paddingVertical: 11,
     color: Colors.text,
+    ...Type.input,
   },
   inputFocused: {
     borderColor: Colors.accent,
-    // Doubles as the visible focus ring on web.
-    borderWidth: 2,
   },
   inputError: {
     borderColor: Colors.alert,
@@ -174,50 +168,59 @@ const styles = StyleSheet.create({
   error: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: Spacing.sm,
-    marginTop: Spacing.sm,
+    gap: 7,
+    marginTop: Spacing.md,
     backgroundColor: Colors.errorSurface,
     borderWidth: 1,
     borderColor: Colors.errorBorder,
     borderRadius: Radius.md,
     paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.md,
+    paddingVertical: 10,
   },
   errorIcon: {
-    marginTop: 1,
+    marginTop: 2,
   },
   errorText: {
     flex: 1,
+    lineHeight: 17.4,
   },
   checkRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: Spacing.md,
-    paddingVertical: Spacing.md,
+    gap: 11,
+    paddingVertical: 11,
     minHeight: TouchTarget.min,
   },
+  checkboxChecked: {
+    backgroundColor: Colors.espresso,
+    borderColor: Colors.espresso,
+  },
   checkbox: {
-    width: 24,
-    height: 24,
+    width: 22,
+    height: 22,
     borderRadius: 6,
     borderWidth: 1.5,
     borderColor: Colors.textMuted,
     backgroundColor: Colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  checkboxChecked: {
-    backgroundColor: Colors.espresso,
-    borderColor: Colors.espresso,
+    marginTop: 1,
   },
   checkCopy: {
     flex: 1,
   },
   checkLabel: {
-    lineHeight: 20,
+    fontSize: 13,
+    lineHeight: 19.5,
+  },
+  required: {
+    color: Colors.alert,
+    fontWeight: '700',
   },
   groupLabel: {
-    marginTop: Spacing.xxl,
+    marginTop: 18,
+    marginBottom: 9,
+    letterSpacing: 1.26,
   },
   pressed: {
     opacity: 0.7,
