@@ -1,7 +1,7 @@
-import Feather from '@expo/vector-icons/Feather';
 import { Redirect, Tabs } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { TabIcon } from '@/components/ui/tab-icons';
 import { useAccess } from '@/features/access/access-context';
 import { Colors, Type } from '@/theme/tokens';
 
@@ -73,9 +73,7 @@ export default function TabLayout() {
           // The icon font renders as text content, so the accessible name is set
           // explicitly rather than being derived from the label plus glyph.
           tabBarAccessibilityLabel: 'Home',
-          tabBarIcon: ({ color }) => (
-            <Feather name="home" size={18} color={color} />
-          ),
+          tabBarIcon: ({ color }) => <TabIcon name="home" color={color} />,
         }}
       />
       <Tabs.Screen
@@ -85,9 +83,7 @@ export default function TabLayout() {
           // The icon font renders as text content, so the accessible name is set
           // explicitly rather than being derived from the label plus glyph.
           tabBarAccessibilityLabel: 'Method',
-          tabBarIcon: ({ color }) => (
-            <Feather name="book-open" size={18} color={color} />
-          ),
+          tabBarIcon: ({ color }) => <TabIcon name="method" color={color} />,
         }}
       />
       <Tabs.Screen
@@ -97,9 +93,7 @@ export default function TabLayout() {
           // The icon font renders as text content, so the accessible name is set
           // explicitly rather than being derived from the label plus glyph.
           tabBarAccessibilityLabel: 'Track',
-          tabBarIcon: ({ color }) => (
-            <Feather name="activity" size={18} color={color} />
-          ),
+          tabBarIcon: ({ color }) => <TabIcon name="track" color={color} />,
         }}
       />
       <Tabs.Screen
@@ -109,9 +103,7 @@ export default function TabLayout() {
           // The icon font renders as text content, so the accessible name is set
           // explicitly rather than being derived from the label plus glyph.
           tabBarAccessibilityLabel: 'Dose',
-          tabBarIcon: ({ color }) => (
-            <Feather name="calendar" size={18} color={color} />
-          ),
+          tabBarIcon: ({ color }) => <TabIcon name="dose" color={color} />,
         }}
       />
       <Tabs.Screen
@@ -121,9 +113,7 @@ export default function TabLayout() {
           // The icon font renders as text content, so the accessible name is set
           // explicitly rather than being derived from the label plus glyph.
           tabBarAccessibilityLabel: 'Profile',
-          tabBarIcon: ({ color }) => (
-            <Feather name="user" size={18} color={color} />
-          ),
+          tabBarIcon: ({ color }) => <TabIcon name="profile" color={color} />,
         }}
       />
     </Tabs>

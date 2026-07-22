@@ -91,6 +91,8 @@ export const Radius = {
   card: 16,
   /** .hero, Welcome hero buttons */
   xl: 20,
+  /** purchase confirmation sheet */
+  sheet: 24,
   /** .btn, .chip */
   pill: 999,
 } as const;

@@ -68,8 +68,13 @@ export default function WelcomeScreen() {
         </AppText>
       </View>
 
-      {/* Flexible spacer: anchors the actions to the bottom on tall screens
-          and collapses to a 16pt gap on short ones. */}
+      {/* `.welcomeSpacer` — in the prototype this collapses to its 16pt
+          min-height at 390x844 and 340x720, because the content fills the
+          frame. Natively the frame is taller (no in-app status bar), so a
+          growing spacer opened a ~70pt void before the CTA. The gap is pinned
+          to the approved 16pt and the slack is absorbed below the disclaimer
+          instead, which keeps the editorial-top / anchored-actions reading
+          without a void between the membership note and the CTA. */}
       <View style={styles.spacer} />
 
       <View>
@@ -135,6 +140,8 @@ export default function WelcomeScreen() {
           {WELCOME_COPY.disclaimer}
         </AppText>
       </View>
+
+      <View style={styles.tailSpacer} />
     </Screen>
   );
 }
@@ -162,14 +169,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   spacer: {
-    // .welcomeSpacer — flex:1 1 auto; min-height:16.
-    // Capped so a tall viewport cannot open a blank void between the editorial
-    // top and the anchored actions; the prototype's own gap at 390x844 (inside
-    // its 50pt status bar) is roughly this size.
+    // .welcomeSpacer min-height, held exactly.
+    height: 16,
+    flexGrow: 0,
+    flexShrink: 0,
+  },
+  // Absorbs any leftover viewport height at the end of the page rather than
+  // in the middle of the composition.
+  tailSpacer: {
     flexGrow: 1,
     flexShrink: 1,
-    minHeight: 16,
-    maxHeight: 64,
+    minHeight: 0,
   },
   trialMicro: {
     maxWidth: 350,

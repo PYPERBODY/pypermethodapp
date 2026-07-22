@@ -8,7 +8,7 @@ import { Screen } from '@/components/ui/screen';
 import { useAccess } from '@/features/access/access-context';
 import { PURCHASE_COPY } from '@/features/access/copy';
 import { APP_PLAN_CONFIG } from '@/features/access/plans';
-import { Colors, Spacing } from '@/theme/tokens';
+import { Colors, Radius, Spacing } from '@/theme/tokens';
 
 /**
  * Simulated purchase confirmation.
@@ -57,7 +57,12 @@ export default function PurchaseScreen() {
   };
 
   return (
-    <Screen surface="espresso" scroll>
+    // Porcelain screen with an inset Espresso card, matching the prototype's
+    // purchase view (`.migration-source/ThePyperMethod_v2.jsx` line 2779:
+    // background #171717, border-radius 24, padding 22/20, margin-top 6, sitting
+    // inside the 20pt scroll gutter plus the 4pt onboarding inset).
+    <Screen scroll>
+      <View style={styles.sheet}>
       <AppText variant="bannerKey" tone="onEspressoMuted" style={styles.eyebrow}>
         {PURCHASE_COPY.eyebrow}
       </AppText>
@@ -118,6 +123,7 @@ export default function PurchaseScreen() {
       <AppText variant="micro" tone="onEspressoSoft" style={styles.footnote}>
         {PURCHASE_COPY.simulationNote}
       </AppText>
+      </View>
     </Screen>
   );
 }
@@ -145,6 +151,14 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
 }
 
 const styles = StyleSheet.create({
+  sheet: {
+    backgroundColor: Colors.espresso,
+    borderRadius: Radius.sheet,
+    paddingVertical: 22,
+    paddingHorizontal: Spacing.xl,
+    marginTop: 6,
+    marginHorizontal: 4,
+  },
   eyebrow: {
     letterSpacing: 1.36,
   },
