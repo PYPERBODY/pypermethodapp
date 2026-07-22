@@ -30,6 +30,12 @@ export const WELCOME_COPY = {
   signInPrompt: 'Already subscribed or an active PYPER member? ',
   signInAction: 'Sign in',
   careTitle: 'Explore PYPER GLP-1 Care',
+  /**
+   * Present in the approved prototype (`.exCopy`, line 2649) but deliberately
+   * NOT rendered on approver instruction, so the care row is the title plus a
+   * single external-link arrow. Retained here so the approved string is not
+   * lost if the decision is revisited.
+   */
   careCopy:
     'Clinical care is managed through the secure PYPER Member Portal.',
   careAccessibilityLabel: 'Explore PYPER GLP-1 Care in an external browser',

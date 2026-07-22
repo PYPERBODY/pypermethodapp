@@ -80,8 +80,16 @@ Remaining visible differences:
   word later, after "supported".
 - **Sign-in line break.** The prototype keeps "member? Sign in" together on the
   second line; native pushes the whole action to its own line.
-- **Care-row chevron.** The prototype has both an inline `↗` and a trailing `›`
-  (`.exChev`). Native shows only the arrow — removed on your instruction.
+- **Care row is title-only.** Two approved-source elements are deliberately
+  omitted on approver instruction:
+  1. the trailing `›` chevron (`.exChev`, line 2651), so there is a single
+     external-link indicator;
+  2. the secondary sentence "Clinical care is managed through the secure PYPER
+     Member Portal." (`.exCopy`, line 2649).
+  The row is now "Explore PYPER GLP-1 Care ↗" followed directly by the approved
+  medical disclaimer, which is unchanged and still carries the same Member
+  Portal language. The string is retained in `copy.ts` if the decision is
+  revisited.
 - Wordmark scale, weight, Steel period, headline, supporting copy, membership
   note, both buttons and the disclaimer match.
 - Environmental: the prototype draws a simulated iOS status bar and notch; the
@@ -179,7 +187,9 @@ and are a candidate for the same treatment in a later pass.
 ### 9. Welcome at 340 × 720 — `9-welcome-340x720.png`
 
 Gutters step down to 20pt as the prototype's `@media(max-width:349px)` rule
-specifies. Scrolls 32pt; no horizontal scrolling.
+specifies. Now fits without scrolling at all — removing the care-row sentence
+shortened the page — and there is no horizontal scrolling. Short scrolling
+remains permitted at this size; it is simply no longer needed.
 
 ---
 
@@ -193,7 +203,7 @@ specifies. Scrolls 32pt; no horizontal scrolling.
 | Plan radio top- vs centre-aligned | Low | One style change |
 | Headline / sign-in line breaks | Low | Font metric rounding |
 | Back chip 44pt vs 33pt | Low | Deliberate — touch target |
-| Care-row chevron removed | None | Approved divergence |
+| Care-row chevron + secondary sentence removed | None | Approved divergences |
 | Password fields, pending banners, Restore Purchases | None | Brief-mandated additions |
 | Hyperhuman wording omitted | None | Deferred scope |
 

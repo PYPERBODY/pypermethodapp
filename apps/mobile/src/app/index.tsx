@@ -129,9 +129,6 @@ export default function WelcomeScreen() {
                 ↗
               </AppText>
             </AppText>
-            <AppText variant="sub" tone="soft" style={styles.careDetail}>
-              {WELCOME_COPY.careCopy}
-            </AppText>
           </View>
         </Pressable>
 
@@ -221,12 +218,6 @@ const styles = StyleSheet.create({
     // .exTitle — 14px / 800 / -.01em
     fontSize: 14,
     letterSpacing: -0.14,
-  },
-  careDetail: {
-    // .exCopy — 12px / 1.4
-    fontSize: 12,
-    lineHeight: 16.8,
-    marginTop: 2,
   },
   disclaimer: {
     // .welcomeDisclaimer — max-width 340; margin 12 0 4
